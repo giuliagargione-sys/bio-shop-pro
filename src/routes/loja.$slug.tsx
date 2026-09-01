@@ -117,7 +117,7 @@ function LojaPage() {
 }
 
 
-function Socials({ className = "" }: { className?: string }) {
+function Socials({ loja, className = "" }: { loja: Loja; className?: string }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <a
