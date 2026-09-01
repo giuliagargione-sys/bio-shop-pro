@@ -1,55 +1,39 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState, type CSSProperties } from "react";
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Instagram, Music2, ArrowRight, Check, MessageCircle, RefreshCcw } from "lucide-react";
 
-import heroImg from "@/assets/loja/hero.jpg";
-import p1 from "@/assets/loja/p1.jpg";
-import p2 from "@/assets/loja/p2.jpg";
-import p3 from "@/assets/loja/p3.jpg";
-import p4 from "@/assets/loja/p4.jpg";
-import p5 from "@/assets/loja/p5.jpg";
-import p6 from "@/assets/loja/p6.jpg";
+import { getLoja, type Loja, type Produto } from "@/data/lojas";
 
 export const Route = createFileRoute("/loja/$slug")({
-  head: () => ({
-    meta: [
-      { title: "Ateliê da Ana — Moda que combina com você" },
-      {
-        name: "description",
-        content:
-          "Descubra seu estilo no quiz do Ateliê da Ana e veja as peças selecionadas pra você. Novidades toda semana.",
-      },
-      { property: "og:title", content: "Ateliê da Ana — Moda que combina com você" },
-      {
-        property: "og:description",
-        content: "Faça o quiz de estilo e receba peças selecionadas especialmente pra você.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  loader: ({ params }) => {
+    const loja = getLoja(params.slug);
+    if (!loja) throw notFound();
+    return { loja };
+  },
+  head: ({ loaderData }) => {
+    if (!loaderData) {
+      return {
+        meta: [{ title: "Loja não encontrada" }, { name: "robots", content: "noindex" }],
+      };
+    }
+    const { nome, frase } = loaderData.loja;
+    const titulo = `${nome} — ${frase}`;
+    const desc = `Descubra seu estilo no quiz da ${nome} e veja as peças selecionadas pra você. Novidades toda semana.`;
+    return {
+      meta: [
+        { title: titulo },
+        { name: "description", content: desc },
+        { property: "og:title", content: titulo },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
+  notFoundComponent: LojaNaoEncontrada,
   component: LojaPage,
 });
 
-/* ---------- dados de exemplo ---------- */
-
-const loja = {
-  nome: "Ateliê da Ana",
-  frase: "Moda que combina com você",
-  instagram: "https://instagram.com/ateliedaana",
-  tiktok: "https://tiktok.com/@ateliedaana",
-  whatsapp: "https://wa.me/5511999999999",
-  trocas: "https://wa.me/5511999999999?text=Quero%20falar%20sobre%20trocas",
-};
-
-const produtos = [
-  { img: p1, nome: "Vestido Floral Midi", preco: "R$ 189,90", selo: "Mais vendido" },
-  { img: p2, nome: "Blazer Alfaiataria Cru", preco: "R$ 259,90", selo: null },
-  { img: p3, nome: "Calça Wide Leg Jeans", preco: "R$ 219,90", selo: "Últimas peças" },
-  { img: p4, nome: "Blusa de Cetim Rosé", preco: "R$ 139,90", selo: null },
-  { img: p5, nome: "Cardigã Tricot Caramelo", preco: "R$ 179,90", selo: "Mais vendido" },
-  { img: p6, nome: "Saia Plissada Rosé", preco: "R$ 199,90", selo: null },
-];
 
 const perguntas = [
   {
