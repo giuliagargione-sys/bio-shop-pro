@@ -142,25 +142,25 @@ function Socials({ loja, className = "" }: { loja: Loja; className?: string }) {
   );
 }
 
-function Nav() {
+function Nav({ loja }: { loja: Loja }) {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--loja-primary)]/15 bg-[var(--loja-bg)]/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5">
         <span className="text-lg font-semibold tracking-tight text-[var(--loja-secondary)]">
           {loja.nome}
         </span>
-        <Socials />
+        <Socials loja={loja} />
       </div>
     </header>
   );
 }
 
-function Hero() {
+function Hero({ loja }: { loja: Loja }) {
   return (
     <section className="relative flex min-h-[86svh] items-end overflow-hidden pt-16">
       <img
-        src={heroImg}
-        alt="Peças em tons de rosa e cru na arara do Ateliê da Ana"
+        src={loja.hero}
+        alt={`Peças em destaque da loja ${loja.nome}`}
         width={1536}
         height={1024}
         className="absolute inset-0 size-full object-cover"
@@ -168,7 +168,7 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-[#2B1A1E]/85 via-[#2B1A1E]/35 to-transparent" />
       <div className="relative mx-auto w-full max-w-5xl px-5 pb-14">
         <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--loja-accent)]">
-          Coleção nova toda semana
+          {loja.heroTag}
         </p>
         <h1 className="mt-3 max-w-xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
           {loja.nome}
@@ -186,13 +186,13 @@ function Hero() {
   );
 }
 
-function Favoritos() {
+function Favoritos({ loja }: { loja: Loja }) {
   return (
     <section className="mx-auto max-w-5xl px-5 py-16">
       <div className="flex items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--loja-accent)]">
-            Seleção da Ana
+            {loja.selecaoTitulo}
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Meus favoritos</h2>
         </div>
@@ -200,7 +200,7 @@ function Favoritos() {
       </div>
 
       <div className="-mx-5 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {produtos.map((p) => (
+        {loja.produtos.map((p: Produto) => (
           <article
             key={p.nome}
             className="group w-[68%] shrink-0 snap-start sm:w-[38%] lg:w-[30%]"
