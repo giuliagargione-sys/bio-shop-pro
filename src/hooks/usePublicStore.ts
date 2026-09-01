@@ -3,6 +3,8 @@ import type { StoreConfig } from "@/types/config";
 import { fetchStoreBySlug } from "@/lib/remoteConfig";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { defaultConfig } from "@/lib/defaultConfig";
+import { getDemoStore } from "@/lib/demoStores";
+
 
 // Usado pela loja pública (rota /loja/:slug) — leitura só, sem login.
 // Aplica o tema da loja encontrada como variáveis CSS no documento, do
