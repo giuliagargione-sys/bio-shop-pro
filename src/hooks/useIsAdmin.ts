@@ -42,7 +42,7 @@ export function useIsAdmin() {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, authLoading]);
 
   return { isAdmin, loading };
 }
