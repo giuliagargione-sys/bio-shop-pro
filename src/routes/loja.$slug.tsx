@@ -429,7 +429,7 @@ function Quiz({ loja }: { loja: Loja }) {
   );
 }
 
-function BarraAjuda() {
+function BarraAjuda({ loja }: { loja: Loja }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--loja-primary)]/20 bg-[var(--loja-bg)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-5xl gap-2 px-4 py-3">
@@ -456,14 +456,15 @@ function BarraAjuda() {
   );
 }
 
-function Footer() {
+function Footer({ loja }: { loja: Loja }) {
   return (
     <footer className="border-t border-[var(--loja-primary)]/15 px-5 py-12">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
         <span className="text-lg font-semibold tracking-tight text-[var(--loja-secondary)]">
           {loja.nome}
         </span>
-        <Socials />
+        <Socials loja={loja} />
+
         <p className="text-xs text-[var(--loja-ink)]/50">
           © {new Date().getFullYear()} {loja.nome}. Todos os direitos reservados.
         </p>
