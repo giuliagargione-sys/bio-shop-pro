@@ -239,7 +239,7 @@ function Favoritos({ loja }: { loja: Loja }) {
 
 /* ---------- Quiz ---------- */
 
-function Quiz() {
+function Quiz({ loja }: { loja: Loja }) {
   const [etapa, setEtapa] = useState<"perguntas" | "dados" | "resultado">("perguntas");
   const [indice, setIndice] = useState(0);
   const [respostas, setRespostas] = useState<string[]>([]);
