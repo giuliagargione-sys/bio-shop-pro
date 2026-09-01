@@ -112,7 +112,10 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       syncStatus,
       updateConfig: (patch) => setConfigState((prev) => ({ ...prev, ...patch })),
       updateNested: (key, patch) =>
-        setConfigState((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } })),
+        setConfigState((prev) => ({
+          ...prev,
+          [key]: { ...(prev[key] as object), ...(patch as object) },
+        })),
       resetConfig: () => setConfigState(defaultConfig),
       changeSlug: async (newSlug) => {
         if (!userIdRef.current) return { ok: false, error: "Sua loja ainda está carregando." };
