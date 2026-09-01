@@ -51,7 +51,7 @@
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 0.5rem;
   --coral: oklch(0.702 0.195 11.5);
   --coral-dark: oklch(0.623 0.19 11.5);
   --ameixa: oklch(0.348 0.104 332);
@@ -114,18 +114,19 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   background: var(--coral);
   color: oklch(1 0 0);
   font-weight: 600;
-  padding: 0.875rem 1.75rem;
-  box-shadow: 0 8px 24px -8px oklch(0.702 0.195 11.5 / 55%);
+  letter-spacing: -0.01em;
+  padding: 0.8rem 1.6rem;
+  box-shadow: 0 1px 2px oklch(0.245 0.045 332 / 12%);
   transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
 
   &:hover {
     background: var(--coral-dark);
     transform: translateY(-1px);
-    box-shadow: 0 12px 28px -8px oklch(0.702 0.195 11.5 / 60%);
+    box-shadow: 0 8px 20px -10px oklch(0.623 0.19 11.5 / 50%);
   }
 }
 
@@ -134,16 +135,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
-  border: 2px solid var(--ameixa);
+  border-radius: var(--radius-md);
+  border: 1px solid oklch(0.348 0.104 332 / 35%);
   color: var(--ameixa);
   font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: background 150ms ease, color 150ms ease;
+  letter-spacing: -0.01em;
+  padding: 0.8rem 1.6rem;
+  transition: border-color 150ms ease, background 150ms ease;
 
   &:hover {
-    background: var(--ameixa);
-    color: var(--creme);
+    border-color: var(--ameixa);
+    background: oklch(0.348 0.104 332 / 6%);
   }
 }
 
@@ -152,16 +154,16 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   background: var(--dourado);
   color: var(--tinta);
-  font-weight: 700;
-  padding: 0.875rem 1.75rem;
-  box-shadow: 0 8px 24px -8px oklch(0.855 0.15 85 / 60%);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 0.8rem 1.6rem;
   transition: transform 150ms ease, box-shadow 150ms ease;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 28px -8px oklch(0.855 0.15 85 / 70%);
+    box-shadow: 0 10px 24px -12px oklch(0.855 0.15 85 / 70%);
   }
 }
