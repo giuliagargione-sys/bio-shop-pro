@@ -36,12 +36,12 @@ export function Logo({ light = false }: { light?: boolean }) {
         />
       </svg>
       <span
-        className={`font-display text-lg font-semibold leading-tight tracking-tight ${
+        className={`font-display text-lg font-medium leading-tight tracking-tight ${
           light ? "text-creme" : "text-tinta"
         }`}
       >
         Link Na Bio{" "}
-        <span className="text-coral">Que Vende</span>
+        <span className="font-semibold text-coral">Que Vende</span>
       </span>
     </span>
   );
