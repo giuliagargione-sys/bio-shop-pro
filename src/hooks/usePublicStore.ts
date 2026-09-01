@@ -42,11 +42,18 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
       setState((s) => ({ ...s, loading: false, notFound: true }));
       return;
     }
+    // Lojas de exemplo fixas no código: carregam identidade, produtos e
+    // cores direto pelo slug (funciona com ou sem banco conectado).
+    const demoConfig = getDemoStore(slug);
+    if (demoConfig) {
+      setState({ loading: false, notFound: false, ownerId: null, config: demoConfig });
+      applyThemeToDocument(demoConfig.theme);
+      return;
+    }
+
     if (!isSupabaseConfigured) {
-      // sem Supabase conectado ainda — mostra o modelo padrão em vez de
-      // quebrar a página (útil pra visualizar o layout durante o setup)
-      setState({ loading: false, notFound: false, ownerId: null, config: defaultConfig });
-      applyThemeToDocument(defaultConfig.theme);
+      // sem banco conectado e slug fora das lojas de exemplo
+      setState({ loading: false, notFound: true, ownerId: null, config: defaultConfig });
       return;
     }
 
@@ -59,6 +66,7 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
         setState({ loading: false, notFound: true, ownerId: null, config: defaultConfig });
         return;
       }
+
       applyThemeToDocument(result.config.theme);
       setState({ loading: false, notFound: false, ownerId: result.ownerId, config: result.config });
     });
