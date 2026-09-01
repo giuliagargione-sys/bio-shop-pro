@@ -42,12 +42,13 @@ Deno.serve(async (req: Request) => {
     const caller = callerData.user;
     if (!caller) return json({ error: "Não autenticado." }, 401);
 
-    const { data: callerProfile } = await callerClient
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", caller.id)
+    const { data: callerRole } = await callerClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", caller.id)
+      .eq("role", "admin")
       .maybeSingle();
-    if (!callerProfile?.is_admin) {
+    if (!callerRole) {
       return json({ error: "Só o acesso central pode criar contas." }, 403);
     }
 

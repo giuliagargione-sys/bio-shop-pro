@@ -1,5 +1,5 @@
 // Edge Function: lista todas as alunas (lojas criadas) pro painel central
-// (/admin) — só quem é admin (profiles.is_admin = true) consegue chamar.
+// (/admin) — só quem é admin (tem o papel de admin) consegue chamar.
 //
 // Precisa ler dados de TODAS as usuárias (e-mail, loja, status de
 // pagamento), então usa a service role key — que nunca pode ir pro
@@ -41,13 +41,14 @@ Deno.serve(async (req: Request) => {
       return json({ error: "Não autenticado." }, 401);
     }
 
-    const { data: callerProfile } = await callerClient
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", caller.id)
+    const { data: callerRole } = await callerClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", caller.id)
+      .eq("role", "admin")
       .maybeSingle();
 
-    if (!callerProfile?.is_admin) {
+    if (!callerRole) {
       return json({ error: "Só o acesso central pode ver essa lista." }, 403);
     }
 

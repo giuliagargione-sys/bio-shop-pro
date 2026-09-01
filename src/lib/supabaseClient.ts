@@ -1,16 +1,8 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+// O backend (Lovable Cloud) já vem conectado neste projeto: o cliente
+// oficial é gerado automaticamente em src/integrations/supabase/client.ts.
+// Aqui a gente só reexporta para manter os imports antigos funcionando.
+import { supabase as generatedClient } from "@/integrations/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-// O Lovable preenche essas variáveis sozinho quando você conecta o
-// Supabase ao projeto (aba "Supabase" no Lovable). Se os nomes vierem
-// diferentes por lá, ajuste aqui — veja o README para o passo a passo.
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
-
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-
-// Quando o Supabase ainda não foi conectado, `supabase` fica null e cada
-// tela trata isso com uma mensagem amigável em vez de quebrar o app —
-// assim dá pra abrir e mexer no visual mesmo antes de conectar o backend.
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl as string, supabaseAnonKey as string)
-  : null;
+export const supabase: SupabaseClient | null = generatedClient as unknown as SupabaseClient;
+export const isSupabaseConfigured = true;
