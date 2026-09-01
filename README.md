@@ -1,114 +1,281 @@
-# Bio Shop Pro
+# Link Na Bio Que Vende
 
-Crie um app chamado "Link Na Bio Que Vende!" em React + Tailwind (use
+Um único app onde várias alunas se cadastram, cada uma com a própria loja
+(link na bio), quiz de estilo, captura de leads e dashboard de
+personalização — protegida por login. Pronto pra rodar no
+[Lovable](https://lovable.dev).
 
-react-router-dom pras rotas). É uma landing page de um produto SaaS pra
+Feito em **React + Vite + TypeScript + Tailwind CSS** (stack nativo do
+Lovable) com **Supabase** como backend (banco de dados + login) e
+checkout pela **Hubla**.
 
-lojistas de moda venderem pelo link da bio do Instagram.
+👉 Pra publicar isso de verdade (Lovable + Supabase, passo a passo do
+zero), veja **[`COMO_PUBLICAR.md`](./COMO_PUBLICAR.md)**.
 
-IDENTIDADE VISUAL:
+## O que tem aqui
 
-- Cores: coral #FF4D6D, coral escuro #E23A57, ameixa #3D1F4D, tinta
+- **`/`** — a landing page do produto: o que é, como funciona, planos (com
+  botão "Ver planos" que leva pro checkout da Hubla) e "Entrar" pra quem
+  já é aluna.
+- **`/loja/:slug`** — a loja pública de uma aluna (esse é o link que vai
+  na bio do Instagram dela): capa, carrossel de produtos, quiz de estilo
+  (termina capturando nome + WhatsApp da cliente como lead), botões de
+  **Dúvidas? Fale com a gente** e **Trocas e devoluções**, rodapé. Cada
+  aluna tem o próprio endereço (`/loja/nome-dela`), editável na dashboard.
+- **`/personalizar`** — a dashboard da aluna logada, **protegida por
+  login**. De lá dá pra editar: o endereço da loja, marca (nome/logo),
+  cores e fonte, capa, produtos em destaque, o quiz, os **leads** que
+  chegaram (com botão de "Entrar em contato" pra cada um), WhatsApp/redes
+  sociais, os dois links de dúvidas/trocas, rodapé, exportar/importar um
+  backup em `.json`. Tem um botão flutuante de **Ajuda** (chat com IA) pra
+  ela tirar dúvidas de como personalizar sem precisar te chamar.
+- **`/login`** — criar conta ou entrar (e-mail + senha).
+- **`/admin`** — seu **acesso central**, só pra você: lista todas as
+  alunas/lojas criadas, endereço de cada uma, status de pagamento
+  (adimplente/inadimplente, quando a Hubla estiver espelhando) e um lugar
+  pra você mesma criar o login de uma aluna manualmente. Só entra quem
+  estiver marcado como admin (veja abaixo como se marcar).
 
-  #221226 (quase preto), dourado #FFC857, creme #FFF7F2 (fundo)
+## Como funciona o multi-conta
 
-- Tipografia: "Fredoka" pros títulos (arredondada, amigável), "Inter" pro
+Cada aluna que cria conta ganha automaticamente **a própria loja** — na
+primeira vez que ela entra em `/personalizar`, o app cria uma linha só
+dela na tabela `store_config`, com um endereço (`slug`) gerado a partir do
+e-mail (ela pode trocar depois, na aba Marca). Os leads que a loja dela
+captura (`leads`) também ficam presos a essa conta — cada aluna só vê os
+próprios, mesmo estando todas no mesmo aplicativo/banco de dados. Isso é
+garantido pelas regras de segurança (RLS) do Supabase, não só pela
+interface — então mesmo alguém tentando acessar direto pela API não
+consegue ver o que não é dela.
 
-  texto (importe do Google Fonts)
+## Segurança: o que impede uma aluna de ver ou alterar dados de outra
 
-- Logo: um ícone simples de elo de corrente (link) com uma seta dourada,
+Isso não depende só da interface (o que apareceria ou não na tela) — é
+garantido em duas camadas que continuam valendo mesmo que alguém tente
+burlar a tela e chamar a API do Supabase diretamente:
 
-  ao lado do texto "Link Na Bio Que Vende"
+1. **Login (Supabase Auth)** — senha nunca fica em texto puro (hash
+   bcrypt), sessão por token (JWT) com expiração. `/personalizar` e
+   `/admin` redirecionam pra `/login` sem sessão válida. Isso é a "porta
+   da frente", mas sozinha não seria suficiente — por isso a camada 2.
+2. **Row Level Security (RLS) no banco de dados** — a regra que realmente
+   não tem como burlar, porque roda dentro do Postgres, não no código do
+   app:
+   - `store_config` (a loja de cada aluna): qualquer pessoa pode **ler**
+     (a loja pública precisa abrir sem login), mas **escrever** só é
+     permitido quando `auth.uid()` (quem está logada) é dona daquela
+     linha. Uma aluna literalmente não consegue mandar uma alteração pra
+     loja de outra — o banco recusa antes de gravar qualquer coisa,
+     mesmo que a pessoa tente pela API direto (fora da tela).
+   - `leads`: inserção é aberta (a cliente final que responde o quiz não
+     loga), mas leitura e atualização só pra dona da loja
+     (`auth.uid() = store_user_id`). Uma aluna não vê leads de outra.
+   - `profiles` (quem é admin): cada uma só lê a própria linha. Não
+     existe nenhuma forma de uma conta se autopromover a admin pelo
+     app — só muda via SQL Editor (você) ou service role.
+   - `subscribers` (status de pagamento da Hubla): RLS ligado **sem
+     nenhuma política de acesso** — ou seja, acesso zero por qualquer
+     conta comum, nem a própria dona lê isso direto. Só as Edge Functions
+     enxergam essa tabela.
+3. **As rotas que veem "todo mundo" (o `/admin`) nunca rodam no
+   navegador** — ficam em Edge Functions no servidor
+   (`admin-list-alunas`, `admin-create-aluna`), que conferem se quem
+   chamou tem `is_admin = true` antes de responder qualquer coisa. Se uma
+   aluna comum tentar chamar essas funções direto (inspecionando o
+   código), recebe erro 403. A chave "mestra" do Supabase (que ignora
+   RLS) só existe dentro dessas funções — nunca no código que roda no
+   navegador de ninguém.
 
-ROTAS (crie a estrutura, mesmo que as outras fiquem só com um texto
+Sobre **"layout alterado sozinho"**: o autosave da dashboard sempre grava
+filtrado pela conta logada (reforçado pelo RLS, não só pelo código), então
+não tem caminho pra a edição de uma aluna vazar pra loja de outra. O único
+cenário realista de sobrescrita é a **mesma** aluna editando em duas abas
+ou dois aparelhos ao mesmo tempo — aí vale "quem salvou por último" (isso
+é comportamento normal de autosave, não uma falha de segurança).
 
-"em construção" por enquanto):
+**O que eu não consegui testar nesta sessão**: este sandbox não tem um
+projeto Supabase real conectado, então não rodei uma chamada de API de
+verdade simulando um ataque — as regras seguem exatamente o modelo de RLS
+documentado pelo próprio Supabase (é o mecanismo padrão que produtos
+sérios usam pra isolar dados por usuário), mas o ideal é você confirmar na
+prática depois de publicar. Tem um roteiro de teste rápido no passo 7 do
+`COMO_PUBLICAR.md`.
 
-- "/" → a landing page (descrita abaixo)
+## Antes de publicar: conectar o Supabase
 
-- "/loja/:slug" → placeholder
+Sem isso, o app abre no visual, mas cadastro, login, leads e a busca
+automática de produto por link ficam desligados.
 
-- "/login" → placeholder
+1. No Lovable, vá em **Configurações → Supabase** e conecte (ou crie) um
+   projeto Supabase pra este app. O Lovable cuida de configurar as
+   variáveis de ambiente sozinho.
+2. Abra o **SQL Editor** do Supabase e rode, **nessa ordem**:
+   1. `supabase/migrations/0001_init.sql`
+   2. `supabase/migrations/0002_multi_tenant.sql`
+   3. `supabase/migrations/0003_admin_and_billing.sql`
+3. Publique as Edge Functions:
+   ```bash
+   supabase functions deploy fetch-product-preview
+   supabase functions deploy admin-list-alunas
+   supabase functions deploy admin-create-aluna
+   supabase functions deploy ai-help
+   supabase functions deploy hubla-webhook --no-verify-jwt
+   ```
+   (precisa da [Supabase CLI](https://supabase.com/docs/guides/cli), ou
+   use a interface do Lovable/Supabase em Edge Functions. Repare que
+   `hubla-webhook` leva a flag `--no-verify-jwt` — é a Hubla chamando, não
+   uma usuária logada.)
+4. Recarregue o app, abra `/login` e crie a primeira conta de teste — essa
+   vai ser a **sua** conta de acesso central. Depois, no SQL Editor, rode:
+   ```sql
+   update profiles set is_admin = true where email = 'seu-email-aqui@gmail.com';
+   ```
+   Recarregue o app e o link "Acesso central" aparece na sua dashboard,
+   levando pra `/admin`.
 
-- "/personalizar" → placeholder
+Se os nomes das variáveis de ambiente vierem diferentes depois de conectar
+(o Lovable às vezes muda isso entre versões), ajuste em
+`src/lib/supabaseClient.ts` — só duas linhas.
 
-- "/admin" → placeholder
+## Checkout com a Hubla
 
-A LANDING PAGE ("/"), nessa ordem:
+Os botões "Escolher [plano]" na landing page (`src/pages/LandingPage.tsx`,
+constante `HUBLA_CHECKOUT_LINKS`) apontam direto pro link de checkout da
+Hubla — **troque pelos links reais** das suas ofertas assim que criar cada
+uma lá.
 
-1. Menu fixo no topo: logo à esquerda; à direita botão "Entrar" (vai pra
+Pontos pra você confirmar direto na Hubla (a documentação pública deles
+não deixou isso 100% claro pra eu confirmar daqui):
 
-   /login) e botão "Ver planos" (âncora pra seção de planos)
+- **Redirecionamento após a compra**: procure, na configuração da oferta/
+  checkout, uma opção de URL de redirecionamento ou página de
+  agradecimento — aponte pra `/login?mode=signup&plan=essencial` (troque
+  `essencial` pelo slug do plano) pra pessoa já cair criando a conta logo
+  depois de pagar. Se não achar essa opção, dá pra usar a página de
+  obrigado padrão da Hubla mesmo, com um link/botão manual pra
+  `seusite.com/login?mode=signup`.
+- **Liberar o acesso automaticamente só pra quem pagou**: hoje, qualquer
+  pessoa que crie uma conta em `/login` ganha acesso à dashboard (mesmo
+  sem ter passado pelo checkout). Como alternativa a deixar aberto, use o
+  **acesso central (`/admin`)** pra criar você mesma o login de cada aluna
+  depois de confirmar o pagamento — assim ninguém entra sem você liberar.
 
-2. Hero: badge pequeno "Pra quem vende pelo Instagram", título grande "O
+## Espelhar adimplente/inadimplente da Hubla no painel `/admin`
 
-   link da bio que também vende por você", subtítulo "Uma loja, um quiz
+Já preparei a tabela e a função que recebem isso (`subscribers` +
+`supabase/functions/hubla-webhook`), mas **ainda não testei com um evento
+real da Hubla** — a documentação pública deles não deixa claro o formato
+exato do payload, então a função tenta adivinhar de forma defensiva (não
+quebra se algum campo não existir do jeito esperado).
 
-   que gera leads e uma dashboard fácil de mexer — tudo no único link que
+Pra ligar de verdade:
 
-   cabe na sua bio do Instagram.", dois botões: "Ver planos" e "Já sou
+1. Na Hubla: **Integrações → Webhooks → Ativar**, gere o token de
+   autenticação deles e configure a URL:
+   ```
+   https://SEU-PROJETO.supabase.co/functions/v1/hubla-webhook?secret=SEU_SEGREDO
+   ```
+   (o `SEU_SEGREDO` é inventado por você — cole o mesmo valor na secret
+   `HUBLA_WEBHOOK_SECRET` das Edge Functions do Supabase. Isso impede
+   qualquer pessoa de chamar essa URL e inventar status de pagamento.)
+2. Ative os eventos de **Subscription** (assinatura) e **Invoice**
+   (fatura) — são esses que carregam pagamento aprovado, atrasado e
+   cancelado.
+3. Dispare um evento de teste (a Hubla deixa simular com dados fake) e
+   confira em **Supabase → Edge Functions → hubla-webhook → Logs** o que
+   chegou. Me manda esse conteúdo que eu ajusto os nomes de campo exatos
+   em `classify()` e `dig()` dentro da função — hoje ela tenta reconhecer
+   os formatos mais comuns, mas o certo é confirmar com um evento real.
+4. Depois de confirmado, o `/admin` passa a mostrar "Adimplente" /
+   "Inadimplente" / "Cancelado" automaticamente pra cada aluna, casando
+   pelo e-mail.
 
-   aluna — entrar"
+## IA de ajuda na dashboard
 
-3. Seção "Como funciona": 4 cards em grid 2x2, cada um com ícone, título
+O botão flutuante "Ajuda" dentro de `/personalizar` abre um chat que usa a
+API da Anthropic (Claude) pra responder dúvidas sobre como personalizar a
+loja (a assistente só sabe sobre o app — não é um chat genérico).
 
-   e texto curto:
+1. Pegue uma chave em [console.anthropic.com](https://console.anthropic.com)
+   (Settings → API Keys).
+2. Adicione como secret `ANTHROPIC_API_KEY` nas Edge Functions do
+   Supabase.
+3. Publique a função (já está no passo 3 lá em cima): `ai-help`.
 
-   - "Um link, uma loja" — Cole um único link na bio do Instagram e
+Sem a chave configurada, o chat continua abrindo normalmente, só que avisa
+que a IA ainda não foi ligada, em vez de quebrar.
 
-     transforme ele numa loja de verdade
+## Acesso central (`/admin`) — só pra você
 
-   - "Quiz que vira venda" — Um quiz de estilo guia a cliente até o look
+Depois de se marcar como admin (passo 4 da instalação), você vê um link
+"Acesso central" na sua própria dashboard, levando pra `/admin`, com:
 
-     ideal e captura o contato dela no processo
+- **Todas as lojas criadas**: nome da loja, e-mail da aluna, endereço
+  (`/loja/...`), data de criação e status de pagamento.
+- **Criar login de aluna manualmente**: já que a criação de conta não é
+  automática pelo pagamento ainda, você digita o e-mail dela ali, o app
+  gera uma senha provisória e mostra pra você copiar e mandar por
+  WhatsApp — sem precisar que ela mesma se cadastre em `/login`. (O
+  cadastro público em `/login` continua funcionando em paralelo, se você
+  preferir deixar autoatendimento pra algum plano.)
+- **Status de pagamento**: aparece "sem info de pagamento" até você ligar
+  o webhook da Hubla (seção acima).
 
-   - "Leads organizados" — Cada resposta do quiz vira um lead na sua
+Essa página só é visível pra contas marcadas `is_admin = true` na tabela
+`profiles` — nenhuma aluna comum consegue acessar `/admin` nem ver dados
+de outras lojas, mesmo tentando pela URL direto (a função que lista todo
+mundo confere isso do lado do servidor antes de responder).
 
-     dashboard, com WhatsApp pronto pra chamar
+## Como isso funciona por trás
 
-   - "Sua cara, sem precisar programar" — Cores, fonte, produtos, tudo
+- **Loja de cada aluna**: schema único (`src/types/config.ts`) descreve
+  tudo que é personalizável. `ConfigContext`
+  (`src/context/ConfigContext.tsx`, só carregado dentro de
+  `/personalizar`) busca/salva a loja da aluna logada na tabela
+  `store_config` (uma linha por `user_id`), com debounce, e aplica
+  cores/fonte como variáveis CSS em tempo real. A loja pública
+  (`/loja/:slug`) usa `src/hooks/usePublicStore.ts`, que busca só leitura
+  pelo endereço (`slug`), sem precisar de login.
+- **Leads**: ao terminar o quiz em `/loja/:slug`, a cliente deixa nome e
+  WhatsApp; isso vai pra tabela `leads`, marcado com a dona da loja
+  (`store_user_id`). Cada aluna só vê os próprios na aba Leads.
+- **Login**: Supabase Auth (e-mail/senha) — mais seguro do que uma senha
+  fixa escrita no código.
+- **Busca automática de produto**: Edge Function `fetch-product-preview`
+  busca o link do lado do servidor e lê título/imagem (tags Open Graph).
 
-     editável numa dashboard simples
+## Identidade visual
 
-4. Seção de planos (id "planos"): 2 cards lado a lado — "Essencial" (R$
+- **Cores do produto** (landing page, login, barra lateral da dashboard):
+  coral `#FF4D6D`, ameixa `#3D1F4D`, tinta `#221226`, dourado `#FFC857`,
+  creme `#FFF7F2` — definidas em `src/index.css` como `--product-*`.
+  Diferente das cores `--brand-*` que cada aluna escolhe pra loja dela.
+- **Fonte do produto**: Fredoka (títulos) + Inter (textos).
+- Logo em `src/components/brand/Logo.tsx` (SVG, sem depender de arquivo de
+  imagem).
 
-   47/mês) e "Que Vende" (R$ 97/mês, destacado visualmente como "Mais
+## Rodando localmente
 
-   escolhido"), cada um com uma lista de 3-4 benefícios e um botão
-
-   "Escolher [nome do plano]" (por enquanto sem link real, deixe como
-
-   "#")
-
-5. CTA final com fundo escuro (gradiente ameixa → tinta), título "Sua
-
-   loja no link da bio pode começar a vender hoje" e botão "Ver planos"
-
-6. Rodapé simples com copyright e um link "Falar com a gente"
-
-Deixe tudo responsivo (funcionando bem no celular) e com boa hierarquia
-
-visual — nada de bloco genérico, quero que pareça uma landing page de
-
-produto de verdade, bonita e profissional.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/2ebd9515-9246-4297-970b-a0710b7ff0a9).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+```bash
+npm install
 npm run dev
 ```
+
+## Limitações desta sessão
+
+- Não foi possível rodar `npm install` / `npm run build` neste ambiente (a
+  rede daqui bloqueia o registro do npm), nem testar as chamadas reais ao
+  Supabase/Hubla/Anthropic (não há projetos provisionados aqui). Código
+  revisado manualmente, arquivo por arquivo.
+- O espelhamento adimplente/inadimplente da Hubla (tabela `subscribers` +
+  função `hubla-webhook`) está pronto na estrutura, mas **não validado**
+  com um evento real da Hubla — veja a seção "Espelhar adimplente/
+  inadimplente da Hubla" pra ativar e me mandar o payload real assim que
+  puder, pra eu confirmar os nomes de campo certos.
+- A criação manual de aluna (`/admin`) gera senha provisória e mostra na
+  tela pra você copiar — não manda e-mail automático (evita depender de
+  configurar SMTP no Supabase). Se preferir enviar convite por e-mail no
+  lugar disso no futuro, dá pra trocar pela função `inviteUserByEmail` do
+  Supabase.
+- Os preços e nomes dos planos em `/` são só exemplo — troque no array
+  `PLANS` de `src/pages/LandingPage.tsx`.
