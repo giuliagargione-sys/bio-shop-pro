@@ -1,5 +1,5 @@
 // Edge Function: lista todas as alunas (lojas criadas) pro painel central
-// (/admin) — só quem é admin (profiles.is_admin = true) consegue chamar.
+// (/admin) — só quem é admin (tem o papel de admin) consegue chamar.
 //
 // Precisa ler dados de TODAS as usuárias (e-mail, loja, status de
 // pagamento), então usa a service role key — que nunca pode ir pro
@@ -26,33 +26,32 @@ Deno.serve(async (req: Request) => {
   }
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-  const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
   const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
   try {
     // 1) Quem está chamando? (usa o token da própria aluna/admin logada)
     const authHeader = req.headers.get("Authorization") ?? "";
-    const callerClient = createClient(SUPABASE_URL, ANON_KEY, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: callerData } = await callerClient.auth.getUser();
+    const jwt = authHeader.replace(/^Bearer\s+/i, "");
+    const serviceClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+    const { data: callerData } = await serviceClient.auth.getUser(jwt);
     const caller = callerData.user;
     if (!caller) {
       return json({ error: "Não autenticado." }, 401);
     }
 
-    const { data: callerProfile } = await callerClient
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", caller.id)
+    const { data: callerRole } = await serviceClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", caller.id)
+      .eq("role", "admin")
       .maybeSingle();
 
-    if (!callerProfile?.is_admin) {
+    if (!callerRole) {
       return json({ error: "Só o acesso central pode ver essa lista." }, 403);
     }
 
     // 2) A partir daqui, usa a service role pra ver todo mundo.
-    const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+    const adminClient = serviceClient;
 
     const { data: usersList, error: usersError } = await adminClient.auth.admin.listUsers({
       perPage: 1000,

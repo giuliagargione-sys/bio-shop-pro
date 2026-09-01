@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/context/AuthContext";
 
-// Lê profiles.is_admin da própria usuária logada (permitido pela RLS —
-// cada uma só lê a própria linha). É só isso que decide se ela vê o link
-// "Acesso central" e se consegue entrar em /admin.
+// O papel de cada pessoa fica numa tabela separada (user_roles), nunca no
+// perfil — assim ninguém consegue se auto-promover a admin pelo app.
+// Cada usuária só enxerga o próprio papel (regra de acesso do banco).
 export function useIsAdmin() {
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +14,12 @@ export function useIsAdmin() {
     let cancelled = false;
 
     async function check() {
+      // Enquanto a sessão ainda está sendo carregada, seguimos "carregando"
+      // — senão a tela do acesso central acha que não é admin e desvia.
+      if (authLoading) {
+        setLoading(true);
+        return;
+      }
       if (!supabase || !session?.user) {
         setIsAdmin(false);
         setLoading(false);
@@ -21,12 +27,13 @@ export function useIsAdmin() {
       }
       setLoading(true);
       const { data } = await supabase
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", session.user.id)
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
         .maybeSingle();
       if (!cancelled) {
-        setIsAdmin(Boolean(data?.is_admin));
+        setIsAdmin(Boolean(data));
         setLoading(false);
       }
     }
@@ -35,7 +42,7 @@ export function useIsAdmin() {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, authLoading]);
 
   return { isAdmin, loading };
 }

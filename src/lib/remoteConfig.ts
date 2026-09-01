@@ -78,8 +78,14 @@ export async function createMyStore(): Promise<RemoteStore | null> {
         config: mergeWithDefaults(data.data),
       };
     }
-    // 23505 = violação de unicidade (slug já existe) — tenta outro sufixo
-    if (error && error.code !== "23505") return null;
+    // 23505 = violação de unicidade. Pode ser o endereço (tenta outro
+    // sufixo) ou a loja já ter sido criada em paralelo (devolve ela).
+    if (error && error.code === "23505") {
+      const existing = await fetchMyStore();
+      if (existing) return existing;
+      continue;
+    }
+    if (error) return null;
   }
   return null;
 }
