@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 // perfil — assim ninguém consegue se auto-promover a admin pelo app.
 // Cada usuária só enxerga o próprio papel (regra de acesso do banco).
 export function useIsAdmin() {
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +14,12 @@ export function useIsAdmin() {
     let cancelled = false;
 
     async function check() {
+      // Enquanto a sessão ainda está sendo carregada, seguimos "carregando"
+      // — senão a tela do acesso central acha que não é admin e desvia.
+      if (authLoading) {
+        setLoading(true);
+        return;
+      }
       if (!supabase || !session?.user) {
         setIsAdmin(false);
         setLoading(false);
