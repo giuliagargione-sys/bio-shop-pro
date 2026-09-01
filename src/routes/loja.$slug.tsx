@@ -83,32 +83,39 @@ const resultados: Record<string, { nome: string; emoji: string; desc: string }> 
   },
 };
 
-/* ---------- tema da loja (customizável) ---------- */
-
-const temaLoja = {
-  "--loja-primary": "#E8869C",
-  "--loja-secondary": "#C4536B",
-  "--loja-accent": "#D4A24C",
-  "--loja-bg": "#FBF3EE",
-  "--loja-ink": "#3A2A2E",
-  "--loja-font": "'Poppins', 'Inter', sans-serif",
-} as CSSProperties;
-
-function LojaPage() {
+function LojaNaoEncontrada() {
   return (
-    <div
-      style={temaLoja}
-      className="min-h-screen bg-[var(--loja-bg)] pb-24 text-[var(--loja-ink)] [font-family:var(--loja-font)]"
-    >
-      <Nav />
-      <Hero />
-      <Favoritos />
-      <Quiz />
-      <Footer />
-      <BarraAjuda />
+    <div className="grid min-h-screen place-items-center px-6 text-center">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Loja não encontrada</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Esse link da bio não existe ou foi alterado.
+        </p>
+        <Link to="/" className="btn-coral mt-6 inline-flex">
+          Voltar ao início
+        </Link>
+      </div>
     </div>
   );
 }
+
+function LojaPage() {
+  const { loja } = Route.useLoaderData();
+  return (
+    <div
+      style={loja.tema}
+      className="min-h-screen bg-[var(--loja-bg)] pb-24 text-[var(--loja-ink)] [font-family:var(--loja-font)]"
+    >
+      <Nav loja={loja} />
+      <Hero loja={loja} />
+      <Favoritos loja={loja} />
+      <Quiz loja={loja} />
+      <Footer loja={loja} />
+      <BarraAjuda loja={loja} />
+    </div>
+  );
+}
+
 
 function Socials({ className = "" }: { className?: string }) {
   return (
