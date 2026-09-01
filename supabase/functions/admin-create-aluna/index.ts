@@ -30,19 +30,17 @@ Deno.serve(async (req: Request) => {
   }
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-  const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
   const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
   try {
     const authHeader = req.headers.get("Authorization") ?? "";
-    const callerClient = createClient(SUPABASE_URL, ANON_KEY, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: callerData } = await callerClient.auth.getUser();
+    const jwt = authHeader.replace(/^Bearer\s+/i, "");
+    const serviceClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+    const { data: callerData } = await serviceClient.auth.getUser(jwt);
     const caller = callerData.user;
     if (!caller) return json({ error: "Não autenticado." }, 401);
 
-    const { data: callerRole } = await callerClient
+    const { data: callerRole } = await serviceClient
       .from("user_roles")
       .select("role")
       .eq("user_id", caller.id)
@@ -57,7 +55,7 @@ Deno.serve(async (req: Request) => {
       return json({ error: "Informe um e-mail válido." }, 400);
     }
 
-    const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+    const adminClient = serviceClient;
     const tempPassword = generatePassword();
 
     const { data, error } = await adminClient.auth.admin.createUser({
