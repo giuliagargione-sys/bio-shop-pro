@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_store_active_admin_only() FROM PUBLIC, anon, authenticated;
