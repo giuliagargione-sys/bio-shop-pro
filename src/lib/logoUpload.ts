@@ -29,7 +29,7 @@ export async function uploadStoreImage(
   if (!user) return { url: null, error: "Faça login novamente para enviar a imagem." };
 
   const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const path = `${user.id}/logo-${Date.now()}.${ext || "png"}`;
+  const path = `${user.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "png"}`;
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
