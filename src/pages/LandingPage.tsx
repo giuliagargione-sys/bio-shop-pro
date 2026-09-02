@@ -8,6 +8,8 @@ import {
   Check,
   MessageCircle,
   ShieldCheck,
+  TrendingUp,
+  Target,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
