@@ -60,6 +60,8 @@ export interface QuizConfig {
 export interface ContactConfig {
   whatsappNumber: string; // formato internacional, ex: 5511999999999
   whatsappDefaultMessage: string;
+  buttonLabel?: string; // texto do botao de contato da loja
+  whatsappLink?: string; // link completo do WhatsApp (wa.me, chat.whatsapp, etc)
   instagramUrl: string;
   tiktokUrl: string;
 }
