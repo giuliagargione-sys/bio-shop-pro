@@ -15,12 +15,12 @@ import { trackStoreEvent } from "@/lib/trackEvent";
 
 export default function StorePage() {
   const { slug } = useParams<{ slug: string }>();
-  const { loading, notFound, ownerId, config } = usePublicStore(slug);
+  const { loading, notFound, inactive, ownerId, config } = usePublicStore(slug);
 
   // Conta uma visita por abertura da loja (alimenta os Insights com IA).
   useEffect(() => {
-    if (!loading && !notFound && ownerId) trackStoreEvent(ownerId, "visita", slug);
-  }, [loading, notFound, ownerId, slug]);
+    if (!loading && !notFound && !inactive && ownerId) trackStoreEvent(ownerId, "visita", slug);
+  }, [loading, notFound, inactive, ownerId, slug]);
 
   if (loading) {
     return (
@@ -36,6 +36,20 @@ export default function StorePage() {
         <h1 className="text-2xl font-semibold">Essa loja não existe (ainda)</h1>
         <p className="text-muted-foreground max-w-sm">
           Confira se o endereço está certo, ou crie a sua própria loja no Link Na Bio Que Vende.
+        </p>
+        <Link to="/" className="text-primary underline">
+          Conhecer o Link Na Bio Que Vende
+        </Link>
+      </div>
+    );
+  }
+
+  if (inactive) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-center px-4">
+        <h1 className="text-2xl font-semibold">Loja temporariamente fora do ar</h1>
+        <p className="text-muted-foreground max-w-sm">
+          Esse link está desativado no momento. Se a loja é sua, fale com a gente pra reativar.
         </p>
         <Link to="/" className="text-primary underline">
           Conhecer o Link Na Bio Que Vende
