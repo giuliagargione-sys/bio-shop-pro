@@ -164,7 +164,7 @@ export default function LandingPage() {
           Para quem quer vender mais pelo Instagram
         </span>
         <h1 className="font-semibold leading-[1.05] max-w-2xl" style={{ fontSize: "clamp(32px, 6vw, 54px)" }}>
-          O link da bio que também vende por você
+          O link da bio que vende por você
         </h1>
         <p className="max-w-lg text-base sm:text-lg opacity-70">
           Sua cliente clica no link, faz um quiz rápido e já sai sabendo o que comprar — o contato
