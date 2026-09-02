@@ -270,49 +270,33 @@ export default function LandingPage() {
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
             Por dentro
           </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold">Do jeito que a sua cliente vê, do jeito que você controla</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold">Monte sua loja em 5 passos!</h2>
         </div>
-        <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-          <div className="rounded-xl bg-white p-5" style={{ border: "1px solid var(--product-line)" }}>
-            <p className="text-[11px] font-semibold uppercase tracking-wider opacity-60 mb-3">A loja que a cliente vê</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          {[
+            { step: 1, title: "Escolha a sua logo e cores", text: "Defina a identidade visual do seu link com a sua marca." },
+            { step: 2, title: "Escolha os produtos em destaque", text: "Selecione as peças que você quer destacar e puxar vendas." },
+            { step: 3, title: "Monte o seu quiz personalizado", text: "Crie perguntas que guiam o cliente até o produto ideal." },
+            { step: 4, title: "Direcione as respostas", text: "Leve o cliente para o WhatsApp ou para uma aba específica do seu site." },
+            { step: 5, title: "Tudo pronto e no ar", text: "Publique seu link e comece a vender mais pelo Instagram." },
+          ].map((item) => (
             <div
-              className="rounded-xl p-5 text-center text-white"
-              style={{ background: "linear-gradient(135deg, var(--product-plum), var(--product-ink))" }}
+              key={item.step}
+              className="rounded-xl bg-white p-5 flex gap-4"
+              style={{ border: "1px solid var(--product-line)" }}
             >
-              <p className="text-[10px] uppercase tracking-wider opacity-75">Moda que combina com você</p>
-              <p className="font-semibold text-lg mt-1 mb-3">Descubra seu look ideal</p>
-              <span
-                className="inline-flex text-xs font-semibold px-4 py-2 rounded-full"
-                style={{ background: "var(--product-coral)" }}
+              <div
+                className="shrink-0 h-9 w-9 rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{ background: "var(--product-coral)", color: "#ffffff" }}
               >
-                Fazer o quiz
-              </span>
+                {item.step}
+              </div>
+              <div>
+                <p className="font-medium mb-1">{item.title}</p>
+                <p className="text-sm opacity-70 leading-relaxed">{item.text}</p>
+              </div>
             </div>
-          </div>
-          <div className="rounded-xl bg-white p-5" style={{ border: "1px solid var(--product-line)" }}>
-            <p className="text-[11px] font-semibold uppercase tracking-wider opacity-60 mb-3">A dashboard que você controla</p>
-            <div className="space-y-1.5">
-              {[
-                { label: "Leads", active: true },
-                { label: "Produtos", active: false },
-                { label: "Quiz", active: false },
-                { label: "Botões extras", active: false },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="text-sm rounded-lg px-3 py-2 flex items-center gap-2"
-                  style={
-                    item.active
-                      ? { background: "var(--product-coral)", color: "#fff", fontWeight: 600 }
-                      : { color: "var(--product-ink)", opacity: 0.7 }
-                  }
-                >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "currentColor", opacity: 0.6 }} />
-                  {item.label}
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
