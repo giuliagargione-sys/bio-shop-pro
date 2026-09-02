@@ -52,6 +52,7 @@ const PLANS = [
       "Loja personalizável no link da bio",
       "Quiz de estilo com captura de leads",
       "Dashboard de leads",
+      "Painel de cliques e peças mais desejadas",
       "Produtos ilimitados",
     ],
     highlighted: false,
@@ -65,10 +66,10 @@ const PLANS = [
     features: [
       "Tudo do plano Essencial",
       "Insights com IA: sugestões de melhoria a partir dos seus cliques",
-      "Painel de cliques e peças mais desejadas",
       "Botões de dúvidas e trocas personalizados",
       "Suporte prioritário",
     ],
+
     highlighted: true,
   },
 ];
