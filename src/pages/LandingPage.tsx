@@ -17,23 +17,23 @@ import { Button } from "@/components/ui/button";
 const FEATURES = [
   {
     icon: <Link2 size={20} />,
-    title: "Um link, uma loja",
-    text: "Cole um único link na bio do Instagram e transforme ele numa loja de verdade: capa, produtos e um jeito de comprar.",
+    title: "Link personalizado",
+    text: "Escolha os produtos, o tipo de quiz e transforme a experiência da sua loja em venda personalizada e certeira.",
   },
   {
     icon: <Sparkles size={20} />,
     title: "Quiz que vira venda",
-    text: "Um quiz de estilo guia a cliente até o look ideal — e captura o contato dela no processo, sem ela perceber que é \"só marketing\".",
+    text: "Direcione o seu cliente para o produto ideal conforme o que ele está buscando — aumentando a conversão do site.",
   },
   {
     icon: <Users size={20} />,
-    title: "Leads organizados",
-    text: "Cada resposta do quiz vira um lead na sua dashboard, com respostas, WhatsApp pronto pra chamar e controle de quem já foi atendida.",
+    title: "Leads",
+    text: "Aumente sua base de clientes com as respostas do quiz. Cada resposta vira um lead com preferências na sua dash, pronto para ser convertido no WhatsApp.",
   },
   {
-    icon: <Palette size={20} />,
-    title: "Sua cara, sem precisar programar",
-    text: "Cores, fonte, produtos, textos, dúvidas e trocas — tudo isso você edita numa dashboard simples, sem mexer em nenhuma linha de código.",
+    icon: <Zap size={20} />,
+    title: "Rápido e fácil",
+    text: "Toda estrutura pronta, sem precisar de programação. Fácil e rápido de personalizar.",
   },
 ];
 
