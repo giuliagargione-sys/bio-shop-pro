@@ -52,7 +52,7 @@ export function HelpLinksSection() {
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          Deixe o link em branco pra esconder o botão na loja.
+          Se deixar o link em branco, o botão continua aparecendo e leva pro seu WhatsApp.
         </p>
       </CardContent>
     </Card>
