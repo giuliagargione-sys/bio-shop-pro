@@ -35,8 +35,7 @@ export type DashboardSectionKey =
   | "insights"
   | "contato"
   | "ajuda"
-  | "rodape"
-  | "exportar";
+  | "rodape";
 
 const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] = [
   { key: "marca", label: "Marca", icon: <Store size={18} /> },
