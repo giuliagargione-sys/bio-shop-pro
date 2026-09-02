@@ -13,20 +13,11 @@ export function ContactSection() {
       <CardHeader>
         <CardTitle>Botão de contato</CardTitle>
         <CardDescription>
-          O botão que a cliente clica pra falar com você no WhatsApp — escreva o texto que quiser e
-          cole o link do seu WhatsApp.
+          Seus contatos: usamos o WhatsApp nos links de ajuda e no resultado do quiz. Para um botão
+          com texto personalizado, use a aba Estrutura e visual.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div>
-          <Label htmlFor="btnLabel">Texto do botão</Label>
-          <Input
-            id="btnLabel"
-            value={contact.buttonLabel ?? ""}
-            onChange={(e) => updateNested("contact", { buttonLabel: e.target.value })}
-            placeholder="Ex: Quero comprar pelo WhatsApp"
-          />
-        </div>
         <div>
           <Label htmlFor="wppLink">Link do WhatsApp</Label>
           <Input

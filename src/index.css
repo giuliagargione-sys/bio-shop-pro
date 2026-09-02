@@ -59,8 +59,7 @@ body {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
 }
 .store-shell {
-  /* espaço pro botao fixo de contato no mobile */
-  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
 }
 @media (min-width: 640px) {
   .store-shell {

@@ -7,7 +7,6 @@ import { ProductCarousel } from "@/components/store/ProductCarousel";
 import { QuizFunnel } from "@/components/store/QuizFunnel";
 import { HelpLinksBar } from "@/components/store/HelpLinksBar";
 import { StoreFooter } from "@/components/store/StoreFooter";
-import { StickyContactBar } from "@/components/store/StickyContactBar";
 import { Link } from "react-router-dom";
 import { CustomButtonBlock } from "@/components/store/CustomButtonBlock";
 import { resolveLayoutBlocks } from "@/lib/layout";
@@ -72,7 +71,6 @@ export default function StorePage() {
           return <CustomButtonBlock key={block.id} block={block} ownerId={ownerId} />;
         })}
       <StoreFooter config={config} />
-      <StickyContactBar config={config} ownerId={ownerId} />
     </div>
   );
 }
