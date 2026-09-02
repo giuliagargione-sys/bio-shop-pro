@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { Check, AlertCircle } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, AlertCircle, Upload, Trash2 } from "lucide-react";
 import { useStoreConfig } from "@/context/ConfigContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { uploadLogo } from "@/lib/logoUpload";
+
 
 function StoreAddressCard() {
   const { slug, changeSlug } = useStoreConfig();
