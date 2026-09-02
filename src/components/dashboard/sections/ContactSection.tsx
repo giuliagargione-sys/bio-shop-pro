@@ -11,10 +11,35 @@ export function ContactSection() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contato</CardTitle>
-        <CardDescription>Pra onde vão as clientes depois do quiz.</CardDescription>
+        <CardTitle>Botão de contato</CardTitle>
+        <CardDescription>
+          O botão que a cliente clica pra falar com você no WhatsApp — escreva o texto que quiser e
+          cole o link do seu WhatsApp.
+        </CardDescription>
       </CardHeader>
       <CardContent>
+        <div>
+          <Label htmlFor="btnLabel">Texto do botão</Label>
+          <Input
+            id="btnLabel"
+            value={contact.buttonLabel ?? ""}
+            onChange={(e) => updateNested("contact", { buttonLabel: e.target.value })}
+            placeholder="Ex: Quero comprar pelo WhatsApp"
+          />
+        </div>
+        <div>
+          <Label htmlFor="wppLink">Link do WhatsApp</Label>
+          <Input
+            id="wppLink"
+            value={contact.whatsappLink ?? ""}
+            onChange={(e) => updateNested("contact", { whatsappLink: e.target.value })}
+            placeholder="https://wa.me/5511999999999"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Cole o link pronto do seu WhatsApp. Se preferir, deixe vazio e preencha só o número
+            abaixo.
+          </p>
+        </div>
         <div>
           <Label htmlFor="wpp">Número do WhatsApp (com DDI e DDD, só números)</Label>
           <Input
