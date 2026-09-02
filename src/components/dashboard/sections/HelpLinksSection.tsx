@@ -11,10 +11,10 @@ export function HelpLinksSection() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dúvidas e trocas</CardTitle>
+        <CardTitle>Botões extras</CardTitle>
         <CardDescription>
-          Dois botões fixos na loja pra tirar dúvida ou resolver troca/devolução. Coloque o link
-          pra onde cada um deve levar — pode ser WhatsApp, Instagram, um formulário, o que for.
+          Botões extras na loja pra tirar dúvida, trocas/devoluções ou qualquer outro destino.
+          Coloque o link pra onde cada um deve levar — pode ser WhatsApp, Instagram, um formulário, o que for.
         </CardDescription>
       </CardHeader>
       <CardContent>

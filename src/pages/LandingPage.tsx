@@ -241,7 +241,7 @@ export default function LandingPage() {
                 { label: "Leads", active: true },
                 { label: "Produtos", active: false },
                 { label: "Quiz", active: false },
-                { label: "Dúvidas e trocas", active: false },
+                { label: "Botões extras", active: false },
               ].map((item) => (
                 <div
                   key={item.label}

@@ -7,7 +7,7 @@ export const FIXED_BLOCK_TYPES = ["produtos", "quiz", "ajuda"] as const;
 export const BLOCK_LABELS: Record<LayoutBlock["type"], string> = {
   produtos: "Carrossel de produtos",
   quiz: "Quiz de estilo",
-  ajuda: "Dúvidas e trocas",
+  ajuda: "Botões extras",
   botao: "Botão personalizado",
 };
 
