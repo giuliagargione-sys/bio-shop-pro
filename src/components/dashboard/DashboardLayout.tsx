@@ -7,7 +7,6 @@ import {
   HelpCircle,
   Phone,
   PanelBottom,
-  Download,
   ExternalLink,
   Store,
   Users,
