@@ -1,10 +1,17 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
+import { trackStoreEvent } from "@/lib/trackEvent";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export function ProductCarousel({ config }: { config: StoreConfig }) {
+export function ProductCarousel({
+  config,
+  ownerId,
+}: {
+  config: StoreConfig;
+  ownerId?: string | null;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   function scrollBy(delta: number) {
@@ -38,6 +45,7 @@ export function ProductCarousel({ config }: { config: StoreConfig }) {
             href={product.link}
             target={product.link?.startsWith("#") ? undefined : "_blank"}
             rel="noreferrer"
+            onClick={() => trackStoreEvent(ownerId, "produto", product.name)}
             className="snap-start shrink-0 w-[68%] max-w-[240px] sm:w-56 rounded-[var(--radius)] border border-border overflow-hidden bg-white active:scale-[0.99] hover:shadow-md transition-all"
           >
             <div className="relative aspect-[3/4] bg-muted flex items-center justify-center">
