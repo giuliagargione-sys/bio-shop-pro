@@ -114,9 +114,16 @@ export function QuizSection() {
                 <div key={question.id}>
                   {qIndex > 0 && <Separator className="my-4" />}
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Pergunta {qIndex + 1}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Pergunta {qIndex + 1}
+                      </span>
+                      {qIndex === 0 && (
+                        <span className="text-[11px] text-muted-foreground/80">
+                          Exemplo: ajuste a pergunta e as respostas ao seu nicho.
+                        </span>
+                      )}
+                    </div>
                     <button
                       onClick={() => removeQuestion(question.id)}
                       style={{ color: "#c0392b" }}
@@ -127,14 +134,16 @@ export function QuizSection() {
                   </div>
                   <Input
                     value={question.question}
+                    placeholder={qIndex === 0 ? "Ex: Para qual ocasião é o seu look?" : "Digite a pergunta"}
                     onChange={(e) => updateQuestion(question.id, { question: e.target.value })}
                     className="mb-2"
                   />
                   <div className="space-y-2 pl-3 border-l-2 border-border">
-                    {question.options.map((opt) => (
+                    {question.options.map((opt, oIndex) => (
                       <div key={opt.id} className="flex items-center gap-2">
                         <Input
                           value={opt.label}
+                          placeholder={qIndex === 0 ? `Ex: opção ${oIndex + 1} da 1ª pergunta` : `Opção ${oIndex + 1}`}
                           onChange={(e) => updateOption(question.id, opt.id, e.target.value)}
                         />
                         <button
@@ -196,22 +205,23 @@ export function QuizSection() {
             <CardHeader>
               <CardTitle>Links de destino do resultado</CardTitle>
               <CardDescription>
-                Conforme a resposta da 1ª pergunta ({quiz.questions[0]?.question || "sem pergunta ainda"}),
-                a cliente vai pra um link diferente — use o link da categoria no seu site.
+                Conforme a resposta da 1ª pergunta, a cliente vai pra um link diferente.
+                Use o link da categoria no seu site. Os textos abaixo são exemplos —
+                adapte a pergunta e as respostas ao seu nicho (moda, beleza, acessórios etc.).
                 São até {MAX_QUIZ_DESTINATIONS} destinos.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {destinations.length === 0 && (
                 <p className="text-sm text-muted-foreground">
-                  Crie a 1ª pergunta com as opções de ocasião / estilo pra configurar os destinos.
+                  Crie a 1ª pergunta com as opções do seu nicho para configurar os destinos.
                 </p>
               )}
               {destinations.map((dest, index) => (
                 <div key={dest.optionId}>
                   {index > 0 && <Separator className="my-4" />}
                   <span className="text-xs font-medium text-muted-foreground">
-                    Se ela responder: {dest.optionLabel}
+                    Ex: se ela responder “{dest.optionLabel}”
                   </span>
                   <div className="mt-2 space-y-2">
                     <div>
