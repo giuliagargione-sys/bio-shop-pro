@@ -232,22 +232,6 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mt-10">
-          {[
-            "Aumente faturamento / conversão",
-            "Aumente sua base de clientes",
-            "Deixe a venda mais certeira e personalizada",
-          ].map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium"
-              style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
-            >
-              <Check size={16} style={{ color: "var(--product-coral)" }} />
-              {item}
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* Preview */}
