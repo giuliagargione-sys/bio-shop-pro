@@ -50,7 +50,6 @@ const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] 
   { key: "contato", label: "Contato", icon: <Phone size={18} /> },
   { key: "ajuda", label: "Dúvidas e trocas", icon: <LifeBuoy size={18} /> },
   { key: "rodape", label: "Rodapé", icon: <PanelBottom size={18} /> },
-  { key: "exportar", label: "Salvar / Exportar", icon: <Download size={18} /> },
 ];
 
 interface DashboardLayoutProps {

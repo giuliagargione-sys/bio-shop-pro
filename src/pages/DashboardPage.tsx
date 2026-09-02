@@ -13,7 +13,6 @@ import { InsightsSection } from "@/components/dashboard/sections/InsightsSection
 import { ContactSection } from "@/components/dashboard/sections/ContactSection";
 import { HelpLinksSection } from "@/components/dashboard/sections/HelpLinksSection";
 import { FooterSection } from "@/components/dashboard/sections/FooterSection";
-import { ExportSection } from "@/components/dashboard/sections/ExportSection";
 
 const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
   marca: <BrandSection />,
@@ -31,7 +30,6 @@ const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
   contato: <ContactSection />,
   ajuda: <HelpLinksSection />,
   rodape: <FooterSection />,
-  exportar: <ExportSection />,
 };
 
 export default function DashboardPage() {
