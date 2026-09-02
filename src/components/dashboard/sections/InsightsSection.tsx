@@ -116,7 +116,28 @@ export function InsightsSection() {
             </p>
           )}
           {!loading && insights && (
-            <div className="whitespace-pre-wrap text-sm leading-relaxed">{insights}</div>
+            <div className="whitespace-pre-wrap text-sm leading-relaxed">
+              {insights.split("\n").map((line, i) => {
+                const trimmed = line.trim();
+                const isHeading =
+                  trimmed.length > 0 &&
+                  trimmed.length <= 70 &&
+                  !/^\d+[\.)]/.test(trimmed) &&
+                  !/[.!?]$/.test(trimmed);
+                if (isHeading) {
+                  return (
+                    <strong key={i} className="block mt-4 mb-1 font-bold text-foreground">
+                      {trimmed}
+                    </strong>
+                  );
+                }
+                return (
+                  <span key={i} className="block">
+                    {line}
+                  </span>
+                );
+              })}
+            </div>
           )}
           {!loading && error && <p className="text-sm text-muted-foreground">{error}</p>}
           <Button onClick={() => void run()} disabled={loading} className="w-full sm:w-auto">
