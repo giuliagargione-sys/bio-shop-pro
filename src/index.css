@@ -6,35 +6,49 @@
   /* Estas variaveis sao controladas pela dashboard de personalizacao
      (ver src/context/ConfigContext.tsx). As cores neutras (fundo, texto,
      bordas) ficam fixas em tailwind.config.ts, fora do controle da aluna. */
-  --brand-primary: #d94f70;
-  --brand-primary-foreground: #ffffff;
-  --brand-secondary: #2b2b2b;
-  --brand-secondary-foreground: #ffffff;
-  --brand-accent: #f4c9d2;
-  --brand-accent-foreground: #2b2b2b;
-  --brand-font: "Poppins", system-ui, sans-serif;
-  --radius: 0.75rem;
+  --brand-primary: #6b1b2b;
+  --brand-primary-foreground: #fffdf9;
+  --brand-secondary: #0b0b0b;
+  --brand-secondary-foreground: #fffdf9;
+  --brand-accent: #e3ded6;
+  --brand-accent-foreground: #0b0b0b;
+  --brand-font: "Epilogue", system-ui, sans-serif;
+  --radius: 0.5rem;
 
-  /* Identidade visual do PRODUTO "Link Na Bio Que Vende" — usada na tela
-     de login e no cabeçalho da dashboard. Fixa, não editável pela aluna
-     (é diferente das cores --brand-* acima, que são da loja dela). */
-  --product-coral: #ff4d6d;
-  --product-coral-dark: #e23a57;
-  --product-ink: #221226;
-  --product-plum: #3d1f4d;
-  --product-gold: #ffc857;
-  --product-cream: #fff7f2;
-  --product-cream-deep: #ffece2;
-  --product-font: "Fredoka", "Poppins", system-ui, sans-serif;
+  /* Identidade visual do PRODUTO "Link Na Bio Que Vende" — paleta sóbria
+     Bordô Minimal (preto, creme e bordô usado com parcimônia). Fixa, não
+     editável pela aluna (diferente das --brand-* acima, da loja dela). */
+  --product-coral: #6b1b2b;
+  --product-coral-dark: #57121f;
+  --product-ink: #0b0b0b;
+  --product-plum: #1c1416;
+  --product-gold: #e3ded6;
+  --product-cream: #fffdf9;
+  --product-cream-deep: #f3efe8;
+  --product-line: #e3ded6;
+  --product-font: "Urbanist", system-ui, sans-serif;
+  --product-body-font: "Epilogue", system-ui, sans-serif;
 }
 
 body {
   font-family: var(--brand-font);
 }
 
+/* Plataforma: corpo em Epilogue, títulos em Urbanist. */
 .font-product {
-  font-family: var(--product-font);
+  font-family: var(--product-body-font);
+  letter-spacing: -0.005em;
 }
+
+.font-product h1,
+.font-product h2,
+.font-product h3,
+.font-product h4,
+.font-product .font-display {
+  font-family: var(--product-font);
+  letter-spacing: -0.02em;
+}
+
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
