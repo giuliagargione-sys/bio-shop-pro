@@ -278,22 +278,30 @@ export default function LandingPage() {
             { step: 2, title: "Escolha os produtos em destaque", text: "Selecione as peças que você quer destacar e puxar vendas." },
             { step: 3, title: "Monte o seu quiz personalizado", text: "Crie perguntas que guiam o cliente até o produto ideal." },
             { step: 4, title: "Direcione as respostas", text: "Leve o cliente para o WhatsApp ou para uma aba específica do seu site." },
-            { step: 5, title: "Tudo pronto e no ar", text: "Publique seu link e comece a vender mais pelo Instagram." },
+            { step: 5, title: "Tudo pronto e no ar!", text: "Publique seu link e comece a vender mais pelo Instagram.", highlight: true },
           ].map((item) => (
             <div
               key={item.step}
-              className="rounded-xl bg-white p-5 flex gap-4"
-              style={{ border: "1px solid var(--product-line)" }}
+              className={`rounded-xl p-5 flex gap-4 ${item.highlight ? "lg:col-start-2" : ""}`}
+              style={
+                item.highlight
+                  ? { background: "var(--product-coral)", color: "#ffffff", boxShadow: "0 12px 28px -10px rgba(107,27,43,0.35)" }
+                  : { background: "#ffffff", color: "var(--product-ink)", border: "1px solid var(--product-line)" }
+              }
             >
               <div
                 className="shrink-0 h-9 w-9 rounded-full flex items-center justify-center text-sm font-semibold"
-                style={{ background: "var(--product-coral)", color: "#ffffff" }}
+                style={
+                  item.highlight
+                    ? { background: "#ffffff", color: "var(--product-coral)" }
+                    : { background: "var(--product-coral)", color: "#ffffff" }
+                }
               >
                 {item.step}
               </div>
               <div>
                 <p className="font-medium mb-1">{item.title}</p>
-                <p className="text-sm opacity-70 leading-relaxed">{item.text}</p>
+                <p className={`text-sm leading-relaxed ${item.highlight ? "opacity-90" : "opacity-70"}`}>{item.text}</p>
               </div>
             </div>
           ))}
