@@ -166,8 +166,12 @@ export default function LandingPage() {
           O link da bio que também vende por você
         </h1>
         <p className="max-w-lg text-base sm:text-lg opacity-70">
-          Uma loja, um quiz que gera leads e uma dashboard fácil de mexer — tudo no único link que
-          cabe na sua bio do Instagram.
+          Sua cliente clica no link, faz um quiz rápido e já sai sabendo o que comprar — o contato
+          dela cai pronto na sua dashboard, pra você{" "}
+          <span className="font-semibold" style={{ color: "var(--product-coral-dark)" }}>
+            fechar no WhatsApp
+          </span>
+          .
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a href="#planos">
