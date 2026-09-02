@@ -12,6 +12,28 @@ export function buildWhatsAppLink(number: string, message: string) {
   return `https://wa.me/${digits}?text=${text}`;
 }
 
+// A aluna pode colar um link pronto do WhatsApp OU so o numero. Essa funcao
+// resolve os dois casos e, quando da, ja anexa a mensagem automatica.
+export function resolveWhatsAppHref(
+  contact: { whatsappNumber?: string; whatsappLink?: string },
+  message?: string,
+) {
+  const link = (contact.whatsappLink || "").trim();
+  if (link) {
+    if (!message) return link;
+    try {
+      const url = new URL(link);
+      if (/wa\.me|api\.whatsapp\.com|web\.whatsapp\.com/.test(url.hostname) && !url.searchParams.get("text")) {
+        url.searchParams.set("text", message);
+      }
+      return url.toString();
+    } catch {
+      return link;
+    }
+  }
+  return buildWhatsAppLink(contact.whatsappNumber || "", message || "");
+}
+
 // Decide se o texto sobre uma cor de fundo deve ser branco ou preto,
 // pra aluna nao precisar escolher isso manualmente.
 export function getContrastText(hex: string): string {

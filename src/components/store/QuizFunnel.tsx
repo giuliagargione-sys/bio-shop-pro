@@ -3,7 +3,7 @@ import { ArrowLeft, MessageCircle, Loader2 } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { buildWhatsAppLink } from "@/lib/utils";
+import { resolveWhatsAppHref } from "@/lib/utils";
 import { saveLead } from "@/lib/leads";
 
 export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: string | null }) {
@@ -62,7 +62,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
     .map((q) => `${q.question} ${answers[q.id] ?? ""}`)
     .join(" | ");
   const whatsappMessage = `${contact.whatsappDefaultMessage}\n\nNome: ${leadName}\nRespostas: ${answersSummary}`;
-  const whatsappHref = buildWhatsAppLink(contact.whatsappNumber, whatsappMessage);
+  const whatsappHref = resolveWhatsAppHref(contact, whatsappMessage);
 
   return (
     <section

@@ -1,7 +1,17 @@
-import { Instagram, Music2 } from "lucide-react";
+import { Instagram, Music2, MessageCircle } from "lucide-react";
+import { resolveWhatsAppHref } from "@/lib/utils";
 import type { StoreConfig } from "@/types/config";
 
 export function StoreNav({ config }: { config: StoreConfig }) {
+  const contactLabel = (config.contact.buttonLabel || "").trim();
+  const contactHref = resolveWhatsAppHref(
+    config.contact,
+    config.contact.whatsappDefaultMessage,
+  );
+  const showContact = Boolean(
+    contactLabel && (config.contact.whatsappLink || config.contact.whatsappNumber),
+  );
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
       <div className="container flex items-center justify-between py-3">
@@ -28,6 +38,21 @@ export function StoreNav({ config }: { config: StoreConfig }) {
           {config.contact.tiktokUrl && (
             <a href={config.contact.tiktokUrl} target="_blank" rel="noreferrer" aria-label="TikTok">
               <Music2 size={20} />
+            </a>
+          )}
+          {showContact && (
+            <a
+              href={contactHref}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 rounded-[var(--radius)] px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+              style={{
+                background: "var(--brand-primary)",
+                color: "var(--brand-primary-foreground)",
+              }}
+            >
+              <MessageCircle size={16} />
+              {contactLabel}
             </a>
           )}
         </div>

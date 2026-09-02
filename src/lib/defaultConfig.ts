@@ -97,6 +97,8 @@ export const defaultConfig: StoreConfig = {
   contact: {
     whatsappNumber: "5511999999999",
     whatsappDefaultMessage: "Oi! Acabei de responder o quiz de estilo e quero ver meu look 💕",
+    buttonLabel: "Falar no WhatsApp",
+    whatsappLink: "",
     instagramUrl: "",
     tiktokUrl: "",
   },
