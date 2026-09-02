@@ -244,7 +244,7 @@ export default function LandingPage() {
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
             Como funciona
           </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold">Tudo o que sua loja no link da bio precisa</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold">Venda mais do jeito certo!</h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
           {FEATURES.map((f) => (
