@@ -23,7 +23,9 @@ export function ProductCarousel({
   return (
     <section id="produtos" className="py-8 sm:py-12">
       <div className="container max-w-md mx-auto flex items-center justify-between mb-4 sm:mb-5 px-4 sm:px-0">
-        <h2 className="font-brand text-xl sm:text-2xl font-semibold">Peças em destaque</h2>
+        <h2 className="font-brand text-xl sm:text-2xl font-semibold">
+          {(config.productsTitle || "").trim() || "Peças em destaque"}
+        </h2>
         <div className="hidden sm:flex gap-2">
           <Button variant="outline" size="icon" onClick={() => scrollBy(-280)} aria-label="Anterior">
             <ChevronLeft size={18} />

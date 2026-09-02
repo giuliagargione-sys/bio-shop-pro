@@ -106,6 +106,8 @@ export interface StoreConfig {
   theme: ThemeConfig;
   layout: LayoutConfig;
   hero: HeroConfig;
+  /** titulo da secao de produtos na loja (editavel pela aluna) */
+  productsTitle?: string;
   products: Product[];
   quiz: QuizConfig;
   contact: ContactConfig;
