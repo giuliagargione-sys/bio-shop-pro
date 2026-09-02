@@ -3,7 +3,7 @@ import { resolveWhatsAppHref } from "@/lib/utils";
 import type { StoreConfig } from "@/types/config";
 
 export function StoreNav({ config }: { config: StoreConfig }) {
-  const contactLabel = (config.contact.buttonLabel || "").trim();
+  const contactLabel = (config.contact.buttonLabel || "Falar no WhatsApp").trim();
   const contactHref = resolveWhatsAppHref(
     config.contact,
     config.contact.whatsappDefaultMessage,
