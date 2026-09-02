@@ -47,6 +47,12 @@ export interface QuizQuestion {
   options: QuizOption[];
 }
 
+export interface QuizDestination {
+  optionId: string; // id da opção da 1ª pergunta (ocasião / estilo)
+  label: string; // texto do botão que a cliente vê no resultado
+  url: string; // link de destino (categoria do site, não WhatsApp)
+}
+
 export interface QuizConfig {
   enabled: boolean;
   title: string;
@@ -55,6 +61,7 @@ export interface QuizConfig {
   resultTitle: string;
   resultDescription: string;
   resultCtaLabel: string;
+  resultDestinations?: QuizDestination[]; // link de destino por resposta da 1ª pergunta
 }
 
 export interface ContactConfig {
