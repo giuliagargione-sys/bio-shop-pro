@@ -182,7 +182,7 @@ export default function LandingPage() {
           </a>
           <Link to="/login">
             <Button size="lg" variant="outline">
-              Já sou aluna — entrar
+              Entrar
             </Button>
           </Link>
         </div>
