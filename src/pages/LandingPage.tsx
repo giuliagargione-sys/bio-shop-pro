@@ -161,7 +161,7 @@ export default function LandingPage() {
           className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
           style={{ background: "var(--product-cream-deep)", color: "var(--product-coral-dark)" }}
         >
-          Pra quem vende pelo Instagram
+          Para quem quer vender mais pelo Instagram
         </span>
         <h1 className="font-semibold leading-[1.05] max-w-2xl" style={{ fontSize: "clamp(32px, 6vw, 54px)" }}>
           O link da bio que também vende por você
