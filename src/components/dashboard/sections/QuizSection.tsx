@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { uid } from "@/lib/utils";
-import type { QuizQuestion } from "@/types/config";
+import type { QuizQuestion, QuizDestination } from "@/types/config";
+import { resolveQuizDestinations, MAX_QUIZ_DESTINATIONS } from "@/lib/quiz";
 
 export function QuizSection() {
   const { config, updateNested } = useStoreConfig();
@@ -58,6 +59,14 @@ export function QuizSection() {
     updateQuestion(questionId, {
       options: question.options.filter((o) => o.id !== optionId),
     });
+  }
+
+  const destinations = resolveQuizDestinations(quiz);
+
+  function updateDestination(optionId: string, patch: Partial<QuizDestination>) {
+    const current = destinations.map(({ optionId: id, label, url }) => ({ optionId: id, label, url }));
+    const next = current.map((d) => (d.optionId === optionId ? { ...d, ...patch } : d));
+    updateNested("quiz", { resultDestinations: next });
   }
 
   return (
@@ -174,12 +183,56 @@ export function QuizSection() {
                 />
               </div>
               <div>
-                <Label>Texto do botão de WhatsApp</Label>
+                <Label>Texto do botão (usado quando não houver link da categoria)</Label>
                 <Input
                   value={quiz.resultCtaLabel}
                   onChange={(e) => updateNested("quiz", { resultCtaLabel: e.target.value })}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Links de destino do resultado</CardTitle>
+              <CardDescription>
+                Conforme a resposta da 1ª pergunta ({quiz.questions[0]?.question || "sem pergunta ainda"}),
+                a cliente vai pra um link diferente — use o link da categoria no seu site.
+                São até {MAX_QUIZ_DESTINATIONS} destinos.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {destinations.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  Crie a 1ª pergunta com as opções de ocasião / estilo pra configurar os destinos.
+                </p>
+              )}
+              {destinations.map((dest, index) => (
+                <div key={dest.optionId}>
+                  {index > 0 && <Separator className="my-4" />}
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Se ela responder: {dest.optionLabel}
+                  </span>
+                  <div className="mt-2 space-y-2">
+                    <div>
+                      <Label>Texto do botão</Label>
+                      <Input
+                        value={dest.label}
+                        placeholder="Ex: Ver looks de balada"
+                        onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Link da categoria</Label>
+                      <Input
+                        value={dest.url}
+                        placeholder="https://sualoja.com.br/categoria/balada"
+                        onChange={(e) => updateDestination(dest.optionId, { url: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </>

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { ArrowLeft, MessageCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, Loader2, ArrowRight } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resolveWhatsAppHref } from "@/lib/utils";
 import { saveLead } from "@/lib/leads";
+import { findDestinationForAnswer } from "@/lib/quiz";
 
 export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: string | null }) {
   const { quiz, contact } = config;
@@ -14,6 +15,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
   // totalSteps + 1    = resultado
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answerIds, setAnswerIds] = useState<Record<string, string>>({});
   const [leadName, setLeadName] = useState("");
   const [leadWhatsapp, setLeadWhatsapp] = useState("");
   const [saving, setSaving] = useState(false);
@@ -25,8 +27,9 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
   const isResult = step > totalSteps;
   const currentQuestion = isQuestionStep ? quiz.questions[step] : null;
 
-  function selectOption(questionId: string, optionLabel: string) {
+  function selectOption(questionId: string, optionLabel: string, optionId: string) {
     setAnswers((prev) => ({ ...prev, [questionId]: optionLabel }));
+    setAnswerIds((prev) => ({ ...prev, [questionId]: optionId }));
     setStep((s) => s + 1);
   }
 
@@ -37,6 +40,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
   function restart() {
     setStep(0);
     setAnswers({});
+    setAnswerIds({});
     setLeadName("");
     setLeadWhatsapp("");
   }
@@ -63,6 +67,9 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
     .join(" | ");
   const whatsappMessage = `${contact.whatsappDefaultMessage}\n\nNome: ${leadName}\nRespostas: ${answersSummary}`;
   const whatsappHref = resolveWhatsAppHref(contact, whatsappMessage);
+  // A 1ª pergunta (ocasião / estilo) define o link de destino do resultado.
+  const firstQuestionId = quiz.questions[0]?.id;
+  const destination = findDestinationForAnswer(quiz, firstQuestionId ? answerIds[firstQuestionId] : undefined);
 
   return (
     <section
@@ -101,7 +108,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
                 {currentQuestion.options.map((opt) => (
                   <button
                     key={opt.id}
-                    onClick={() => selectOption(currentQuestion.id, opt.label)}
+                    onClick={() => selectOption(currentQuestion.id, opt.label, opt.id)}
                     className="text-left rounded-md border border-border px-4 py-3 text-sm hover:border-primary hover:bg-muted transition-colors"
                   >
                     {opt.label}
@@ -158,12 +165,21 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
             <div className="text-center flex flex-col items-center gap-3">
               <h3 className="font-brand text-xl font-bold">{quiz.resultTitle}</h3>
               <p className="text-sm text-muted-foreground">{quiz.resultDescription}</p>
-              <a href={whatsappHref} target="_blank" rel="noreferrer" className="w-full">
-                <Button size="lg" className="w-full mt-2">
-                  <MessageCircle size={18} />
-                  {quiz.resultCtaLabel}
-                </Button>
-              </a>
+              {destination ? (
+                <a href={destination.url} target="_blank" rel="noreferrer" className="w-full">
+                  <Button size="lg" className="w-full mt-2">
+                    {destination.label.trim() || quiz.resultCtaLabel}
+                    <ArrowRight size={18} />
+                  </Button>
+                </a>
+              ) : (
+                <a href={whatsappHref} target="_blank" rel="noreferrer" className="w-full">
+                  <Button size="lg" className="w-full mt-2">
+                    <MessageCircle size={18} />
+                    {quiz.resultCtaLabel}
+                  </Button>
+                </a>
+              )}
               <button onClick={restart} className="text-xs text-muted-foreground underline mt-1">
                 Refazer quiz
               </button>
