@@ -159,7 +159,7 @@ export default function LandingPage() {
       <section className="container py-16 sm:py-24 text-center flex flex-col items-center gap-6">
         <span
           className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
-          style={{ background: "var(--product-cream-deep)", color: "var(--product-coral-dark)" }}
+          style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
         >
           Para quem quer vender mais pelo Instagram
         </span>
