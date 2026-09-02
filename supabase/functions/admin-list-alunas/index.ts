@@ -60,7 +60,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: stores } = await adminClient
       .from("store_config")
-      .select("user_id, slug, data, updated_at");
+      .select("user_id, slug, data, updated_at, active");
 
     const { data: subs } = await adminClient.from("subscribers").select("*");
 
@@ -82,6 +82,7 @@ Deno.serve(async (req: Request) => {
           slug: store?.slug ?? null,
           storeName: storeData?.brand?.storeName ?? null,
           storeUpdatedAt: store?.updated_at ?? null,
+          active: store ? (store as { active?: boolean }).active !== false : true,
           paymentStatus: sub?.status ?? "desconhecido",
           plan: sub?.plan ?? null,
           lastPaymentEventAt: sub?.hubla_event_at ?? null,

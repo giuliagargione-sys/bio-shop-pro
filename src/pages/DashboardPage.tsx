@@ -1,4 +1,6 @@
 import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { useStoreConfig } from "@/context/ConfigContext";
 import { DashboardLayout, type DashboardSectionKey } from "@/components/dashboard/DashboardLayout";
 import { BrandSection } from "@/components/dashboard/sections/BrandSection";
 import { ThemeSection } from "@/components/dashboard/sections/ThemeSection";
@@ -34,9 +36,21 @@ const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
 
 export default function DashboardPage() {
   const [active, setActive] = useState<DashboardSectionKey>("leads");
+  const { editingAsAdmin } = useStoreConfig();
 
   return (
     <DashboardLayout active={active} onChange={setActive}>
+      {editingAsAdmin && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-muted p-3 text-sm">
+          <span>
+            Você está editando a loja de uma aluna pelo acesso central. Tudo que mudar aqui salva na
+            loja dela.
+          </span>
+          <Link to="/admin" className="underline">
+            Voltar pro acesso central
+          </Link>
+        </div>
+      )}
       {SECTION_MAP[active]}
     </DashboardLayout>
   );

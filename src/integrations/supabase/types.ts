@@ -64,6 +64,7 @@ export type Database = {
       }
       store_config: {
         Row: {
+          active: boolean
           created_at: string
           data: Json
           id: string
@@ -72,6 +73,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          active?: boolean
           created_at?: string
           data?: Json
           id?: string
@@ -80,6 +82,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          active?: boolean
           created_at?: string
           data?: Json
           id?: string

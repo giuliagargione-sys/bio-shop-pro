@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+export { setStoreActive } from "./remoteConfig";
 
 // Tudo aqui passa pelas Edge Functions admin-list-alunas / admin-create-aluna
 // (nunca consulta as tabelas direto) — são elas que conferem se quem está
@@ -11,6 +12,7 @@ export interface AlunaSummary {
   slug: string | null;
   storeName: string | null;
   storeUpdatedAt: string | null;
+  active: boolean;
   paymentStatus: "ativo" | "inadimplente" | "cancelado" | "desconhecido";
   plan: string | null;
   lastPaymentEventAt: string | null;

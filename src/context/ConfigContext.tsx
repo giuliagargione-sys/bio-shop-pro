@@ -9,7 +9,14 @@ import {
 } from "react";
 import type { StoreConfig } from "@/types/config";
 import { defaultConfig } from "@/lib/defaultConfig";
-import { fetchMyStore, createMyStore, saveMyConfig, updateMySlug } from "@/lib/remoteConfig";
+import { useSearchParams } from "react-router-dom";
+import {
+  fetchMyStore,
+  createMyStore,
+  saveMyConfig,
+  updateMySlug,
+  fetchStoreByUserId,
+} from "@/lib/remoteConfig";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
 
 export type SyncStatus = "loading" | "synced" | "saving" | "error";
@@ -17,6 +24,8 @@ export type SyncStatus = "loading" | "synced" | "saving" | "error";
 interface ConfigContextValue {
   config: StoreConfig;
   slug: string | null;
+  /** true quando o acesso central está editando a loja de outra pessoa */
+  editingAsAdmin: boolean;
   syncStatus: SyncStatus;
   updateConfig: (patch: Partial<StoreConfig>) => void;
   updateNested: <K extends keyof StoreConfig>(key: K, patch: Partial<StoreConfig[K]>) => void;
@@ -46,6 +55,10 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const [config, setConfigState] = useState<StoreConfig>(defaultConfig);
   const [slug, setSlug] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("loading");
+  // O acesso central pode abrir a loja de uma aluna com /personalizar?loja=<id>
+  // (as regras do banco só deixam salvar se quem está logada for admin).
+  const [searchParams] = useSearchParams();
+  const targetUserId = searchParams.get("loja");
 
   const userIdRef = useRef<string | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -60,8 +73,8 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     (async () => {
-      let store = await fetchMyStore();
-      if (!store) store = await createMyStore();
+      let store = targetUserId ? await fetchStoreByUserId(targetUserId) : await fetchMyStore();
+      if (!store && !targetUserId) store = await createMyStore();
       if (cancelled) return;
 
       if (store) {
@@ -79,7 +92,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [targetUserId]);
 
   useEffect(() => {
     applyThemeToDocument(config.theme);
@@ -110,6 +123,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       config,
       slug,
       syncStatus,
+      editingAsAdmin: Boolean(targetUserId),
       updateConfig: (patch) => setConfigState((prev) => ({ ...prev, ...patch })),
       updateNested: (key, patch) =>
         setConfigState((prev) => ({
@@ -124,7 +138,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         return result;
       },
     }),
-    [config, slug, syncStatus]
+    [config, slug, syncStatus, targetUserId]
   );
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>;
