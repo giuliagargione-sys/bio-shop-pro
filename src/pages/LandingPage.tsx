@@ -7,6 +7,7 @@ import {
   Palette,
   Check,
   MessageCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
