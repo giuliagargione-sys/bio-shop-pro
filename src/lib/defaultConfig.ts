@@ -36,6 +36,7 @@ export const defaultConfig: StoreConfig = {
     secondaryCtaLabel: "Ver mais vendidos",
     secondaryCtaHref: "#produtos",
   },
+  productsTitle: "Peças em destaque",
   products: [
     {
       id: uid("prod"),

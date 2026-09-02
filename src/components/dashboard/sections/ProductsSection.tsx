@@ -118,6 +118,19 @@ export function ProductsSection() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4">
+            <Label htmlFor="productsTitle">Título da seção na loja</Label>
+            <Input
+              id="productsTitle"
+              value={config.productsTitle ?? ""}
+              onChange={(e) => updateConfig({ productsTitle: e.target.value })}
+              placeholder="Ex: Peças em destaque"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Dê o nome que quiser: "Novidades da semana", "Mais amados", "Meus favoritos"...
+            </p>
+          </div>
+
           {config.products.length === 0 && (
             <p className="text-sm text-muted-foreground">
               Nenhuma peça ainda — adicione a primeira abaixo.
