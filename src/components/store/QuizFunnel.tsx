@@ -67,12 +67,12 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
   return (
     <section
       id="quiz"
-      className="py-14"
+      className="py-10 sm:py-14"
       style={{ background: "var(--brand-accent)", color: "var(--brand-accent-foreground)" }}
     >
-      <div className="container max-w-md">
-        <div className="text-center mb-6">
-          <h2 className="font-brand text-2xl font-bold">{quiz.title}</h2>
+      <div className="container max-w-md mx-auto px-4 sm:px-0">
+        <div className="text-center mb-5">
+          <h2 className="font-brand text-[22px] sm:text-2xl font-bold">{quiz.title}</h2>
           <p className="opacity-80 text-sm mt-1">{quiz.subtitle}</p>
         </div>
 
