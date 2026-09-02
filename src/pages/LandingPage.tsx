@@ -174,6 +174,22 @@ export default function LandingPage() {
           </span>
           !
         </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 max-w-xl">
+          {[
+            "Aumente faturamento / conversão",
+            "Aumente sua base de clientes",
+            "Deixe a venda mais certeira e personalizada",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium"
+              style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
+            >
+              <Check size={14} style={{ color: "var(--product-coral)" }} />
+              {item}
+            </div>
+          ))}
+        </div>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a href="#planos">
             <Button size="lg" style={{ background: "var(--product-coral)", color: "#fff" }}>
@@ -213,22 +229,6 @@ export default function LandingPage() {
                 <p className="font-medium mb-1">{f.title}</p>
                 <p className="text-sm opacity-70 leading-relaxed">{f.text}</p>
               </div>
-            </div>
-          ))}
-        </div>
-        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mt-10">
-          {[
-            "Aumente faturamento / conversão",
-            "Aumente sua base de clientes",
-            "Deixe a venda mais certeira e personalizada",
-          ].map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium"
-              style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
-            >
-              <Check size={16} style={{ color: "var(--product-coral)" }} />
-              {item}
             </div>
           ))}
         </div>
