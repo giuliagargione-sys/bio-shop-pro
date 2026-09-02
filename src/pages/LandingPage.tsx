@@ -167,12 +167,12 @@ export default function LandingPage() {
           O link da bio que vende por você
         </h1>
         <p className="max-w-lg text-base sm:text-lg opacity-70">
-          Sua cliente clica no link, faz um quiz rápido e já sai sabendo o que comprar — o contato
-          dela cai pronto na sua dashboard, pra você{" "}
+          O link da sua bio leva a cliente direto pro produto certo — pra ela comprar ali, na hora.
+          E se não comprar, a venda não é perdida: o contato cai pronto pra você{" "}
           <span className="font-semibold" style={{ color: "var(--product-coral-dark)" }}>
-            fechar no WhatsApp
+            recuperar no WhatsApp
           </span>
-          .
+          !
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a href="#planos">
