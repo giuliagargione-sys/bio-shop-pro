@@ -9,6 +9,13 @@ const TEN_YEARS_IN_SECONDS = 60 * 60 * 24 * 365 * 10;
 const MAX_BYTES = 5 * 1024 * 1024;
 
 export async function uploadLogo(file: File): Promise<{ url: string | null; error: string | null }> {
+  return uploadStoreImage(file, "logo");
+}
+
+export async function uploadStoreImage(
+  file: File,
+  prefix = "img",
+): Promise<{ url: string | null; error: string | null }> {
   if (!supabase) return { url: null, error: "Backend não conectado." };
   if (!file.type.startsWith("image/")) {
     return { url: null, error: "Escolha um arquivo de imagem (JPG, PNG ou WEBP)." };
