@@ -14,30 +14,30 @@ export function StoreNav({ config }: { config: StoreConfig }) {
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
-      <div className="container flex items-center justify-between py-3">
+      <div className="container max-w-md mx-auto flex items-center justify-between py-2.5 sm:py-3 px-4 sm:px-0">
         <div className="flex items-center gap-2">
           {config.brand.logoUrl ? (
             <img
               src={config.brand.logoUrl}
               alt={config.brand.storeName}
-              className="h-9 w-9 rounded-full object-cover"
+              className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
             />
           ) : (
-            <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-brand font-semibold">
+            <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-brand font-semibold text-sm sm:text-base">
               {config.brand.storeName.charAt(0).toUpperCase() || "L"}
             </div>
           )}
-          <span className="font-brand font-semibold text-lg">{config.brand.storeName}</span>
+          <span className="font-brand font-semibold text-base sm:text-lg">{config.brand.storeName}</span>
         </div>
-        <div className="flex items-center gap-3 text-foreground/70">
+        <div className="flex items-center gap-2.5 sm:gap-3 text-foreground/70">
           {config.contact.instagramUrl && (
             <a href={config.contact.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
-              <Instagram size={20} />
+              <Instagram size={18} className="sm:w-5 sm:h-5" />
             </a>
           )}
           {config.contact.tiktokUrl && (
             <a href={config.contact.tiktokUrl} target="_blank" rel="noreferrer" aria-label="TikTok">
-              <Music2 size={20} />
+              <Music2 size={18} className="sm:w-5 sm:h-5" />
             </a>
           )}
           {showContact && (
