@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { DashboardLayout, type DashboardSectionKey } from "@/components/dashboard/DashboardLayout";
 import { BrandSection } from "@/components/dashboard/sections/BrandSection";
 import { ThemeSection } from "@/components/dashboard/sections/ThemeSection";
+import { StructureSection } from "@/components/dashboard/sections/StructureSection";
 import { HeroSection } from "@/components/dashboard/sections/HeroSection";
 import { ProductsSection } from "@/components/dashboard/sections/ProductsSection";
 import { QuizSection } from "@/components/dashboard/sections/QuizSection";
@@ -13,7 +14,12 @@ import { ExportSection } from "@/components/dashboard/sections/ExportSection";
 
 const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
   marca: <BrandSection />,
-  tema: <ThemeSection />,
+  tema: (
+    <div className="space-y-6">
+      <StructureSection />
+      <ThemeSection />
+    </div>
+  ),
   hero: <HeroSection />,
   produtos: <ProductsSection />,
   quiz: <QuizSection />,
