@@ -176,19 +176,47 @@ export default function LandingPage() {
           </span>
           !
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-3 max-w-xl">
+        <div className="grid sm:grid-cols-3 gap-4 w-full max-w-3xl">
           {[
-            "Aumente faturamento / conversão",
-            "Aumente sua base de clientes",
-            "Deixe a venda mais certeira e personalizada",
+            {
+              icon: <TrendingUp size={22} />,
+              title: "Aumente faturamento",
+              text: "Converta mais seguidores em clientes com um link que vende de verdade.",
+            },
+            {
+              icon: <Users size={22} />,
+              title: "Aumente sua base",
+              text: "Capture leads qualificados pelo quiz e organize tudo na dashboard.",
+            },
+            {
+              icon: <Target size={22} />,
+              title: "Venda mais certeira",
+              text: "Direcione cada cliente ao produto ideal e recupere a venda no WhatsApp.",
+            },
           ].map((item) => (
             <div
-              key={item}
-              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium"
-              style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
+              key={item.title}
+              className="rounded-xl p-5 text-left flex flex-col gap-3"
+              style={{
+                background: "#ffffff",
+                border: "1px solid var(--product-line)",
+                boxShadow: "0 8px 24px -12px rgba(11,11,11,0.08)",
+              }}
             >
-              <Check size={14} style={{ color: "var(--product-coral)" }} />
-              {item}
+              <div
+                className="h-10 w-10 rounded-lg flex items-center justify-center"
+                style={{ background: "var(--product-coral)", color: "#ffffff" }}
+              >
+                {item.icon}
+              </div>
+              <div>
+                <p className="font-semibold text-sm sm:text-base" style={{ color: "var(--product-ink)" }}>
+                  {item.title}
+                </p>
+                <p className="text-xs sm:text-sm opacity-70 leading-relaxed mt-1">
+                  {item.text}
+                </p>
+              </div>
             </div>
           ))}
         </div>
