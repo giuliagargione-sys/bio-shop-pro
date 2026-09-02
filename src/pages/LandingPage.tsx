@@ -174,6 +174,22 @@ export default function LandingPage() {
           </span>
           !
         </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 max-w-xl">
+          {[
+            "Aumente faturamento / conversão",
+            "Aumente sua base de clientes",
+            "Deixe a venda mais certeira e personalizada",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium"
+              style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
+            >
+              <Check size={14} style={{ color: "var(--product-coral)" }} />
+              {item}
+            </div>
+          ))}
+        </div>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a href="#planos">
             <Button size="lg" style={{ background: "var(--product-coral)", color: "#fff" }}>
