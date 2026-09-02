@@ -11,7 +11,7 @@ export function ContactSection() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Botão de contato</CardTitle>
+        <CardTitle>Contatos e redes</CardTitle>
         <CardDescription>
           Seus contatos: usamos o WhatsApp nos links de ajuda e no resultado do quiz. Para um botão
           com texto personalizado, use a aba Estrutura e visual.
