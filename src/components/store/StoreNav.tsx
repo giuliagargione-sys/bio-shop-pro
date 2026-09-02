@@ -1,4 +1,5 @@
-import { Instagram, Music2 } from "lucide-react";
+import { Instagram, Music2, MessageCircle } from "lucide-react";
+import { resolveWhatsAppHref } from "@/lib/utils";
 import type { StoreConfig } from "@/types/config";
 
 export function StoreNav({ config }: { config: StoreConfig }) {
