@@ -43,11 +43,17 @@ Deno.serve(async (req: Request) => {
     const rows = events ?? [];
     const byKind: Record<string, number> = {};
     const byProduct: Record<string, number> = {};
+    const byButton: Record<string, number> = {};
     for (const e of rows) {
       byKind[e.kind] = (byKind[e.kind] ?? 0) + 1;
       if (e.kind === "produto" && e.label) byProduct[e.label] = (byProduct[e.label] ?? 0) + 1;
+      if ((e.kind === "botao" || e.kind === "whatsapp") && e.label)
+        byButton[e.label] = (byButton[e.label] ?? 0) + 1;
     }
     const topProducts = Object.entries(byProduct)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+    const topButtons = Object.entries(byButton)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8);
 
@@ -67,6 +73,7 @@ Deno.serve(async (req: Request) => {
       taxaCliqueProduto: visitas ? Math.round((cliquesProduto / visitas) * 100) : 0,
       taxaWhatsapp: visitas ? Math.round((cliquesWhats / visitas) * 100) : 0,
       topProducts,
+      topButtons,
     };
 
     if (!LOVABLE_API_KEY) {
@@ -86,12 +93,29 @@ Deno.serve(async (req: Request) => {
 NÚMEROS: ${JSON.stringify(stats)}
 CONFIGURAÇÃO: ${resumoLoja}
 
-Escreva um diagnóstico curto em português do Brasil, tom simpático e direto, para a lojista.
-Formato:
-1) "O que os números dizem" — 2 a 3 frases interpretando visitas, cliques e leads.
-2) "3 ações pra vender mais essa semana" — lista numerada, cada item com uma ação concreta e específica (ex: mudar ordem das seções, trocar texto do botão, destacar a peça X que teve mais cliques, mandar mensagem pros leads).
-3) "Peça pra colocar em destaque" — uma recomendação baseada nos cliques.
-Se os dados forem poucos, diga isso e foque em como gerar os primeiros cliques. Não invente números.`;
+Analise principalmente as PEÇAS MAIS CLICADAS (topProducts) e os BOTÕES MAIS CLICADOS (topButtons).
+Escreva em português do Brasil, tom simpático e direto, falando com a lojista.
+
+Estrutura da resposta, exatamente com estes títulos em linhas separadas:
+O que os números dizem
+2 a 3 frases interpretando visitas, cliques em peças, cliques nos botões e leads.
+
+Peças e botões que chamam mais atenção
+Liste as peças e os botões mais clicados com o número de cliques e diga o que isso revela sobre o interesse das clientes.
+
+Oportunidades
+2 a 3 oportunidades concretas que os cliques revelam (ex: peça com muito clique e pouca conversa no WhatsApp, botão ignorado que precisa de outro texto, seção na ordem errada).
+
+3 ações pra vender mais essa semana
+Lista numerada (1. 2. 3.), cada item uma ação concreta e específica citando o nome real da peça ou do botão.
+
+Ideias de conteúdo
+2 ou 3 ideias de post ou story usando a peça que está chamando mais atenção (ex: provador, look do dia, bastidores, enquete), cada uma com uma frase de chamada pronta pra usar.
+
+REGRAS DE FORMATO OBRIGATÓRIAS:
+- NUNCA use asteriscos, markdown, negrito, hashtags ou qualquer símbolo de formatação. Só texto puro.
+- Não use travessão no começo das linhas; nas listas use "1." "2." "3.".
+- Se os dados forem poucos, diga isso e foque em como gerar os primeiros cliques. Não invente números nem nomes de peças que não estejam nos dados.`;
 
     const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -105,7 +129,7 @@ Se os dados forem poucos, diga isso e foque em como gerar os primeiros cliques. 
           {
             role: "system",
             content:
-              "Você é consultora de vendas online para lojistas de moda que vendem pelo link da bio do Instagram. Seja prática, específica e curta.",
+              "Você é consultora de vendas online para lojistas de moda que vendem pelo link da bio do Instagram. Seja prática, específica e curta. Responda sempre em texto puro, sem markdown e sem nenhum asterisco.",
           },
           { role: "user", content: prompt },
         ],
@@ -123,7 +147,10 @@ Se os dados forem poucos, diga isso e foque em como gerar os primeiros cliques. 
     }
 
     const data = await aiRes.json();
-    const insights = data?.choices?.[0]?.message?.content ?? null;
+    const raw = data?.choices?.[0]?.message?.content ?? null;
+    const insights = typeof raw === "string"
+      ? raw.replace(/\*+/g, "").replace(/^#+\s*/gm, "").replace(/^\s*[-•]\s+/gm, "").trim()
+      : null;
     return json({ stats, insights, error: insights ? null : "Resposta vazia da IA." });
   } catch (err) {
     console.error(err);
