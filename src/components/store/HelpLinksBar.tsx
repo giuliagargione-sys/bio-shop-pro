@@ -1,4 +1,4 @@
-import { LifeBuoy, RefreshCcw } from "lucide-react";
+import { LifeBuoy, RefreshCcw, Link2 } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { resolveWhatsAppHref } from "@/lib/utils";
 
@@ -12,8 +12,9 @@ export function HelpLinksBar({ config }: { config: StoreConfig }) {
 
   const supportHref = helpLinks.supportUrl?.trim() || whatsappSupport;
   const returnsHref = helpLinks.returnsUrl?.trim() || whatsappReturns;
+  const extra = (helpLinks.extra ?? []).filter((b) => b.label?.trim() && b.url?.trim());
 
-  if (!supportHref && !returnsHref) return null;
+  if (!supportHref && !returnsHref && extra.length === 0) return null;
 
   const itemClass =
     "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-border px-4 py-3 text-sm hover:bg-muted active:bg-muted transition-colors";
@@ -32,6 +33,13 @@ export function HelpLinksBar({ config }: { config: StoreConfig }) {
           {helpLinks.returnsLabel}
         </a>
       )}
+      {extra.map((b) => (
+        <a key={b.id} href={b.url} target="_blank" rel="noreferrer" className={itemClass}>
+          <Link2 size={18} />
+          {b.label}
+        </a>
+      ))}
     </div>
   );
 }
+

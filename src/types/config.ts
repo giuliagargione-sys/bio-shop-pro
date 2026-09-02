@@ -77,11 +77,18 @@ export interface FooterConfig {
   copyText: string;
 }
 
+export interface ExtraLink {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface HelpLinksConfig {
   supportLabel: string;
   supportUrl: string; // ex: link do WhatsApp ou Direct do Instagram
   returnsLabel: string;
   returnsUrl: string; // ex: link de uma pagina/PDF com a politica de trocas
+  extra?: ExtraLink[]; // botoes extras adicionais (plano PRO)
 }
 
 export interface LayoutBlock {
