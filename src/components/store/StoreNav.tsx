@@ -45,7 +45,7 @@ export function StoreNav({ config }: { config: StoreConfig }) {
               href={contactHref}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 rounded-[var(--radius)] px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+              className="hidden sm:flex items-center gap-2 rounded-[var(--radius)] px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
               style={{
                 background: "var(--brand-primary)",
                 color: "var(--brand-primary-foreground)",

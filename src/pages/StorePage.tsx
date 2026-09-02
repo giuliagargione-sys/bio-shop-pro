@@ -6,6 +6,7 @@ import { ProductCarousel } from "@/components/store/ProductCarousel";
 import { QuizFunnel } from "@/components/store/QuizFunnel";
 import { HelpLinksBar } from "@/components/store/HelpLinksBar";
 import { StoreFooter } from "@/components/store/StoreFooter";
+import { StickyContactBar } from "@/components/store/StickyContactBar";
 import { Link } from "react-router-dom";
 
 export default function StorePage() {
@@ -35,13 +36,14 @@ export default function StorePage() {
   }
 
   return (
-    <div className="min-h-screen font-brand">
+    <div className="min-h-screen font-brand store-shell">
       <StoreNav config={config} />
       <Hero config={config} />
       <ProductCarousel config={config} />
       <QuizFunnel config={config} ownerId={ownerId} />
       <HelpLinksBar config={config} />
       <StoreFooter config={config} />
+      <StickyContactBar config={config} />
     </div>
   );
 }
