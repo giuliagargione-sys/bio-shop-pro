@@ -21,8 +21,8 @@ export function ProductCarousel({
   if (config.products.length === 0) return null;
 
   return (
-    <section id="produtos" className="py-10 sm:py-12">
-      <div className="container flex items-center justify-between mb-4 sm:mb-5">
+    <section id="produtos" className="py-8 sm:py-12">
+      <div className="container max-w-md mx-auto flex items-center justify-between mb-4 sm:mb-5 px-4 sm:px-0">
         <h2 className="font-brand text-xl sm:text-2xl font-semibold">Peças em destaque</h2>
         <div className="hidden sm:flex gap-2">
           <Button variant="outline" size="icon" onClick={() => scrollBy(-280)} aria-label="Anterior">
@@ -34,10 +34,10 @@ export function ProductCarousel({
         </div>
       </div>
 
-      {/* No celular o carrossel sangra até a borda pra dar a dica de "arrasta" */}
+      {/* No celular o carrossel mostra um cartão por vez, centralizado, com dica de arrastar. */}
       <div
         ref={trackRef}
-        className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
+        className="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
       >
         {config.products.map((product) => (
           <a
@@ -46,7 +46,7 @@ export function ProductCarousel({
             target={product.link?.startsWith("#") ? undefined : "_blank"}
             rel="noreferrer"
             onClick={() => trackStoreEvent(ownerId, "produto", product.name)}
-            className="snap-start shrink-0 w-[68%] max-w-[240px] sm:w-56 rounded-[var(--radius)] border border-border overflow-hidden bg-white active:scale-[0.99] hover:shadow-md transition-all"
+            className="snap-center shrink-0 w-[78%] max-w-[280px] sm:w-56 rounded-[var(--radius)] border border-border overflow-hidden bg-white active:scale-[0.99] hover:shadow-md transition-all"
           >
             <div className="relative aspect-[3/4] bg-muted flex items-center justify-center">
               {product.imageUrl ? (
