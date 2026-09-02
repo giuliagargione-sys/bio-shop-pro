@@ -77,6 +77,18 @@ export interface HelpLinksConfig {
   returnsUrl: string; // ex: link de uma pagina/PDF com a politica de trocas
 }
 
+export interface LayoutBlock {
+  id: string;
+  type: "produtos" | "quiz" | "ajuda" | "botao";
+  enabled: boolean;
+  label?: string; // usado nos blocos do tipo "botao"
+  href?: string; // link do botao personalizado
+}
+
+export interface LayoutConfig {
+  blocks: LayoutBlock[]; // ordem em que as seções aparecem na loja
+}
+
 export interface StoreConfig {
   version: number;
   meta: {
@@ -85,6 +97,7 @@ export interface StoreConfig {
   };
   brand: BrandConfig;
   theme: ThemeConfig;
+  layout: LayoutConfig;
   hero: HeroConfig;
   products: Product[];
   quiz: QuizConfig;

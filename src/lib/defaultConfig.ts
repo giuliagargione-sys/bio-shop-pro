@@ -1,4 +1,5 @@
 import { uid } from "./utils";
+import { defaultLayoutBlocks } from "./layout";
 import type { StoreConfig } from "@/types/config";
 
 // Config inicial, inspirada na estrutura da giustore.netlify.app.
@@ -23,6 +24,9 @@ export const defaultConfig: StoreConfig = {
     accentForeground: "#2b2b2b",
     font: "Poppins",
     radius: "0.75rem",
+  },
+  layout: {
+    blocks: defaultLayoutBlocks(),
   },
   hero: {
     headline: "Descubra o look ideal para você",

@@ -8,6 +8,8 @@ import { HelpLinksBar } from "@/components/store/HelpLinksBar";
 import { StoreFooter } from "@/components/store/StoreFooter";
 import { StickyContactBar } from "@/components/store/StickyContactBar";
 import { Link } from "react-router-dom";
+import { CustomButtonBlock } from "@/components/store/CustomButtonBlock";
+import { resolveLayoutBlocks } from "@/lib/layout";
 
 export default function StorePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -39,9 +41,15 @@ export default function StorePage() {
     <div className="min-h-screen font-brand store-shell">
       <StoreNav config={config} />
       <Hero config={config} />
-      <ProductCarousel config={config} />
-      <QuizFunnel config={config} ownerId={ownerId} />
-      <HelpLinksBar config={config} />
+      {resolveLayoutBlocks(config)
+        .filter((block) => block.enabled)
+        .map((block) => {
+          if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} />;
+          if (block.type === "quiz")
+            return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;
+          if (block.type === "ajuda") return <HelpLinksBar key={block.id} config={config} />;
+          return <CustomButtonBlock key={block.id} block={block} />;
+        })}
       <StoreFooter config={config} />
       <StickyContactBar config={config} />
     </div>
