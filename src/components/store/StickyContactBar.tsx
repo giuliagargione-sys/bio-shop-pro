@@ -1,10 +1,17 @@
 import { MessageCircle } from "lucide-react";
 import { resolveWhatsAppHref } from "@/lib/utils";
 import type { StoreConfig } from "@/types/config";
+import { trackStoreEvent } from "@/lib/trackEvent";
 
 // Barra fixa no rodapé do celular: é o jeito mais rápido da cliente
 // falar no WhatsApp sem precisar rolar a página de volta.
-export function StickyContactBar({ config }: { config: StoreConfig }) {
+export function StickyContactBar({
+  config,
+  ownerId,
+}: {
+  config: StoreConfig;
+  ownerId?: string | null;
+}) {
   const label = (config.contact.buttonLabel || "").trim();
   const hasTarget = Boolean(config.contact.whatsappLink || config.contact.whatsappNumber);
   if (!label || !hasTarget) return null;
@@ -17,6 +24,7 @@ export function StickyContactBar({ config }: { config: StoreConfig }) {
         href={href}
         target="_blank"
         rel="noreferrer"
+        onClick={() => trackStoreEvent(ownerId, "whatsapp", "barra fixa")}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius)] text-base font-semibold active:opacity-90"
         style={{ background: "var(--brand-primary)", color: "var(--brand-primary-foreground)" }}
       >

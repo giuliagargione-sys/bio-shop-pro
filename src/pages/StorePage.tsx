@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { usePublicStore } from "@/hooks/usePublicStore";
 import { StoreNav } from "@/components/store/StoreNav";
@@ -10,10 +11,16 @@ import { StickyContactBar } from "@/components/store/StickyContactBar";
 import { Link } from "react-router-dom";
 import { CustomButtonBlock } from "@/components/store/CustomButtonBlock";
 import { resolveLayoutBlocks } from "@/lib/layout";
+import { trackStoreEvent } from "@/lib/trackEvent";
 
 export default function StorePage() {
   const { slug } = useParams<{ slug: string }>();
   const { loading, notFound, ownerId, config } = usePublicStore(slug);
+
+  // Conta uma visita por abertura da loja (alimenta os Insights com IA).
+  useEffect(() => {
+    if (!loading && !notFound && ownerId) trackStoreEvent(ownerId, "visita", slug);
+  }, [loading, notFound, ownerId, slug]);
 
   if (loading) {
     return (
@@ -44,14 +51,14 @@ export default function StorePage() {
       {resolveLayoutBlocks(config)
         .filter((block) => block.enabled)
         .map((block) => {
-          if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} />;
+          if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} ownerId={ownerId} />;
           if (block.type === "quiz")
             return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;
           if (block.type === "ajuda") return <HelpLinksBar key={block.id} config={config} />;
-          return <CustomButtonBlock key={block.id} block={block} />;
+          return <CustomButtonBlock key={block.id} block={block} ownerId={ownerId} />;
         })}
       <StoreFooter config={config} />
-      <StickyContactBar config={config} />
+      <StickyContactBar config={config} ownerId={ownerId} />
     </div>
   );
 }

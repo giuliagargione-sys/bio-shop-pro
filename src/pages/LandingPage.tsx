@@ -38,7 +38,7 @@ const FEATURES = [
 // oferta/plano). O botão do plano abre esse link numa aba nova.
 const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   essencial: "https://pay.hub.la/SEU-LINK-ESSENCIAL",
-  "que-vende": "https://pay.hub.la/SEU-LINK-QUE-VENDE",
+  pro: "https://pay.hub.la/SEU-LINK-PRO",
 };
 
 const PLANS = [
@@ -57,14 +57,15 @@ const PLANS = [
     highlighted: false,
   },
   {
-    slug: "que-vende",
-    name: "Que Vende",
+    slug: "pro",
+    name: "PRO",
     price: "R$ 97",
     period: "/mês",
     tagline: "Pra quem quer tirar o trabalho manual do caminho",
     features: [
       "Tudo do plano Essencial",
-      "Card de produto preenchido automático (é só colar o link)",
+      "Insights com IA: sugestões de melhoria a partir dos seus cliques",
+      "Painel de cliques e peças mais desejadas",
       "Botões de dúvidas e trocas personalizados",
       "Suporte prioritário",
     ],

@@ -17,6 +17,7 @@ import {
   CloudOff,
   Loader2,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
@@ -32,6 +33,7 @@ export type DashboardSectionKey =
   | "produtos"
   | "quiz"
   | "leads"
+  | "insights"
   | "contato"
   | "ajuda"
   | "rodape"
@@ -44,6 +46,7 @@ const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] 
   { key: "produtos", label: "Produtos", icon: <ShoppingBag size={18} /> },
   { key: "quiz", label: "Quiz", icon: <HelpCircle size={18} /> },
   { key: "leads", label: "Leads", icon: <Users size={18} /> },
+  { key: "insights", label: "Insights com IA", icon: <Sparkles size={18} /> },
   { key: "contato", label: "Contato", icon: <Phone size={18} /> },
   { key: "ajuda", label: "Dúvidas e trocas", icon: <LifeBuoy size={18} /> },
   { key: "rodape", label: "Rodapé", icon: <PanelBottom size={18} /> },
