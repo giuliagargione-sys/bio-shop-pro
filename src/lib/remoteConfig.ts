@@ -121,14 +121,47 @@ export async function updateMySlug(
 
 export async function fetchStoreBySlug(
   slug: string
-): Promise<{ ownerId: string; config: StoreConfig } | null> {
+): Promise<{ ownerId: string; config: StoreConfig; active: boolean } | null> {
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("store_config")
-    .select("user_id, data")
+    .select("user_id, data, active")
     .eq("slug", slug)
     .maybeSingle();
 
   if (error || !data) return null;
-  return { ownerId: data.user_id as string, config: mergeWithDefaults(data.data) };
+  return {
+    ownerId: data.user_id as string,
+    config: mergeWithDefaults(data.data),
+    active: (data as { active?: boolean }).active !== false,
+  };
+}
+
+// ---------- Acesso central (admin) ----------
+// As regras do banco já deixam quem tem o papel de admin editar qualquer
+// loja, então o painel usa as mesmas funções, mirando outro user_id.
+
+export async function fetchStoreByUserId(userId: string): Promise<RemoteStore | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("store_config")
+    .select("id, user_id, slug, data")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    id: data.id as string,
+    userId: data.user_id as string,
+    slug: data.slug as string,
+    config: mergeWithDefaults(data.data),
+  };
+}
+
+export async function setStoreActive(
+  userId: string,
+  active: boolean
+): Promise<{ ok: boolean; error: string | null }> {
+  if (!supabase) return { ok: false, error: "Banco não conectado." };
+  const { error } = await supabase.from("store_config").update({ active }).eq("user_id", userId);
+  return { ok: !error, error: error?.message ?? null };
 }

@@ -25,6 +25,7 @@ function applyThemeToDocument(theme: StoreConfig["theme"]) {
 interface PublicStoreState {
   loading: boolean;
   notFound: boolean;
+  inactive: boolean;
   ownerId: string | null;
   config: StoreConfig;
 }
@@ -33,6 +34,7 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
   const [state, setState] = useState<PublicStoreState>({
     loading: true,
     notFound: false,
+    inactive: false,
     ownerId: null,
     config: defaultConfig,
   });
@@ -46,14 +48,14 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
     // cores direto pelo slug (funciona com ou sem banco conectado).
     const demoConfig = getDemoStore(slug);
     if (demoConfig) {
-      setState({ loading: false, notFound: false, ownerId: null, config: demoConfig });
+      setState({ loading: false, notFound: false, inactive: false, ownerId: null, config: demoConfig });
       applyThemeToDocument(demoConfig.theme);
       return;
     }
 
     if (!isSupabaseConfigured) {
       // sem banco conectado e slug fora das lojas de exemplo
-      setState({ loading: false, notFound: true, ownerId: null, config: defaultConfig });
+      setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });
       return;
     }
 
@@ -63,12 +65,18 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
     fetchStoreBySlug(slug).then((result) => {
       if (cancelled) return;
       if (!result) {
-        setState({ loading: false, notFound: true, ownerId: null, config: defaultConfig });
+        setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });
         return;
       }
 
       applyThemeToDocument(result.config.theme);
-      setState({ loading: false, notFound: false, ownerId: result.ownerId, config: result.config });
+      setState({
+        loading: false,
+        notFound: false,
+        inactive: !result.active,
+        ownerId: result.ownerId,
+        config: result.config,
+      });
     });
 
     return () => {
