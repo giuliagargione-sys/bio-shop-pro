@@ -77,11 +77,11 @@ const PLANS = [
 function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
   return (
     <div
-      className="rounded-2xl p-6 flex flex-col gap-5 relative"
+      className="rounded-xl p-6 flex flex-col gap-5 relative"
       style={{
         background: plan.highlighted ? "var(--product-ink)" : "#ffffff",
         color: plan.highlighted ? "#ffffff" : "var(--product-ink)",
-        border: plan.highlighted ? "none" : "1px solid #f0d9d9",
+        border: plan.highlighted ? "none" : "1px solid var(--product-line)",
         boxShadow: plan.highlighted ? "0 20px 40px -18px rgba(34,18,38,0.45)" : "none",
       }}
     >
@@ -136,7 +136,7 @@ export default function LandingPage() {
   return (
     <div className="font-product" style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}>
       {/* Nav */}
-      <header className="sticky top-0 z-30 backdrop-blur border-b" style={{ borderColor: "#f0d9d9", background: "rgba(255,247,242,0.85)" }}>
+      <header className="sticky top-0 z-30 backdrop-blur border-b" style={{ borderColor: "var(--product-line)", background: "rgba(255,253,249,0.88)" }}>
         <div className="container flex items-center justify-between py-3">
           <Logo size={32} />
           <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="como-funciona" className="container py-16 border-t" style={{ borderColor: "#f0d9d9" }}>
+      <section id="como-funciona" className="container py-16 border-t" style={{ borderColor: "var(--product-line)" }}>
         <div className="text-center max-w-md mx-auto mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
             Como funciona
@@ -193,7 +193,7 @@ export default function LandingPage() {
         </div>
         <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
           {FEATURES.map((f) => (
-            <div key={f.title} className="rounded-2xl bg-white p-5 flex gap-4" style={{ border: "1px solid #f0d9d9" }}>
+            <div key={f.title} className="rounded-xl bg-white p-5 flex gap-4" style={{ border: "1px solid var(--product-line)" }}>
               <div
                 className="shrink-0 h-10 w-10 rounded-xl flex items-center justify-center"
                 style={{ background: "var(--product-cream)", color: "var(--product-coral)" }}
@@ -210,7 +210,7 @@ export default function LandingPage() {
       </section>
 
       {/* Preview */}
-      <section className="container py-16 border-t" style={{ borderColor: "#f0d9d9" }}>
+      <section className="container py-16 border-t" style={{ borderColor: "var(--product-line)" }}>
         <div className="text-center max-w-md mx-auto mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
             Por dentro
@@ -218,7 +218,7 @@ export default function LandingPage() {
           <h2 className="text-2xl sm:text-3xl font-semibold">Do jeito que a sua cliente vê, do jeito que você controla</h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-          <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid #f0d9d9" }}>
+          <div className="rounded-xl bg-white p-5" style={{ border: "1px solid var(--product-line)" }}>
             <p className="text-[11px] font-semibold uppercase tracking-wider opacity-60 mb-3">A loja que a cliente vê</p>
             <div
               className="rounded-xl p-5 text-center text-white"
@@ -234,7 +234,7 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
-          <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid #f0d9d9" }}>
+          <div className="rounded-xl bg-white p-5" style={{ border: "1px solid var(--product-line)" }}>
             <p className="text-[11px] font-semibold uppercase tracking-wider opacity-60 mb-3">A dashboard que você controla</p>
             <div className="space-y-1.5">
               {[
@@ -262,7 +262,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="planos" className="container py-16 border-t" style={{ borderColor: "#f0d9d9" }}>
+      <section id="planos" className="container py-16 border-t" style={{ borderColor: "var(--product-line)" }}>
         <div className="text-center max-w-md mx-auto mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
             Planos
@@ -284,9 +284,9 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="container py-16 border-t" style={{ borderColor: "#f0d9d9" }}>
+      <section className="container py-16 border-t" style={{ borderColor: "var(--product-line)" }}>
         <div
-          className="rounded-2xl p-10 text-center flex flex-col items-center gap-5"
+          className="rounded-xl p-10 text-center flex flex-col items-center gap-5"
           style={{ background: "linear-gradient(135deg, var(--product-plum), var(--product-ink))", color: "#fff" }}
         >
           <LogoMark size={44} />

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ColorInput } from "@/components/ui/color-input";
 import { getContrastText } from "@/lib/utils";
 
-const FONT_OPTIONS = ["Poppins", "Playfair Display", "Inter", "Montserrat", "Lora", "Quicksand"];
+const FONT_OPTIONS = ["Epilogue", "Urbanist", "Poppins", "Playfair Display", "Inter", "Montserrat", "Lora"];
 
 export function ThemeSection() {
   const { config, updateNested } = useStoreConfig();

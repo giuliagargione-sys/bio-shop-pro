@@ -65,7 +65,7 @@ export default function LoginPage() {
           <Logo size={44} />
         </div>
 
-        <div className="rounded-2xl bg-white shadow-lg p-6 border" style={{ borderColor: "#f0d9d9" }}>
+        <div className="rounded-xl bg-white shadow-lg p-6 border" style={{ borderColor: "var(--product-line)" }}>
           <div className="flex items-center gap-2 mb-1">
             <Lock size={16} style={{ color: "var(--product-coral)" }} />
             <h1 className="font-semibold text-lg" style={{ color: "var(--product-ink)" }}>
