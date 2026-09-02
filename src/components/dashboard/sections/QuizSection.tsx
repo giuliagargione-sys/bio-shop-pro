@@ -191,13 +191,11 @@ export function QuizSection() {
                   onChange={(e) => updateNested("quiz", { resultDescription: e.target.value })}
                 />
               </div>
-              <div>
-                <Label>Texto do botão (usado quando não houver link da categoria)</Label>
-                <Input
-                  value={quiz.resultCtaLabel}
-                  onChange={(e) => updateNested("quiz", { resultCtaLabel: e.target.value })}
-                />
-              </div>
+              <p className="text-xs text-muted-foreground">
+                O botão final é definido abaixo, em “Links de destino do resultado”,
+                conforme a resposta da 1ª pergunta.
+              </p>
+
             </CardContent>
           </Card>
 
@@ -228,7 +226,7 @@ export function QuizSection() {
                       <Label>Texto do botão</Label>
                       <Input
                         value={dest.label}
-                        placeholder="Ex: Ver looks de balada"
+                        placeholder={`Ex: Ver ${dest.optionLabel.toLowerCase()}`}
                         onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
                       />
                     </div>
