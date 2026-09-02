@@ -1,0 +1,4 @@
+CREATE POLICY "logos: aluna le seus arquivos" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'store-logos' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "logos: aluna envia na sua pasta" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'store-logos' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "logos: aluna atualiza seus arquivos" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'store-logos' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "logos: aluna apaga seus arquivos" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'store-logos' AND (storage.foldername(name))[1] = auth.uid()::text);

@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { Check, AlertCircle } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, AlertCircle, Upload, Trash2 } from "lucide-react";
 import { useStoreConfig } from "@/context/ConfigContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { uploadLogo } from "@/lib/logoUpload";
+
 
 function StoreAddressCard() {
   const { slug, changeSlug } = useStoreConfig();
@@ -93,21 +95,94 @@ export function BrandSection() {
               placeholder="Ex: Moda que combina com você"
             />
           </div>
-          <div>
-            <Label htmlFor="logoUrl">Link da imagem do logo</Label>
-            <Input
-              id="logoUrl"
-              value={config.brand.logoUrl}
-              onChange={(e) => updateNested("brand", { logoUrl: e.target.value })}
-              placeholder="https://..."
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Cole o link de uma imagem (do Instagram, Google Drive público, Imgur, etc). Se deixar
-              em branco, aparece a inicial do nome da loja.
-            </p>
-          </div>
+          <LogoUploadField />
         </CardContent>
       </Card>
     </div>
   );
 }
+
+function LogoUploadField() {
+  const { config, updateNested } = useStoreConfig();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleFile(file: File | undefined) {
+    if (!file) return;
+    setError(null);
+    setUploading(true);
+    const result = await uploadLogo(file);
+    setUploading(false);
+    if (result.url) updateNested("brand", { logoUrl: result.url });
+    else setError(result.error);
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  return (
+    <div>
+      <Label>Imagem do logo</Label>
+      <div className="flex items-center gap-3 mt-1">
+        <div className="h-16 w-16 shrink-0 rounded-full border border-border bg-muted overflow-hidden flex items-center justify-center">
+          {config.brand.logoUrl ? (
+            <img src={config.brand.logoUrl} alt="Logo da loja" className="h-full w-full object-cover" />
+          ) : (
+            <span className="text-lg font-semibold text-muted-foreground">
+              {config.brand.storeName.charAt(0).toUpperCase() || "L"}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/svg+xml"
+            className="hidden"
+            onChange={(e) => handleFile(e.target.files?.[0])}
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+          >
+            <Upload size={14} className="mr-1.5" />
+            {uploading ? "Enviando..." : config.brand.logoUrl ? "Trocar imagem" : "Subir imagem"}
+          </Button>
+          {config.brand.logoUrl && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => updateNested("brand", { logoUrl: "" })}
+              disabled={uploading}
+            >
+              <Trash2 size={14} className="mr-1.5" />
+              Remover
+            </Button>
+          )}
+        </div>
+      </div>
+      {error && (
+        <p className="text-xs flex items-center gap-1 mt-2" style={{ color: "#c0392b" }}>
+          <AlertCircle size={13} />
+          {error}
+        </p>
+      )}
+      <p className="text-xs text-muted-foreground mt-2">
+        JPG, PNG ou WEBP de até 5 MB. Se não subir nada, aparece a inicial do nome da loja.
+      </p>
+      <details className="mt-3">
+        <summary className="text-xs text-muted-foreground cursor-pointer">
+          Prefiro colar o link de uma imagem
+        </summary>
+        <Input
+          className="mt-2"
+          value={config.brand.logoUrl}
+          onChange={(e) => updateNested("brand", { logoUrl: e.target.value })}
+          placeholder="https://..."
+        />
+      </details>
+    </div>
+  );
+}
+
