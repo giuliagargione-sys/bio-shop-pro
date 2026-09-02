@@ -7,7 +7,6 @@ import {
   HelpCircle,
   Phone,
   PanelBottom,
-  Download,
   ExternalLink,
   Store,
   Users,
@@ -36,8 +35,7 @@ export type DashboardSectionKey =
   | "insights"
   | "contato"
   | "ajuda"
-  | "rodape"
-  | "exportar";
+  | "rodape";
 
 const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] = [
   { key: "marca", label: "Marca", icon: <Store size={18} /> },
@@ -50,7 +48,6 @@ const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] 
   { key: "contato", label: "Contato", icon: <Phone size={18} /> },
   { key: "ajuda", label: "Dúvidas e trocas", icon: <LifeBuoy size={18} /> },
   { key: "rodape", label: "Rodapé", icon: <PanelBottom size={18} /> },
-  { key: "exportar", label: "Salvar / Exportar", icon: <Download size={18} /> },
 ];
 
 interface DashboardLayoutProps {
