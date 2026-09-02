@@ -39,7 +39,7 @@ export type DashboardSectionKey =
 
 const NAV_ITEMS: { key: DashboardSectionKey; label: string; icon: ReactNode }[] = [
   { key: "marca", label: "Marca", icon: <Store size={18} /> },
-  { key: "tema", label: "Cores e fonte", icon: <Palette size={18} /> },
+  { key: "tema", label: "Estrutura e visual", icon: <Palette size={18} /> },
   { key: "hero", label: "Capa (topo)", icon: <Type size={18} /> },
   { key: "produtos", label: "Produtos", icon: <ShoppingBag size={18} /> },
   { key: "quiz", label: "Quiz", icon: <HelpCircle size={18} /> },
