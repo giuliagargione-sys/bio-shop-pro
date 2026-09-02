@@ -8,6 +8,7 @@ import {
   Check,
   Copy,
   ArrowLeft,
+  Pencil,
   ShieldCheck,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
@@ -17,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
-import { fetchAlunas, createAluna, type AlunaSummary } from "@/lib/adminApi";
+import { Switch } from "@/components/ui/switch";
+import { fetchAlunas, createAluna, setStoreActive, type AlunaSummary } from "@/lib/adminApi";
 
 function formatDate(iso: string | null) {
   if (!iso) return "—";
@@ -159,6 +161,16 @@ export default function AdminPage() {
     load();
   }, []);
 
+  // Liga/desliga o link público da loja (usado quando o pagamento não está em dia).
+  async function onToggleActive(aluna: AlunaSummary, value: boolean) {
+    setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: value } : a)));
+    const res = await setStoreActive(aluna.id, value);
+    if (!res.ok) {
+      setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: !value } : a)));
+      setError(res.error ?? "Não foi possível mudar o link agora.");
+    }
+  }
+
   const total = alunas.length;
   const ativas = alunas.filter((a) => a.paymentStatus === "ativo").length;
   const inadimplentes = alunas.filter((a) => a.paymentStatus === "inadimplente").length;
@@ -258,18 +270,36 @@ export default function AdminPage() {
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0">
                       <StatusBadge status={a.paymentStatus} />
                       {a.slug ? (
-                        <a
-                          href={`/loja/${a.slug}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-xs underline flex items-center gap-1"
-                          style={{ color: "var(--product-coral-dark)" }}
-                        >
-                          /loja/{a.slug} <ExternalLink size={12} />
-                        </a>
+                        <>
+                          <a
+                            href={`/loja/${a.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs underline flex items-center gap-1"
+                            style={{ color: "var(--product-coral-dark)" }}
+                          >
+                            /loja/{a.slug} <ExternalLink size={12} />
+                          </a>
+                          <Link
+                            to={`/personalizar?loja=${a.id}`}
+                            className="text-xs underline flex items-center gap-1 text-muted-foreground"
+                          >
+                            <Pencil size={12} /> Editar loja
+                          </Link>
+                          <label className="flex items-center gap-2 text-xs">
+                            <Switch
+                              checked={a.active}
+                              onCheckedChange={(value) => onToggleActive(a, value)}
+                              aria-label="Link ativo"
+                            />
+                            <span className={a.active ? "" : "text-muted-foreground"}>
+                              {a.active ? "Link ativo" : "Link desativado"}
+                            </span>
+                          </label>
+                        </>
                       ) : (
                         <span className="text-xs text-muted-foreground">sem loja ainda</span>
                       )}
