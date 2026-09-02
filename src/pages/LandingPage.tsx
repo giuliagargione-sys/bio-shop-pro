@@ -4,12 +4,12 @@ import {
   Link2,
   Sparkles,
   Users,
-  Palette,
   Check,
   MessageCircle,
   ShieldCheck,
   TrendingUp,
   Target,
+  Zap,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
