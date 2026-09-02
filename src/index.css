@@ -50,3 +50,20 @@ body {
 .snap-center {
   scroll-snap-align: center;
 }
+
+/* A loja publica é aberta pelo link da bio: tudo é pensado mobile-first. */
+.snap-start {
+  scroll-snap-align: start;
+}
+.pb-safe {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+}
+.store-shell {
+  /* espaço pro botao fixo de contato no mobile */
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 640px) {
+  .store-shell {
+    padding-bottom: 0;
+  }
+}

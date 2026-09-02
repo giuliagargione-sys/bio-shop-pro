@@ -82,6 +82,8 @@ const ateliedaana = demo({
   },
   contact: {
     whatsappNumber: "5511999999999",
+    buttonLabel: "Falar com a Ana no WhatsApp",
+    whatsappLink: "",
     whatsappDefaultMessage: "Oi Ana! Fiz o quiz e quero ver minha seleção 💕",
     instagramUrl: "https://instagram.com/ateliedaana",
     tiktokUrl: "https://tiktok.com/@ateliedaana",
@@ -146,6 +148,8 @@ const useLari = demo({
   },
   contact: {
     whatsappNumber: "5521988888888",
+    buttonLabel: "Falar com a Lari no WhatsApp",
+    whatsappLink: "",
     whatsappDefaultMessage: "Oi Lari! Fiz o quiz e quero ver as peças 🖤",
     instagramUrl: "https://instagram.com/uselari",
     tiktokUrl: "https://tiktok.com/@uselari",
@@ -210,6 +214,8 @@ const bohoMarie = demo({
   },
   contact: {
     whatsappNumber: "5531977777777",
+    buttonLabel: "Falar com a Marie no WhatsApp",
+    whatsappLink: "",
     whatsappDefaultMessage: "Oi Marie! Fiz o quiz e quero ver meu look ☀️",
     instagramUrl: "https://instagram.com/bohomarie",
     tiktokUrl: "https://tiktok.com/@bohomarie",
