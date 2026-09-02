@@ -177,7 +177,7 @@ export default function LandingPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a href="#planos">
             <Button size="lg" style={{ background: "var(--product-coral)", color: "#fff" }}>
-              Ver planos <ArrowRight size={18} />
+              Quero minha loja <ArrowRight size={18} />
             </Button>
           </a>
           <Link to="/login">
@@ -186,6 +186,10 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
+        <p className="flex items-center justify-center gap-1.5 text-xs opacity-60 pt-1">
+          <ShieldCheck size={14} style={{ color: "var(--product-coral)" }} />
+          Sem fidelidade — cancele quando quiser
+        </p>
       </section>
 
       {/* Features */}
