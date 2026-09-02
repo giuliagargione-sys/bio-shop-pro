@@ -14,13 +14,13 @@ export function CustomButtonBlock({
   if (!label || !href) return null;
 
   return (
-    <div className="container py-3">
+    <div className="container max-w-md mx-auto px-4 sm:px-0 py-3">
       <a
         href={href}
         target="_blank"
         rel="noreferrer"
         onClick={() => trackStoreEvent(ownerId, "botao", label)}
-        className="flex min-h-[52px] w-full items-center justify-center rounded-[var(--radius)] px-6 text-center text-sm font-medium sm:mx-auto sm:max-w-sm"
+        className="flex min-h-[52px] w-full items-center justify-center rounded-[var(--radius)] px-6 text-center text-sm font-medium"
         style={{
           background: "var(--brand-primary)",
           color: "var(--brand-primary-foreground)",

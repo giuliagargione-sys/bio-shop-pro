@@ -16,19 +16,19 @@ export function HelpLinksBar({ config }: { config: StoreConfig }) {
   if (!supportHref && !returnsHref) return null;
 
   const itemClass =
-    "flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-muted active:bg-muted transition-colors";
+    "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-border px-4 py-3 text-sm hover:bg-muted active:bg-muted transition-colors";
 
   return (
-    <div className="container flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 py-6">
+    <div className="container max-w-md mx-auto px-4 sm:px-0 flex flex-col items-stretch gap-2 py-6">
       {supportHref && (
         <a href={supportHref} target="_blank" rel="noreferrer" className={itemClass}>
-          <LifeBuoy size={16} />
+          <LifeBuoy size={18} />
           {helpLinks.supportLabel}
         </a>
       )}
       {returnsHref && (
         <a href={returnsHref} target="_blank" rel="noreferrer" className={itemClass}>
-          <RefreshCcw size={16} />
+          <RefreshCcw size={18} />
           {helpLinks.returnsLabel}
         </a>
       )}
