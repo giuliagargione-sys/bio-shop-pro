@@ -324,6 +324,21 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* CTA between Como funciona and Por dentro */}
+      <section className="container -mt-8 sm:-mt-10 mb-6 relative z-10">
+        <div className="flex justify-center">
+          <a href="#planos">
+            <Button
+              size="lg"
+              className="rounded-full px-8 shadow-lg"
+              style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
+            >
+              Quero criar! <ArrowRight size={17} />
+            </Button>
+          </a>
+        </div>
+      </section>
+
       {/* Preview */}
       <section id="por-dentro" className="container py-20 sm:py-24">
         <div className="text-center max-w-xl mx-auto mb-14 flex flex-col items-center gap-4">
