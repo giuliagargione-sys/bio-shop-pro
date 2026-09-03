@@ -62,9 +62,30 @@ export function ProductCarousel({
                 <ImageOff className="text-muted-foreground" size={28} />
               )}
               {product.badge && <Badge className="absolute top-2 left-2">{product.badge}</Badge>}
+              {product.showPrice !== false && product.salePrice?.trim() && product.price?.trim() && (
+                <Badge className="absolute top-2 right-2">Oferta</Badge>
+              )}
             </div>
             <div className="p-3">
               <p className="font-medium text-sm leading-snug line-clamp-2">{product.name}</p>
+              {product.showPrice !== false && (product.price?.trim() || product.salePrice?.trim()) && (
+                <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                  {product.salePrice?.trim() && product.price?.trim() ? (
+                    <>
+                      <span className="text-xs text-muted-foreground line-through">
+                        de {product.price}
+                      </span>
+                      <span className="text-sm font-semibold text-primary">
+                        por {product.salePrice}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-sm font-semibold">
+                      {product.salePrice?.trim() || product.price}
+                    </span>
+                  )}
+                </div>
+              )}
               <span className="text-xs text-primary font-medium">Ver look →</span>
             </div>
           </a>
