@@ -18,6 +18,7 @@ export const RESERVED_SLUGS = new Set([
   "api",
   "assets",
   "planos",
+  "vip",
   "sobre",
   "app",
 ]);

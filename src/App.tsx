@@ -48,6 +48,8 @@ export default function App() {
       <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/vip" element={<LandingPage vip />} />
+      <Route path="/VIP" element={<LandingPage vip />} />
       <Route path="/loja/:slug" element={<StorePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />

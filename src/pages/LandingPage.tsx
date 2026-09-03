@@ -57,6 +57,15 @@ const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   "essencial-anual": "https://pay.hub.la/SEU-LINK-ESSENCIAL-ANUAL",
   pro: "https://pay.hub.la/SEU-LINK-PRO",
   "pro-anual": "https://pay.hub.la/SEU-LINK-PRO-ANUAL",
+  // Ofertas exclusivas da página /VIP (convite pra alunas)
+  "essencial-vip": "https://pay.hub.la/SEU-LINK-ESSENCIAL-VIP",
+  "pro-vip": "https://pay.hub.la/SEU-LINK-PRO-VIP",
+};
+
+/** Valores especiais liberados só na página /VIP. */
+const VIP_PRICES: Record<string, number> = {
+  essencial: 4.7,
+  pro: 9.7,
 };
 
 type PlanFeature = string | { text: string; highlight?: boolean; star?: boolean };
@@ -243,13 +252,15 @@ function PlanCard({
   plan,
   yearly,
   onChoose,
+  vip = false,
 }: {
   plan: (typeof PLANS)[number];
   yearly: boolean;
   onChoose: () => void;
+  vip?: boolean;
 }) {
   const isPro = plan.highlighted;
-  const monthlyValue = plan.monthlyPrice;
+  const monthlyValue = vip ? VIP_PRICES[plan.slug] ?? plan.monthlyPrice : plan.monthlyPrice;
   const yearlyEquivalent = Math.round(monthlyValue * 0.8 * 100) / 100;
   const yearlyTotal = Math.round(monthlyValue * 12 * 0.8 * 100) / 100;
 
@@ -275,7 +286,21 @@ function PlanCard({
         </span>
       )}
       <div>
-        <p className="font-product font-semibold text-base uppercase tracking-[0.12em]">{plan.name}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="font-product font-semibold text-base uppercase tracking-[0.12em]">{plan.name}</p>
+          {vip && (
+            <span
+              className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] px-2 py-0.5 rounded-full"
+              style={{
+                background: isPro ? "rgba(255,253,249,0.18)" : "rgba(107, 27, 43, 0.10)",
+                color: isPro ? "var(--product-gold)" : "var(--product-coral)",
+                border: `1px solid ${isPro ? "rgba(255,253,249,0.35)" : "rgba(107, 27, 43, 0.25)"}`,
+              }}
+            >
+              <Star size={10} className="fill-current" /> Especial alunas
+            </span>
+          )}
+        </div>
         <p className="text-sm opacity-75 mt-1">{plan.tagline}</p>
       </div>
       <div>
@@ -326,17 +351,19 @@ function PlanCard({
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        Escolher {plan.name} {yearly ? "Anual" : ""}
+        Escolher {plan.name} {vip ? "" : yearly ? "Anual" : ""}
       </Button>
     </div>
   );
 }
 
-export default function LandingPage() {
+export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
   const { hash } = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
   const [yearly, setYearly] = useState(false);
+  const planSuffix = vip ? "-vip" : yearly ? "-anual" : "";
+  const planNameSuffix = vip ? "Alunas" : yearly ? "Anual" : "";
 
   useEffect(() => {
     if (hash) {
@@ -350,7 +377,16 @@ export default function LandingPage() {
 
   return (
     <div className="font-product" style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}>
-      <PageMeta title="Link Na Bio Que Vende — sua loja no link da bio do Instagram" description="Monte sua loja no link da bio: produtos em destaque, quiz que vira venda e leads prontos pra fechar no WhatsApp." path="/" />
+      {vip ? (
+        <PageMeta
+          title="Convite VIP — Link Na Bio Que Vende"
+          description="Página exclusiva para alunas convidadas: planos com valor especial para criar sua loja no link da bio."
+          path="/vip"
+          noindex
+        />
+      ) : (
+        <PageMeta title="Link Na Bio Que Vende — sua loja no link da bio do Instagram" description="Monte sua loja no link da bio: produtos em destaque, quiz que vira venda e leads prontos pra fechar no WhatsApp." path="/" />
+      )}
 
       {/* Nav */}
       <header className="sticky top-0 z-30 pt-3 sm:pt-5">
@@ -594,13 +630,17 @@ export default function LandingPage() {
         <div className="text-center max-w-xl mx-auto mb-10 flex flex-col items-center gap-4">
           <SectionLabel>Planos</SectionLabel>
           <h2 className="text-3xl sm:text-[42px] font-semibold tracking-[-0.02em] leading-tight">
-            Escolha o plano e crie sua loja agora
+            {vip ? "Valor especial para alunas convidadas" : "Escolha o plano e crie sua loja agora"}
           </h2>
-          <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
+          <p className="text-sm opacity-60">
+            {vip
+              ? "Condição exclusiva desta página de convite. Pagamento seguro sem fidelidade."
+              : "Pagamento seguro sem fidelidade."}
+          </p>
         </div>
 
         {/* Billing toggle */}
-        <div className="flex justify-center mb-10">
+        <div className={`flex justify-center mb-10 ${vip ? "hidden" : ""}`}>
           <div
             className="inline-flex items-center rounded-full p-1 gap-1"
             style={{ background: "rgba(107, 27, 43, 0.08)", border: "1px solid var(--product-line)" }}
@@ -643,28 +683,21 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
-          <PlanCard
-            yearly={yearly}
-            plan={PLANS[0]}
-            onChoose={() =>
-              setSelectedPlan({
-                slug: yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug,
-                name: `${PLANS[0].name} ${yearly ? "Anual" : ""}`.trim(),
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug],
-              })
-            }
-          />
-          <PlanCard
-            yearly={yearly}
-            plan={PLANS[1]}
-            onChoose={() =>
-              setSelectedPlan({
-                slug: yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug,
-                name: `${PLANS[1].name} ${yearly ? "Anual" : ""}`.trim(),
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug],
-              })
-            }
-          />
+          {PLANS.map((plan) => (
+            <PlanCard
+              key={plan.slug}
+              vip={vip}
+              yearly={vip ? false : yearly}
+              plan={plan}
+              onChoose={() =>
+                setSelectedPlan({
+                  slug: `${plan.slug}${planSuffix}`,
+                  name: `${plan.name} ${planNameSuffix}`.trim(),
+                  checkoutUrl: HUBLA_CHECKOUT_LINKS[`${plan.slug}${planSuffix}`],
+                })
+              }
+            />
+          ))}
         </div>
         <p className="text-center text-sm opacity-60 mt-10">
           Já pagou e ainda não criou sua conta?{" "}
