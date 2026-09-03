@@ -193,9 +193,11 @@ export function InsightsSection() {
               <p className="text-sm font-semibold">Funil da sua loja</p>
               {funnelSteps.map((s) => (
                 <div key={s.label} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between gap-2 text-sm">
                     <span className="text-muted-foreground">{s.label}</span>
-                    <span className="font-semibold">{s.value}</span>
+                    <span className="font-semibold">
+                      {s.value} <span className="font-normal text-muted-foreground">({s.percent}%)</span>
+                    </span>
                   </div>
                   <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
                     <div
