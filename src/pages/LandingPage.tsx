@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import {
   ArrowRight,
   Link2,
@@ -142,6 +143,18 @@ function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
 }
 
 export default function LandingPage() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace("#", "");
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [hash]);
+
   return (
     <div className="font-product" style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}>
       {/* Nav */}
