@@ -336,6 +336,7 @@ export default function LandingPage() {
   const { hash } = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
+  const [yearly, setYearly] = useState(false);
 
   useEffect(() => {
     if (hash) {
