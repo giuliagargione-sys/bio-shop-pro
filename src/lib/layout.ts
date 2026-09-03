@@ -69,35 +69,41 @@ function helpLinkBlock(refId: string, enabled = true): LayoutBlock {
   return { id: uid("bloco"), type: "helpLink", enabled, refId };
 }
 
-// Nome que aparece no painel (Banner 1, Botão extra "Trocas", etc).
+// Nome que aparece no painel (Banner 1, Botão 2 — Trocas, etc).
 export function blockLabel(block: LayoutBlock, config: StoreConfig, indexes: Record<string, number>) {
+  const n = indexes[block.id] ?? 1;
   if (block.type === "banner") {
     const banner = (config.banners ?? []).find((b) => b.id === block.refId);
-    const n = indexes[block.id] ?? 1;
-    const name = banner?.title?.trim();
+    const name = banner?.title?.trim() || banner?.overlayTitle?.trim();
     return name ? `Banner ${n} — ${name}` : `Banner ${n}`;
   }
   if (block.type === "helpLink") {
     const item = resolveHelpLinkItems(config).find((i) => i.refId === block.refId);
-    const n = indexes[block.id] ?? 1;
     const name = item?.label?.trim();
-    return name ? `Botão ${n} — ${name}` : `Botão extra ${n}`;
+    return name ? `Botão ${n} — ${name}` : `Botão ${n}`;
   }
   if (block.type === "botao") {
     const name = block.label?.trim();
-    return name ? `Botão personalizado — ${name}` : "Botão personalizado";
+    return name ? `Botão ${n} — ${name}` : `Botão ${n}`;
   }
   return BLOCK_LABELS[block.type];
 }
 
-// Numeração por tipo (banner 1, banner 2, botão 1, botão 2...).
+// Numeração: banners contam entre si; botões extras e personalizados contam juntos.
+function counterKey(type: LayoutBlock["type"]) {
+  if (type === "helpLink" || type === "botao") return "botao";
+  return type;
+}
+
 export function blockIndexes(blocks: LayoutBlock[]): Record<string, number> {
   const counters: Record<string, number> = {};
   const out: Record<string, number> = {};
   blocks.forEach((b) => {
-    counters[b.type] = (counters[b.type] ?? 0) + 1;
-    out[b.id] = counters[b.type];
+    const key = counterKey(b.type);
+    counters[key] = (counters[key] ?? 0) + 1;
+    out[b.id] = counters[key];
   });
+
   return out;
 }
 
