@@ -37,11 +37,11 @@ function ProductImageField({
 
   return (
     <div>
-      <Label>Foto da peça</Label>
+      <Label>Foto do produto</Label>
       <div className="flex items-center gap-3 mt-1">
         <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-muted flex items-center justify-center">
           {value ? (
-            <img src={value} alt="Foto da peça" className="h-full w-full object-cover" />
+            <img src={value} alt="Foto do produto" className="h-full w-full object-cover" />
           ) : (
             <ImageIcon size={18} className="text-muted-foreground" />
           )}
