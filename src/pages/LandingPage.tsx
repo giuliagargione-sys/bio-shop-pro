@@ -1,6 +1,6 @@
 import { PageMeta } from "@/components/PageMeta";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Link2,
@@ -12,10 +12,17 @@ import {
   TrendingUp,
   Target,
   Zap,
+  X,
+  ExternalLink,
+  Smartphone,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
 import { Button } from "@/components/ui/button";
+import { storeUrl } from "@/lib/storeUrl";
+
+const DEMO_SLUG = "giuteste";
+const DEMO_URL = storeUrl(DEMO_SLUG);
 
 const FEATURES = [
   {
@@ -37,6 +44,7 @@ const FEATURES = [
     icon: <Zap size={18} />,
     title: "Rápido e fácil",
     text: "Toda estrutura pronta, sem precisar de programação. Fácil e rápido de personalizar.",
+    demo: true,
   },
 ];
 
@@ -103,6 +111,112 @@ function SectionLabel({ children, tone = "ink" }: { children: string; tone?: "in
   );
 }
 
+function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setLoading(true);
+      setError(false);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    if (open) window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(11,11,11,0.72)", backdropFilter: "blur(6px)" }}
+      onClick={onClose}
+      aria-modal="true"
+      role="dialog"
+    >
+      <div
+        className="relative flex flex-col items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors"
+          aria-label="Fechar demonstração"
+        >
+          <X size={28} />
+        </button>
+
+        <div
+          className="relative rounded-[2.2rem] p-2 shadow-2xl"
+          style={{ background: "var(--product-ink)" }}
+        >
+          {/* Notch */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-black z-10" />
+
+          <div
+            className="relative overflow-hidden rounded-[1.7rem] bg-white"
+            style={{ width: "min(84vw, 360px)", height: "min(78vh, 680px)" }}
+          >
+            {loading && !error && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm opacity-60">
+                <Smartphone size={32} style={{ color: "var(--product-coral)" }} />
+                <span>Carregando demonstração…</span>
+              </div>
+            )}
+            {error ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
+                <Smartphone size={40} style={{ color: "var(--product-coral)" }} />
+                <p className="text-sm opacity-70">
+                  Não foi possível carregar a prévia aqui.
+                </p>
+                <a
+                  href={DEMO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button size="sm" className="rounded-full gap-2" style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}>
+                    Abrir demo <ExternalLink size={14} />
+                  </Button>
+                </a>
+              </div>
+            ) : (
+              <iframe
+                ref={iframeRef}
+                src={DEMO_URL}
+                title="Demonstração da loja"
+                className="w-full h-full border-0"
+                loading="lazy"
+                onLoad={() => setLoading(false)}
+                onError={() => {
+                  setLoading(false);
+                  setError(true);
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        <p className="text-white/60 text-xs mt-4 text-center max-w-xs">
+          Visualização da loja de exemplo. Toque fora ou pressione ESC para fechar.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: () => void }) {
   return (
     <div
@@ -164,6 +278,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
 export default function LandingPage() {
   const { hash } = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   useEffect(() => {
     if (hash) {
@@ -318,6 +433,15 @@ export default function LandingPage() {
                 <div style={{ color: "var(--product-coral)" }}>{f.icon}</div>
                 <p className="font-semibold text-[15px]">{f.title}</p>
                 <p className="text-sm opacity-60 leading-relaxed">{f.text}</p>
+                {f.demo && (
+                  <button
+                    onClick={() => setDemoOpen(true)}
+                    className="mt-1 text-sm font-medium underline-offset-2 hover:underline flex items-center gap-1.5 w-fit"
+                    style={{ color: "var(--product-coral)" }}
+                  >
+                    Ver demonstração <ExternalLink size={14} />
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -436,6 +560,7 @@ export default function LandingPage() {
       </footer>
 
       <PlanSignupDialog plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
+      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }
