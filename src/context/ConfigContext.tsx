@@ -27,6 +27,10 @@ interface ConfigContextValue {
   /** true quando o acesso central está editando a loja de outra pessoa */
   editingAsAdmin: boolean;
   syncStatus: SyncStatus;
+  /** true quando existem mudanças ainda não gravadas na nuvem */
+  hasUnsavedChanges: boolean;
+  /** grava agora mesmo (usado pelo botão "Salvar alterações") */
+  saveNow: () => Promise<boolean>;
   updateConfig: (patch: Partial<StoreConfig>) => void;
   updateNested: <K extends keyof StoreConfig>(key: K, patch: Partial<StoreConfig[K]>) => void;
   resetConfig: () => void;
