@@ -278,6 +278,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
 export default function LandingPage() {
   const { hash } = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   useEffect(() => {
     if (hash) {
