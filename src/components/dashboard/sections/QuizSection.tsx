@@ -83,7 +83,7 @@ export function QuizSection() {
           />
         </CardHeader>
         {quiz.enabled && (
-          <CardContent>
+          <CardContent className="space-y-4">
             <div>
               <Label>Título do quiz</Label>
               <Input
@@ -104,79 +104,85 @@ export function QuizSection() {
 
       {quiz.enabled && (
         <>
-          <Card>
-            <CardHeader>
-              <CardTitle>Perguntas</CardTitle>
-              <CardDescription>Cada pergunta vira uma etapa do quiz.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {quiz.questions.map((question, qIndex) => (
-                <div key={question.id}>
-                  {qIndex > 0 && <Separator className="my-4" />}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex flex-col">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Pergunta {qIndex + 1}
-                      </span>
-                      {qIndex === 0 && (
-                        <span className="text-[11px] text-muted-foreground/80">
-                          Exemplo: ajuste a pergunta e as respostas ao seu nicho.
-                        </span>
-                      )}
+          <div className="space-y-4">
+            {quiz.questions.map((question, qIndex) => (
+              <Card key={question.id}>
+                <CardHeader className="flex flex-row items-start justify-between gap-4">
+                  <div className="flex flex-col">
+                    <CardTitle className="text-base">Pergunta {qIndex + 1}</CardTitle>
+                    {qIndex === 0 && (
+                      <CardDescription className="text-[11px]">
+                        Exemplo: ajuste a pergunta e as respostas ao seu nicho.
+                      </CardDescription>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => removeQuestion(question.id)}
+                    className="shrink-0 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                    aria-label="Remover pergunta"
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Pergunta</Label>
+                    <Input
+                      value={question.question}
+                      placeholder={qIndex === 0 ? "Ex: Para qual ocasião é o seu look?" : "Digite a pergunta"}
+                      onChange={(e) => updateQuestion(question.id, { question: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Respostas</Label>
+                    <div className="space-y-2 pl-3 border-l-2 border-border">
+                      {question.options.map((opt, oIndex) => (
+                        <div key={opt.id} className="flex items-center gap-2">
+                          <Input
+                            value={opt.label}
+                            placeholder={qIndex === 0 ? `Ex: opção ${oIndex + 1} da 1ª pergunta` : `Opção ${oIndex + 1}`}
+                            onChange={(e) => updateOption(question.id, opt.id, e.target.value)}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => removeOption(question.id, opt.id)}
+                            className="shrink-0 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                            aria-label="Remover opção"
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => addOption(question.id)}
+                      >
+                        <Plus size={14} /> Adicionar opção
+                      </Button>
                     </div>
-                    <button
-                      onClick={() => removeQuestion(question.id)}
-                      style={{ color: "#c0392b" }}
-                      aria-label="Remover pergunta"
-                    >
-                      <Trash2 size={16} />
-                    </button>
                   </div>
-                  <Input
-                    value={question.question}
-                    placeholder={qIndex === 0 ? "Ex: Para qual ocasião é o seu look?" : "Digite a pergunta"}
-                    onChange={(e) => updateQuestion(question.id, { question: e.target.value })}
-                    className="mb-2"
-                  />
-                  <div className="space-y-2 pl-3 border-l-2 border-border">
-                    {question.options.map((opt, oIndex) => (
-                      <div key={opt.id} className="flex items-center gap-2">
-                        <Input
-                          value={opt.label}
-                          placeholder={qIndex === 0 ? `Ex: opção ${oIndex + 1} da 1ª pergunta` : `Opção ${oIndex + 1}`}
-                          onChange={(e) => updateOption(question.id, opt.id, e.target.value)}
-                        />
-                        <button
-                          onClick={() => removeOption(question.id, opt.id)}
-                          style={{ color: "#c0392b" }}
-                          aria-label="Remover opção"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    ))}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => addOption(question.id)}
-                    >
-                      <Plus size={14} /> Adicionar opção
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <Button variant="outline" onClick={addQuestion} className="w-full mt-4">
-                <Plus size={16} /> Adicionar pergunta
-              </Button>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            ))}
+
+            <Button variant="outline" onClick={addQuestion} className="w-full">
+              <Plus size={16} /> Adicionar pergunta
+            </Button>
+          </div>
 
           <Card>
             <CardHeader>
               <CardTitle>Tela de resultado</CardTitle>
               <CardDescription>O que a cliente vê ao terminar o quiz.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div>
                 <Label>Título do resultado</Label>
                 <Input
@@ -195,7 +201,6 @@ export function QuizSection() {
                 O botão final é definido abaixo, em “Links de destino do resultado”,
                 conforme a resposta da 1ª pergunta.
               </p>
-
             </CardContent>
           </Card>
 
