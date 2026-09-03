@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Smartphone,
   Star,
+  Send,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
