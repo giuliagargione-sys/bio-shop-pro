@@ -182,70 +182,66 @@ export function QuizSection() {
               <CardTitle>Tela de resultado</CardTitle>
               <CardDescription>O que a cliente vê ao terminar o quiz.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Título do resultado</Label>
-                <Input
-                  value={quiz.resultTitle}
-                  onChange={(e) => updateNested("quiz", { resultTitle: e.target.value })}
-                />
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label>Título do resultado</Label>
+                  <Input
+                    value={quiz.resultTitle}
+                    onChange={(e) => updateNested("quiz", { resultTitle: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Subtítulo</Label>
+                  <Textarea
+                    value={quiz.resultDescription}
+                    onChange={(e) => updateNested("quiz", { resultDescription: e.target.value })}
+                  />
+                </div>
               </div>
-              <div>
-                <Label>Descrição</Label>
-                <Textarea
-                  value={quiz.resultDescription}
-                  onChange={(e) => updateNested("quiz", { resultDescription: e.target.value })}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                O botão final é definido abaixo, em “Links de destino do resultado”,
-                conforme a resposta da 1ª pergunta.
-              </p>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Links de destino do resultado</CardTitle>
-              <CardDescription>
-                Conforme a resposta da 1ª pergunta, a cliente vai pra um link diferente.
-                Use o link da categoria no seu site. Os textos abaixo são exemplos —
-                adapte a pergunta e as respostas ao seu nicho (moda, beleza, acessórios etc.).
-                São até {MAX_QUIZ_DESTINATIONS} destinos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {destinations.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Crie a 1ª pergunta com as opções do seu nicho para configurar os destinos.
-                </p>
-              )}
-              {destinations.map((dest, index) => (
-                <div key={dest.optionId}>
-                  {index > 0 && <Separator className="my-4" />}
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Ex: se ela responder “{dest.optionLabel}”
-                  </span>
-                  <div className="mt-2 space-y-2">
-                    <div>
-                      <Label>Texto do botão</Label>
-                      <Input
-                        value={dest.label}
-                        placeholder={`Ex: Ver ${dest.optionLabel.toLowerCase()}`}
-                        onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <Label>Link da categoria</Label>
-                      <Input
-                        value={dest.url}
-                        placeholder="https://sualoja.com.br/categoria/balada"
-                        onChange={(e) => updateDestination(dest.optionId, { url: e.target.value })}
-                      />
+              <Separator />
+
+              <div className="space-y-4">
+                <div>
+                  <CardTitle className="text-base">Links de destino do resultado</CardTitle>
+                  <CardDescription>
+                    Conforme a resposta da 1ª pergunta, a cliente vai pra um link diferente.
+                    Use o link da categoria no seu site. São até {MAX_QUIZ_DESTINATIONS} destinos.
+                  </CardDescription>
+                </div>
+                {destinations.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Crie a 1ª pergunta com as opções do seu nicho para configurar os destinos.
+                  </p>
+                )}
+                {destinations.map((dest, index) => (
+                  <div key={dest.optionId}>
+                    {index > 0 && <Separator className="my-4" />}
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Ex: se ela responder “{dest.optionLabel}”
+                    </span>
+                    <div className="mt-2 space-y-2">
+                      <div>
+                        <Label>Texto do botão</Label>
+                        <Input
+                          value={dest.label}
+                          placeholder={`Ex: Ver ${dest.optionLabel.toLowerCase()}`}
+                          onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Link da categoria</Label>
+                        <Input
+                          value={dest.url}
+                          placeholder="https://sualoja.com.br/categoria/balada"
+                          onChange={(e) => updateDestination(dest.optionId, { url: e.target.value })}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </CardContent>
           </Card>
         </>

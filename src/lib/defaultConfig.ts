@@ -97,7 +97,7 @@ export const defaultConfig: StoreConfig = {
       },
     ],
     resultTitle: "Seu look ideal está pronto! ✨",
-    resultDescription: "Toca no botão abaixo pra receber a sugestão completa no WhatsApp.",
+    resultDescription: "Conforme as suas respostas, achamos escolhemos esse para você:",
     resultCtaLabel: "Ver meu look",
   },
   contact: {
