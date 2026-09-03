@@ -6,6 +6,7 @@ import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import FirstPasswordPage from "./pages/FirstPasswordPage";
 import NotFound from "./pages/NotFound";
 import { RequireAuth } from "./components/RequireAuth";
 import { RequireAdmin } from "./components/RequireAdmin";
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/trocar-senha" element={<FirstPasswordPage />} />
       <Route
         path="/personalizar"
         element={
