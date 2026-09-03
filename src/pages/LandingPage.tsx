@@ -591,31 +591,77 @@ export default function LandingPage() {
 
       {/* Pricing */}
       <section id="planos" className="container py-20 sm:py-24" style={{ borderTop: "1px solid var(--product-line)" }}>
-        <div className="text-center max-w-xl mx-auto mb-14 flex flex-col items-center gap-4">
+        <div className="text-center max-w-xl mx-auto mb-10 flex flex-col items-center gap-4">
           <SectionLabel>Planos</SectionLabel>
           <h2 className="text-3xl sm:text-[42px] font-semibold tracking-[-0.02em] leading-tight">
             Escolha o plano e crie sua loja agora
           </h2>
           <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
         </div>
+
+        {/* Billing toggle */}
+        <div className="flex justify-center mb-10">
+          <div
+            className="inline-flex items-center rounded-full p-1 gap-1"
+            style={{ background: "rgba(107, 27, 43, 0.08)", border: "1px solid var(--product-line)" }}
+          >
+            <button
+              type="button"
+              onClick={() => setYearly(false)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                !yearly ? "shadow-sm" : "opacity-60 hover:opacity-80"
+              }`}
+              style={
+                !yearly
+                  ? { background: "var(--product-cream)", color: "var(--product-ink)" }
+                  : { color: "var(--product-ink)" }
+              }
+            >
+              Mensal
+            </button>
+            <button
+              type="button"
+              onClick={() => setYearly(true)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${
+                yearly ? "shadow-sm" : "opacity-60 hover:opacity-80"
+              }`}
+              style={
+                yearly
+                  ? { background: "var(--product-cream)", color: "var(--product-ink)" }
+                  : { color: "var(--product-ink)" }
+              }
+            >
+              Anual
+              <span
+                className="text-[9px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-full"
+                style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
+              >
+                20% Off
+              </span>
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
           <PlanCard
+            yearly={yearly}
             plan={PLANS[0]}
             onChoose={() =>
               setSelectedPlan({
-                slug: PLANS[0].slug,
-                name: PLANS[0].name,
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[0].slug],
+                slug: yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug,
+                name: `${PLANS[0].name} ${yearly ? "Anual" : ""}`.trim(),
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug],
               })
             }
           />
           <PlanCard
+            yearly={yearly}
             plan={PLANS[1]}
             onChoose={() =>
               setSelectedPlan({
-                slug: PLANS[1].slug,
-                name: PLANS[1].name,
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[1].slug],
+                slug: yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug,
+                name: `${PLANS[1].name} ${yearly ? "Anual" : ""}`.trim(),
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug],
               })
             }
           />
