@@ -52,7 +52,7 @@ export function HelpLinksSection() {
             icon={helpLinks.supportIcon ?? "suporte"}
             onChange={(v) =>
               updateNested("helpLinks", {
-                ...(v.color !== undefined || "color" in v ? { supportColor: v.color } : {}),
+                ...("color" in v ? { supportColor: v.color } : {}),
                 ...(v.icon !== undefined ? { supportIcon: v.icon } : {}),
               })
             }

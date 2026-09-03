@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { GripVertical, Plus, Trash2 } from "lucide-react";
 import type { LayoutBlock } from "@/types/config";
 import { BLOCK_LABELS, newButtonBlock, resolveLayoutBlocks } from "@/lib/layout";
+import { ButtonStyleFields } from "@/components/dashboard/ButtonStyleFields";
 import {
   DndContext,
   closestCenter,
@@ -86,6 +87,16 @@ function SortableRow({ block, index, patch, remove }: RowProps) {
               placeholder="https://..."
             />
           </div>
+          <ButtonStyleFields
+            color={block.color}
+            icon={block.icon ?? "link"}
+            onChange={(v) =>
+              patch(block.id, {
+                ...("color" in v ? { color: v.color } : {}),
+                ...(v.icon !== undefined ? { icon: v.icon } : {}),
+              })
+            }
+          />
           <button
             type="button"
             onClick={() => remove(block.id)}
