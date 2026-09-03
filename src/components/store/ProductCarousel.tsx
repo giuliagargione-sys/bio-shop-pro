@@ -59,7 +59,7 @@ export function ProductCarousel({
           centerItems ? "justify-center" : "justify-start"
         }`}
       >
-        {config.products.map((product) => (
+        {config.products.map((product, index) => (
           <a
             key={product.id}
             href={product.link}
@@ -73,7 +73,11 @@ export function ProductCarousel({
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  loading="lazy"
+                  // A primeira imagem costuma ser a LCP: prioriza ela e deixa
+                  // o resto do carrossel em lazy (recomendação do PageSpeed).
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -90,7 +94,7 @@ export function ProductCarousel({
                 <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
                   {product.salePrice?.trim() && product.price?.trim() ? (
                     <>
-                      <span className="text-xs text-muted-foreground line-through">
+                      <span className="text-xs text-foreground/70 line-through">
                         de {product.price}
                       </span>
                       <span className="text-sm font-semibold text-primary">

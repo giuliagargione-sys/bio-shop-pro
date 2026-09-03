@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { optimizeImage } from "./optimizeImage";
 
 // A aluna sobe a imagem do logo direto do computador/celular. O arquivo vai
 // pra uma pasta privada dela dentro do bucket "store-logos" e a gente guarda
@@ -28,12 +29,16 @@ export async function uploadStoreImage(
   const user = userData.user;
   if (!user) return { url: null, error: "Faça login novamente para enviar a imagem." };
 
-  const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const path = `${user.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "png"}`;
+  // Redimensiona/recomprime antes de subir — fotos em tamanho cheio deixavam
+  // a loja pública lenta no celular (apontado no PageSpeed Insights).
+  const optimized = await optimizeImage(file);
+
+  const ext = (optimized.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const path = `${user.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "jpg"}`;
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
-    .upload(path, file, { cacheControl: "31536000", upsert: true, contentType: file.type });
+    .upload(path, optimized, { cacheControl: "31536000", upsert: true, contentType: optimized.type });
 
   if (uploadError) return { url: null, error: "Não conseguimos enviar a imagem. Tente de novo." };
 

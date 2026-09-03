@@ -84,12 +84,18 @@ function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | nu
           playsInline
           muted
           loop
-          preload="metadata"
-          autoPlay
+          // Nada de pré-carregar/baixar os vídeos no carregamento da página:
+          // o IntersectionObserver dá play só quando o card entra na tela.
+          // Isso tirou ~28 MB do payload inicial (apontado no PageSpeed).
+          preload="none"
           className="h-full w-full object-cover"
           onPause={() => setPlaying(false)}
           onPlay={() => setPlaying(true)}
-        />
+          aria-label={video.productName ? `Vídeo: ${video.productName}` : "Vídeo do produto"}
+        >
+          {/* Vídeos mudos de vitrine: trilha vazia pra leitores de tela não quebrarem. */}
+          <track kind="captions" srcLang="pt" label="Sem áudio" />
+        </video>
         <button
           type="button"
           onClick={togglePlay}
