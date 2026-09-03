@@ -510,22 +510,28 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="planos" className="container py-20 sm:py-24" style={{ borderTop: "1px solid var(--product-line)" }}>
-        <div className="text-center max-w-xl mx-auto mb-10 flex flex-col items-center gap-4">
-          <SectionLabel>Planos</SectionLabel>
-          <h2 className="text-3xl sm:text-[42px] font-semibold tracking-[-0.02em] leading-tight">
-            Escolha o plano e crie sua loja agora
-          </h2>
-          <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
+      {/* CTA between Monte sua loja em 5 passos and Planos */}
+      <section className="container -mt-8 sm:-mt-10 mb-6 relative z-10">
+        <div className="flex justify-center">
           <button
             onClick={() => setDemoOpen(true)}
-            className="group mt-2 inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
+            className="group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
             style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
           >
             <Star size={16} className="fill-[var(--product-gold)] text-[var(--product-gold)]" />
             Ver demonstração
           </button>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="planos" className="container py-20 sm:py-24" style={{ borderTop: "1px solid var(--product-line)" }}>
+        <div className="text-center max-w-xl mx-auto mb-14 flex flex-col items-center gap-4">
+          <SectionLabel>Planos</SectionLabel>
+          <h2 className="text-3xl sm:text-[42px] font-semibold tracking-[-0.02em] leading-tight">
+            Escolha o plano e crie sua loja agora
+          </h2>
+          <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
           <PlanCard
