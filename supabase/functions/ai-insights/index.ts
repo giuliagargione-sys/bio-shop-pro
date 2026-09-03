@@ -18,6 +18,8 @@ Deno.serve(async (req: Request) => {
   const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+  let statsOnly = false;
+
   try {
     const authHeader = req.headers.get("Authorization") ?? "";
     const client = createClient(SUPABASE_URL, ANON_KEY, {
@@ -27,25 +29,52 @@ Deno.serve(async (req: Request) => {
     const user = userData.user;
     if (!user) return json({ error: "Não autenticado." }, 401);
 
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    let days = 30;
+    try {
+      const body = await req.json();
+      const d = Number((body as Record<string, unknown>)?.days);
+      if ([1, 7, 30, 90].includes(d)) days = d;
+      if ((body as Record<string, unknown>)?.statsOnly) statsOnly = true;
+    } catch {
+      // sem body: usa o padrão
+    }
+
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
     const [{ data: events }, { data: leads }, { data: store }] = await Promise.all([
       client
         .from("store_events")
-        .select("kind,label,created_at")
+        .select("kind,label,created_at,session_id")
         .eq("store_user_id", user.id)
         .gte("created_at", since)
         .limit(5000),
-      client.from("leads").select("id,answers,created_at").eq("store_user_id", user.id).limit(1000),
+      client
+        .from("leads")
+        .select("id,answers,created_at")
+        .eq("store_user_id", user.id)
+        .gte("created_at", since)
+        .limit(1000),
       client.from("store_config").select("data,slug").eq("user_id", user.id).maybeSingle(),
     ]);
 
     const rows = events ?? [];
+    const uniqueSessions = new Set<string>();
+    const quizSessions = new Set<string>();
+    const byDay: Record<string, number> = {};
     const byKind: Record<string, number> = {};
     const byProduct: Record<string, number> = {};
     const byButton: Record<string, number> = {};
     for (const e of rows) {
       byKind[e.kind] = (byKind[e.kind] ?? 0) + 1;
+      const sid = (e as { session_id?: string | null }).session_id ?? null;
+      if (sid) {
+        uniqueSessions.add(sid);
+        if (e.kind === "quiz") quizSessions.add(sid);
+      }
+      if (e.kind === "visita") {
+        const day = String(e.created_at).slice(0, 10);
+        byDay[day] = (byDay[day] ?? 0) + 1;
+      }
       if (e.kind === "produto" && e.label) byProduct[e.label] = (byProduct[e.label] ?? 0) + 1;
       if ((e.kind === "botao" || e.kind === "whatsapp") && e.label)
         byButton[e.label] = (byButton[e.label] ?? 0) + 1;
@@ -63,9 +92,29 @@ Deno.serve(async (req: Request) => {
     const cliquesBotao = byKind["botao"] ?? 0;
     const totalLeads = (leads ?? []).length;
 
+    const cliquesTotal = cliquesProduto + cliquesWhats + cliquesBotao;
+    const visitantesUnicos = uniqueSessions.size || visitas;
+    const iniciaramQuiz = quizSessions.size || (byKind["quiz"] ?? 0);
+    const serieVisitas = Object.entries(byDay)
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+      .map(([date, count]) => ({ date, count }));
+
     const stats = {
-      periodo: "últimos 30 dias",
+      periodo: days === 1 ? "hoje" : `últimos ${days} dias`,
+      dias: days,
       visitas,
+      visitantesUnicos,
+      cliquesTotal,
+      taxaClique: visitantesUnicos ? Math.round((cliquesTotal / visitantesUnicos) * 100) : 0,
+      funil: {
+        visitantes: visitantesUnicos,
+        iniciaramQuiz,
+        viraramLead: (leads ?? []).length,
+        conversao: visitantesUnicos
+          ? Math.round(((leads ?? []).length / visitantesUnicos) * 100)
+          : 0,
+      },
+      serieVisitas,
       cliquesProduto,
       cliquesWhats,
       cliquesBotao,
@@ -75,6 +124,10 @@ Deno.serve(async (req: Request) => {
       topProducts,
       topButtons,
     };
+
+    if (statsOnly) {
+      return json({ stats, insights: null, error: null });
+    }
 
     if (!LOVABLE_API_KEY) {
       return json({ stats, insights: null, error: "IA não configurada neste projeto." });
