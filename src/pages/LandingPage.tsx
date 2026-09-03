@@ -381,6 +381,8 @@ export default function LandingPage() {
           <MessageCircle size={14} /> Falar com a gente
         </a>
       </footer>
+
+      <PlanSignupDialog plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
     </div>
   );
 }
