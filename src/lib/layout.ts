@@ -2,13 +2,15 @@ import type { LayoutBlock, StoreConfig } from "@/types/config";
 import { uid } from "./utils";
 
 // Blocos fixos que toda loja tem (podem ser reordenados e desligados).
-export const FIXED_BLOCK_TYPES = ["banners", "produtos", "quiz", "ajuda"] as const;
+export const FIXED_BLOCK_TYPES = ["produtos", "quiz"] as const;
 
 export const BLOCK_LABELS: Record<LayoutBlock["type"], string> = {
   banners: "Banners",
+  banner: "Banner",
   produtos: "Carrossel de produtos",
   quiz: "Quiz de estilo",
   ajuda: "Botões extras",
+  helpLink: "Botão extra",
   botao: "Botão personalizado",
 };
 
@@ -26,13 +28,113 @@ export function newButtonBlock(): LayoutBlock {
   };
 }
 
-// Garante que lojas antigas (salvas antes da aba Estrutura) continuem funcionando:
-// os blocos que faltarem entram no fim, na ordem padrão.
+export type HelpLinkItem = {
+  refId: string;
+  label: string;
+  url: string;
+  color?: string;
+  icon?: string;
+};
+
+// Lista dos botões extras da loja (os dois sugeridos + os criados pela aluna).
+export function resolveHelpLinkItems(config: StoreConfig): HelpLinkItem[] {
+  const help = config.helpLinks;
+  const items: HelpLinkItem[] = [
+    {
+      refId: "support",
+      label: help.supportLabel,
+      url: help.supportUrl,
+      color: help.supportColor,
+      icon: help.supportIcon ?? "suporte",
+    },
+    {
+      refId: "returns",
+      label: help.returnsLabel,
+      url: help.returnsUrl,
+      color: help.returnsColor,
+      icon: help.returnsIcon ?? "entrega",
+    },
+  ];
+  (help.extra ?? []).forEach((b) =>
+    items.push({ refId: b.id, label: b.label, url: b.url, color: b.color, icon: b.icon ?? "link" })
+  );
+  return items;
+}
+
+function bannerBlock(refId: string, enabled = true): LayoutBlock {
+  return { id: uid("bloco"), type: "banner", enabled, refId };
+}
+
+function helpLinkBlock(refId: string, enabled = true): LayoutBlock {
+  return { id: uid("bloco"), type: "helpLink", enabled, refId };
+}
+
+// Nome que aparece no painel (Banner 1, Botão extra "Trocas", etc).
+export function blockLabel(block: LayoutBlock, config: StoreConfig, indexes: Record<string, number>) {
+  if (block.type === "banner") {
+    const banner = (config.banners ?? []).find((b) => b.id === block.refId);
+    const n = indexes[block.id] ?? 1;
+    const name = banner?.title?.trim();
+    return name ? `Banner ${n} — ${name}` : `Banner ${n}`;
+  }
+  if (block.type === "helpLink") {
+    const item = resolveHelpLinkItems(config).find((i) => i.refId === block.refId);
+    const n = indexes[block.id] ?? 1;
+    const name = item?.label?.trim();
+    return name ? `Botão ${n} — ${name}` : `Botão extra ${n}`;
+  }
+  if (block.type === "botao") {
+    const name = block.label?.trim();
+    return name ? `Botão personalizado — ${name}` : "Botão personalizado";
+  }
+  return BLOCK_LABELS[block.type];
+}
+
+// Numeração por tipo (banner 1, banner 2, botão 1, botão 2...).
+export function blockIndexes(blocks: LayoutBlock[]): Record<string, number> {
+  const counters: Record<string, number> = {};
+  const out: Record<string, number> = {};
+  blocks.forEach((b) => {
+    counters[b.type] = (counters[b.type] ?? 0) + 1;
+    out[b.id] = counters[b.type];
+  });
+  return out;
+}
+
+// Garante que lojas antigas continuem funcionando e que cada banner/botão extra
+// tenha o seu próprio bloco reordenável.
 export function resolveLayoutBlocks(config: StoreConfig): LayoutBlock[] {
   const saved = Array.isArray(config.layout?.blocks) ? config.layout.blocks : [];
-  const blocks = saved.filter((b) => b && b.type && BLOCK_LABELS[b.type]);
-  const missing = FIXED_BLOCK_TYPES.filter((type) => !blocks.some((b) => b.type === type)).map(
-    (type) => ({ id: uid("bloco"), type, enabled: true })
+  const bannerIds = (config.banners ?? []).map((b) => b.id);
+  const helpIds = resolveHelpLinkItems(config).map((i) => i.refId);
+
+  const blocks: LayoutBlock[] = [];
+  for (const b of saved) {
+    if (!b || !b.type || !BLOCK_LABELS[b.type]) continue;
+    // Migração: os antigos blocos agrupados viram um bloco por item, no mesmo lugar.
+    if (b.type === "banners") {
+      bannerIds.forEach((id) => blocks.push(bannerBlock(id, b.enabled !== false)));
+      continue;
+    }
+    if (b.type === "ajuda") {
+      helpIds.forEach((id) => blocks.push(helpLinkBlock(id, b.enabled !== false)));
+      continue;
+    }
+    if (b.type === "banner" && !bannerIds.includes(b.refId ?? "")) continue;
+    if (b.type === "helpLink" && !helpIds.includes(b.refId ?? "")) continue;
+    blocks.push(b);
+  }
+
+  // Itens novos (banner recém-criado, botão extra novo) entram no fim.
+  bannerIds
+    .filter((id) => !blocks.some((b) => b.type === "banner" && b.refId === id))
+    .forEach((id) => blocks.push(bannerBlock(id)));
+  helpIds
+    .filter((id) => !blocks.some((b) => b.type === "helpLink" && b.refId === id))
+    .forEach((id) => blocks.push(helpLinkBlock(id)));
+  FIXED_BLOCK_TYPES.filter((type) => !blocks.some((b) => b.type === type)).forEach((type) =>
+    blocks.push({ id: uid("bloco"), type, enabled: true })
   );
-  return [...blocks, ...missing];
+
+  return blocks;
 }
