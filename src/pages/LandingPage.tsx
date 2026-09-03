@@ -21,6 +21,9 @@ import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignup
 import { Button } from "@/components/ui/button";
 import { storeUrl } from "@/lib/storeUrl";
 
+const DEMO_SLUG = "giuteste";
+const DEMO_URL = storeUrl(DEMO_SLUG);
+
 const FEATURES = [
   {
     icon: <Link2 size={18} />,
@@ -41,6 +44,7 @@ const FEATURES = [
     icon: <Zap size={18} />,
     title: "Rápido e fácil",
     text: "Toda estrutura pronta, sem precisar de programação. Fácil e rápido de personalizar.",
+    demo: true,
   },
 ];
 
