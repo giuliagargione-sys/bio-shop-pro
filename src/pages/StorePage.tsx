@@ -59,8 +59,17 @@ export default function StorePage() {
 
   return (
     <div className="min-h-screen font-brand store-shell">
+      <PageMeta
+        title={`${config.storeName} — Link Na Bio Que Vende`}
+        description={
+          config.tagline?.trim() ||
+          `Conheça as peças em destaque de ${config.storeName} e descubra seu look ideal pelo quiz.`
+        }
+        path={`/loja/${slug ?? ""}`}
+      />
       <StoreNav config={config} />
       <Hero config={config} />
+
       {resolveLayoutBlocks(config)
         .filter((block) => block.enabled)
         .map((block) => {
