@@ -120,8 +120,6 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
   useEffect(() => {
     if (open) {
-      setLoading(true);
-      setError(false);
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -139,11 +137,11 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
 
-  if (!open) return null;
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
+        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}
       style={{ background: "rgba(11,11,11,0.72)", backdropFilter: "blur(6px)" }}
       onClick={onClose}
       aria-modal="true"
@@ -177,13 +175,13 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             style={{ width: "min(84vw, 390px)", height: "min(78vh, 720px)" }}
           >
             {loading && !error && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm opacity-60">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm opacity-60 z-10 bg-white">
                 <Smartphone size={32} style={{ color: "var(--product-coral)" }} />
                 <span>Carregando demonstração…</span>
               </div>
             )}
-            {error ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
+            {error && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center z-10 bg-white">
                 <Smartphone size={40} style={{ color: "var(--product-coral)" }} />
                 <p className="text-sm opacity-70">
                   Não foi possível carregar a prévia aqui.
@@ -198,20 +196,19 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </Button>
                 </a>
               </div>
-            ) : (
-              <iframe
-                ref={iframeRef}
-                src={DEMO_URL}
-                title="Demonstração da loja"
-                className="w-full h-full border-0"
-                loading="lazy"
-                onLoad={() => setLoading(false)}
-                onError={() => {
-                  setLoading(false);
-                  setError(true);
-                }}
-              />
             )}
+            <iframe
+              ref={iframeRef}
+              src={DEMO_URL}
+              title="Demonstração da loja"
+              className="w-full h-full border-0"
+              loading="eager"
+              onLoad={() => setLoading(false)}
+              onError={() => {
+                setLoading(false);
+                setError(true);
+              }}
+            />
           </div>
 
           {/* Footer do celular */}
