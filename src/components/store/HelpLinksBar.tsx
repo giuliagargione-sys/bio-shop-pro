@@ -1,6 +1,6 @@
-import { LifeBuoy, RefreshCcw, Link2 } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { resolveWhatsAppHref } from "@/lib/utils";
+import { getButtonIcon, readableTextColor } from "@/lib/buttonStyle";
 
 export function HelpLinksBar({ config }: { config: StoreConfig }) {
   const { helpLinks, contact, theme } = config;
@@ -16,35 +16,59 @@ export function HelpLinksBar({ config }: { config: StoreConfig }) {
 
   if (!supportHref && !returnsHref && extra.length === 0) return null;
 
-  const buttonStyle = {
-    background: theme.primary,
-    color: theme.primaryForeground,
-  } as React.CSSProperties;
+  const styleFor = (color?: string): React.CSSProperties => ({
+    background: color || theme.primary,
+    color: (color && readableTextColor(color)) || theme.primaryForeground,
+  });
 
   const itemClass =
     "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-medium shadow-sm hover:opacity-90 active:opacity-95 transition-opacity";
 
+  const SupportIcon = getButtonIcon(helpLinks.supportIcon ?? "suporte");
+  const ReturnsIcon = getButtonIcon(helpLinks.returnsIcon ?? "entrega");
+
   return (
     <div className="container max-w-md mx-auto px-4 sm:px-0 flex flex-col items-stretch gap-3 py-6">
       {supportHref && (
-        <a href={supportHref} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
-          <LifeBuoy size={18} />
+        <a
+          href={supportHref}
+          target="_blank"
+          rel="noreferrer"
+          className={itemClass}
+          style={styleFor(helpLinks.supportColor)}
+        >
+          {SupportIcon && <SupportIcon size={18} />}
           {helpLinks.supportLabel}
         </a>
       )}
       {returnsHref && (
-        <a href={returnsHref} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
-          <RefreshCcw size={18} />
+        <a
+          href={returnsHref}
+          target="_blank"
+          rel="noreferrer"
+          className={itemClass}
+          style={styleFor(helpLinks.returnsColor)}
+        >
+          {ReturnsIcon && <ReturnsIcon size={18} />}
           {helpLinks.returnsLabel}
         </a>
       )}
-      {extra.map((b) => (
-        <a key={b.id} href={b.url} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
-          <Link2 size={18} />
-          {b.label}
-        </a>
-      ))}
+      {extra.map((b) => {
+        const Icon = getButtonIcon(b.icon ?? "link");
+        return (
+          <a
+            key={b.id}
+            href={b.url}
+            target="_blank"
+            rel="noreferrer"
+            className={itemClass}
+            style={styleFor(b.color)}
+          >
+            {Icon && <Icon size={18} />}
+            {b.label}
+          </a>
+        );
+      })}
     </div>
   );
 }
-
