@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Loader2, Sparkles, TrendingUp } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { ProLock } from "@/components/dashboard/ProLock";
+import { usePlan } from "@/hooks/usePlan";
 
 interface Stats {
   visitas: number;
@@ -20,6 +22,7 @@ export function InsightsSection() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [insights, setInsights] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { isPro, loading: planLoading } = usePlan();
 
   async function run() {
     if (!isSupabaseConfigured) {
@@ -95,6 +98,11 @@ export function InsightsSection() {
         </CardContent>
       </Card>
 
+      <ProLock
+        locked={!isPro && !planLoading}
+        title="Insights com IA é do plano PRO"
+        description="No PRO a IA lê seus cliques e leads e te diz o que ajustar pra vender mais."
+      >
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -145,6 +153,7 @@ export function InsightsSection() {
           </Button>
         </CardContent>
       </Card>
+      </ProLock>
     </div>
   );
 }
