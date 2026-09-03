@@ -71,28 +71,30 @@ export default function StorePage() {
         path={`/${slug ?? ""}`}
       />
       <StoreNav config={config} />
-      <Hero config={config} />
+      <main>
+        <Hero config={config} />
 
-      {resolveLayoutBlocks(config)
-        .filter((block) => block.enabled)
-        .map((block) => {
-          if (block.type === "banner") {
-            const banner = (config.banners ?? []).find((b) => b.id === block.refId);
-            if (!banner) return null;
-            return <BannerCard key={block.id} banner={banner} ownerId={ownerId} />;
-          }
-          if (block.type === "helpLink") {
-            const item = resolveHelpLinkItems(config).find((i) => i.refId === block.refId);
-            if (!item) return null;
-            return <HelpLinkButton key={block.id} item={item} config={config} />;
-          }
-          if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} ownerId={ownerId} />;
-          if (block.type === "videos")
-            return <VideoCarousel key={block.id} config={config} ownerId={ownerId} />;
-          if (block.type === "quiz")
-            return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;
-          return <CustomButtonBlock key={block.id} block={block} ownerId={ownerId} />;
-        })}
+        {resolveLayoutBlocks(config)
+          .filter((block) => block.enabled)
+          .map((block) => {
+            if (block.type === "banner") {
+              const banner = (config.banners ?? []).find((b) => b.id === block.refId);
+              if (!banner) return null;
+              return <BannerCard key={block.id} banner={banner} ownerId={ownerId} />;
+            }
+            if (block.type === "helpLink") {
+              const item = resolveHelpLinkItems(config).find((i) => i.refId === block.refId);
+              if (!item) return null;
+              return <HelpLinkButton key={block.id} item={item} config={config} />;
+            }
+            if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} ownerId={ownerId} />;
+            if (block.type === "videos")
+              return <VideoCarousel key={block.id} config={config} ownerId={ownerId} />;
+            if (block.type === "quiz")
+              return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;
+            return <CustomButtonBlock key={block.id} block={block} ownerId={ownerId} />;
+          })}
+      </main>
       <StoreFooter config={config} />
     </div>
   );
