@@ -205,6 +205,20 @@ export default function AdminPage() {
   const ativas = alunas.filter((a) => a.paymentStatus === "ativo").length;
   const inadimplentes = alunas.filter((a) => a.paymentStatus === "inadimplente").length;
 
+  const term = search.trim().toLowerCase();
+  const filtradas = alunas.filter((a) => {
+    if (!term) return true;
+    return (
+      (a.email ?? "").toLowerCase().includes(term) ||
+      (a.storeName ?? "").toLowerCase().includes(term) ||
+      (a.slug ?? "").toLowerCase().includes(term)
+    );
+  });
+  const lojasAtivas = filtradas.filter((a) => a.slug && a.active);
+  const lojasInativas = filtradas.filter((a) => !a.slug || !a.active);
+  const visiveis = tab === "ativas" ? lojasAtivas : lojasInativas;
+
+
   return (
     <div className="min-h-screen bg-muted">
       <PageMeta title="Painel admin — Link Na Bio Que Vende" description="Controle todas as lojas, edições e ativação de links." path="/admin" noindex />
