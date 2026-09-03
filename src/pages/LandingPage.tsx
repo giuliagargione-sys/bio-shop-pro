@@ -519,20 +519,35 @@ export default function LandingPage() {
           </h2>
           <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-          {PLANS.map((plan) => (
-            <PlanCard
-              key={plan.slug}
-              plan={plan}
-              onChoose={() =>
-                setSelectedPlan({
-                  slug: plan.slug,
-                  name: plan.name,
-                  checkoutUrl: HUBLA_CHECKOUT_LINKS[plan.slug],
-                })
-              }
-            />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-5 max-w-3xl mx-auto items-center">
+          <PlanCard
+            plan={PLANS[0]}
+            onChoose={() =>
+              setSelectedPlan({
+                slug: PLANS[0].slug,
+                name: PLANS[0].name,
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[0].slug],
+              })
+            }
+          />
+          <button
+            onClick={() => setDemoOpen(true)}
+            className="group mx-auto sm:mx-0 inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
+            style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
+          >
+            <Star size={16} className="fill-[var(--product-gold)] text-[var(--product-gold)]" />
+            Ver demonstração
+          </button>
+          <PlanCard
+            plan={PLANS[1]}
+            onChoose={() =>
+              setSelectedPlan({
+                slug: PLANS[1].slug,
+                name: PLANS[1].name,
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[1].slug],
+              })
+            }
+          />
         </div>
         <p className="text-center text-sm opacity-60 mt-10">
           Já pagou e ainda não criou sua conta?{" "}
