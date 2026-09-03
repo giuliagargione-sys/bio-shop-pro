@@ -10,6 +10,8 @@ import { uid } from "@/lib/utils";
 import { uploadStoreVideo } from "@/lib/videoUpload";
 import { uploadStoreImage } from "@/lib/logoUpload";
 import type { VideoItem } from "@/types/config";
+import { ProLock } from "@/components/dashboard/ProLock";
+import { usePlan } from "@/hooks/usePlan";
 
 function VideoField({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
