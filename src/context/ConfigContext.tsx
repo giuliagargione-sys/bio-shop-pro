@@ -37,7 +37,16 @@ interface ConfigContextValue {
   changeSlug: (newSlug: string) => Promise<{ ok: boolean; error: string | null }>;
 }
 
-const ConfigContext = createContext<ConfigContextValue | null>(null);
+// Mantém o mesmo objeto de contexto entre recarregamentos do HMR — sem isso,
+// ao editar este arquivo o provider já montado usa um contexto antigo e o hook
+// enxerga null ("precisa estar dentro de <ConfigProvider>").
+const globalStore = globalThis as unknown as {
+  __storeConfigContext?: ReturnType<typeof createContext<ConfigContextValue | null>>;
+};
+const ConfigContext =
+  globalStore.__storeConfigContext ?? createContext<ConfigContextValue | null>(null);
+globalStore.__storeConfigContext = ConfigContext;
+
 
 // Aplica as cores/fonte/raio como variaveis CSS no documento inteiro —
 // assim a dashboard mostra em tempo real a personalização que está sendo feita.
