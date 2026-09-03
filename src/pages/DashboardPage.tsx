@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useStoreConfig } from "@/context/ConfigContext";
@@ -38,6 +39,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout active={active} onChange={setActive}>
+      <PageMeta title="Personalizar minha loja — Link Na Bio Que Vende" description="Edite logo, cores, produtos, quiz e botões da sua loja no link da bio." path="/personalizar" noindex />
       {editingAsAdmin && (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-muted p-3 text-sm">
           <span>

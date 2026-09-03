@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link } from "react-router-dom";
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
@@ -42,6 +43,7 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center p-4 font-product"
       style={{ background: "var(--product-cream)" }}
     >
+      <PageMeta title="Entrar — Link Na Bio Que Vende" description="Acesse sua dashboard para editar sua loja, ver leads e acompanhar os cliques do seu link." path="/login" noindex />
       <div className="w-full max-w-sm">
         <Link
           to="/"

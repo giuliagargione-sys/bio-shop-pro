@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -177,6 +178,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-muted">
+      <PageMeta title="Painel admin — Link Na Bio Que Vende" description="Controle todas as lojas, edições e ativação de links." path="/admin" noindex />
       <header className="bg-white border-b border-border">
         <div className="container flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
