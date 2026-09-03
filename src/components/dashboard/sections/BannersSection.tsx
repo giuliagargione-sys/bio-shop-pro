@@ -190,7 +190,7 @@ export function BannersSection() {
           onClick={() =>
             setBanners([
               ...banners,
-              { id: uid("banner"), imageUrl: "", link: "", title: "", ratio: "4/5", enabled: true },
+              { id: uid("banner"), imageUrl: "", link: "", title: "", enabled: true },
             ])
           }
           className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted"
