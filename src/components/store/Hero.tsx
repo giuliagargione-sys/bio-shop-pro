@@ -15,20 +15,24 @@ export function Hero({ config }: { config: StoreConfig }) {
           {config.hero.subheadline}
         </p>
         <div className="flex w-full max-w-sm flex-col items-stretch justify-center gap-3 pt-1">
-          <a href={config.hero.primaryCtaHref}>
-            <Button size="lg" className="w-full h-12">
-              {config.hero.primaryCtaLabel}
-            </Button>
-          </a>
-          <a href={config.hero.secondaryCtaHref}>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full h-12 border-white/40 text-secondary-foreground"
-            >
-              {config.hero.secondaryCtaLabel}
-            </Button>
-          </a>
+          {config.hero.primaryCtaHref && (
+            <a href={config.hero.primaryCtaHref}>
+              <Button size="lg" className="w-full h-12">
+                {config.hero.primaryCtaLabel}
+              </Button>
+            </a>
+          )}
+          {config.hero.secondaryCtaHref && (
+            <a href={config.hero.secondaryCtaHref}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full h-12 border-white/40 text-secondary-foreground"
+              >
+                {config.hero.secondaryCtaLabel}
+              </Button>
+            </a>
+          )}
         </div>
       </div>
     </section>
