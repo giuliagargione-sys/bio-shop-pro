@@ -56,6 +56,7 @@ export default function DashboardPage() {
         </div>
       )}
       {SECTION_MAP[active]}
+      {!READ_ONLY_SECTIONS.includes(active) && <SaveBar />}
     </DashboardLayout>
   );
 }
