@@ -57,7 +57,7 @@ const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   pro: "https://pay.hub.la/SEU-LINK-PRO",
 };
 
-type PlanFeature = string | { text: string; highlight?: boolean };
+type PlanFeature = string | { text: string; highlight?: boolean; star?: boolean };
 
 const PLANS = [
   {
@@ -83,11 +83,11 @@ const PLANS = [
     tagline: "Pra quem quer vender mais com menos esforço",
     features: [
       "Tudo do plano Essencial",
-      { text: "Insights com IA: melhorar vendas com base nos dados do seu negócio!", highlight: true },
-      "Banners personalizados",
-      "Vídeos Reels",
-      "Botões extras personalizados",
-      "Suporte prioritário",
+      { text: "Insights com IA: melhorar vendas com base nos dados do seu negócio!", highlight: true, star: true },
+      { text: "Banners personalizados", star: true },
+      { text: "Vídeos Reels", star: true },
+      { text: "Botões extras personalizados", star: true },
+      { text: "Suporte prioritário", star: true },
     ] as PlanFeature[],
 
     highlighted: true,
@@ -262,9 +262,11 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
         {plan.features.map((f, idx) => {
           const text = typeof f === "string" ? f : f.text;
           const isHighlight = typeof f !== "string" && f.highlight;
+          const isStar = typeof f !== "string" && f.star;
+          const Icon = isStar ? Star : Check;
           return (
             <li key={`${text}-${idx}`} className="flex items-start gap-2.5 text-sm leading-relaxed">
-              <Check
+              <Icon
                 size={15}
                 className="shrink-0 mt-1"
                 style={{ color: isPro ? "var(--product-gold)" : "var(--product-coral)" }}
