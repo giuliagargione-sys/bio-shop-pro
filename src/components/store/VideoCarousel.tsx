@@ -99,9 +99,9 @@ export function VideoCarousel({
   ownerId?: string | null;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const videos = (config.videos ?? []).filter(
-    (v) => v.enabled !== false && v.videoUrl?.trim()
-  );
+  const videos = (config.videos ?? [])
+    .filter((v) => v.enabled !== false && v.videoUrl?.trim())
+    .slice(0, 4);
 
   if (videos.length === 0) return null;
 

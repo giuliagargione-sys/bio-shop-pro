@@ -10,6 +10,8 @@ import { uid } from "@/lib/utils";
 import { uploadStoreVideo } from "@/lib/videoUpload";
 import { uploadStoreImage } from "@/lib/logoUpload";
 import type { VideoItem } from "@/types/config";
+import { ProLock } from "@/components/dashboard/ProLock";
+import { usePlan } from "@/hooks/usePlan";
 
 function VideoField({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -129,15 +131,24 @@ function PosterField({ value, onChange }: { value: string; onChange: (url: strin
   );
 }
 
+const MAX_VIDEOS = 4;
+
 export function VideosSection() {
   const { config, updateConfig } = useStoreConfig();
+  const { isPro, loading: planLoading } = usePlan();
   const videos = config.videos ?? [];
+  const atLimit = videos.length >= MAX_VIDEOS;
 
   const setVideos = (next: VideoItem[]) => updateConfig({ videos: next });
   const patch = (id: string, values: Partial<VideoItem>) =>
     setVideos(videos.map((v) => (v.id === id ? { ...v, ...values } : v)));
 
   return (
+    <ProLock
+      locked={!isPro && !planLoading}
+      title="Carrossel de vídeos é do plano PRO"
+      description="No PRO você sobe até 4 vídeos clicáveis com o card do produto na sua loja."
+    >
     <Card>
       <CardHeader>
         <CardTitle>Carrossel de vídeos</CardTitle>
@@ -237,18 +248,25 @@ export function VideosSection() {
 
         <button
           type="button"
+          disabled={atLimit}
           onClick={() =>
             setVideos([
               ...videos,
               { id: uid("video"), videoUrl: "", productName: "", link: "", enabled: true },
             ])
           }
-          className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted"
+          className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
         >
           <Plus size={16} />
           Adicionar vídeo
         </button>
+        <p className="text-xs text-muted-foreground">
+          {atLimit
+            ? "Você chegou no limite de 4 vídeos. Exclua um pra adicionar outro — assim a loja continua leve e rápida."
+            : `Você pode adicionar até 4 vídeos (${videos.length}/4) pra não pesar a página.`}
+        </p>
       </CardContent>
     </Card>
+    </ProLock>
   );
 }
