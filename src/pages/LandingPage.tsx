@@ -236,7 +236,7 @@ export default function LandingPage() {
           </span>
         </h1>
         <p className="max-w-xl text-base sm:text-lg opacity-65 leading-relaxed mt-6">
-          O link da sua bio leva a cliente direto pro produto certo — pra ela comprar ali, na hora.
+          O link da sua bio leva a cliente direto pro produto certo.
           E se não comprar, a venda não é perdida: o contato cai pronto pra você{" "}
           <span className="font-semibold" style={{ color: "var(--product-coral-dark)" }}>
             recuperar no WhatsApp
