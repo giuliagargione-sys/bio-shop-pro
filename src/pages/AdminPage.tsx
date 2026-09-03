@@ -253,7 +253,10 @@ export default function AdminPage() {
           </Card>
         </div>
 
+        <SupportTickets />
+
         <CreateAlunaCard onCreated={load} />
+
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
