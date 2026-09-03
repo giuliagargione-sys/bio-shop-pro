@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
+// A loja pública é o que mais importa em velocidade: ela fica no bundle
+// principal e todo o resto (landing, dashboard, admin, login) é carregado
+// só quando a rota é aberta — isso reduz o JS baixado pela cliente final.
 import StorePage from "./pages/StorePage";
-import DashboardPage from "./pages/DashboardPage";
-import AdminPage from "./pages/AdminPage";
-import LoginPage from "./pages/LoginPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import FirstPasswordPage from "./pages/FirstPasswordPage";
-import NotFound from "./pages/NotFound";
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
+const FirstPasswordPage = lazy(() => import("./pages/FirstPasswordPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 import { RequireAuth } from "./components/RequireAuth";
 import { RequireAdmin } from "./components/RequireAdmin";
 import { ConfigProvider } from "./context/ConfigContext";
@@ -42,6 +45,7 @@ export default function App() {
   return (
     <>
       <StoreHostGate />
+      <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/loja/:slug" element={<StorePage />} />
@@ -71,6 +75,7 @@ export default function App() {
       <Route path="/:slug" element={<StorePage />} />
       <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </>
   );
 }
