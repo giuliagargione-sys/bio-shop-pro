@@ -102,9 +102,8 @@ export function BannersSection() {
       <CardHeader>
         <CardTitle>Banners da loja</CardTitle>
         <CardDescription>
-          Suba uma imagem clicável pra destacar uma coleção, promoção ou lançamento. Os banners são
-          feitos pra celular: ocupam a largura do link, sem cortar a imagem. A posição deles na
-          página você escolhe em "Estrutura e visual", na ordem das seções.
+          Suba uma imagem e a deixe clicável pra destacar uma coleção, promoção ou lançamento. Os
+          banners serão adequados para formato mobile.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
