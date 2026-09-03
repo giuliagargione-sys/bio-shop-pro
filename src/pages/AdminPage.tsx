@@ -290,7 +290,43 @@ export default function AdminPage() {
               <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
             </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
+            <div className="relative">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar por e-mail de cadastro ou nome da loja"
+                className="pl-9"
+                aria-label="Buscar loja"
+              />
+            </div>
+
+            <div className="flex gap-2 border-b border-border pb-2">
+              <button
+                type="button"
+                onClick={() => setTab("ativas")}
+                className={`text-sm font-medium pb-1 px-2 border-b-2 transition-colors ${
+                  tab === "ativas"
+                    ? "border-[var(--product-coral)] text-[var(--product-coral)]"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Ativas ({lojasAtivas.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab("inativas")}
+                className={`text-sm font-medium pb-1 px-2 border-b-2 transition-colors ${
+                  tab === "inativas"
+                    ? "border-[var(--product-coral)] text-[var(--product-coral)]"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Inativas ({lojasInativas.length})
+              </button>
+            </div>
+
             {error && (
               <div className="flex gap-2 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
                 <AlertCircle size={16} className="shrink-0 mt-0.5" />
@@ -306,10 +342,17 @@ export default function AdminPage() {
               <p className="text-sm text-muted-foreground">Ninguém criou conta ainda.</p>
             )}
 
+            {!loading && alunas.length > 0 && visiveis.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {term ? "Nenhuma loja encontrada com essa busca." : "Nada nessa aba por enquanto."}
+              </p>
+            )}
+
             <div className="overflow-x-auto">
               <div className="min-w-[560px] space-y-2">
-                {alunas.map((a) => (
+                {visiveis.map((a) => (
                   <div
+
                     key={a.id}
                     className="rounded-lg border border-border p-3 flex items-center justify-between gap-3"
                   >
