@@ -54,7 +54,9 @@ export function ProductCarousel({
       {/* No celular o carrossel mostra um cartão por vez, centralizado, com dica de arrastar. */}
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
+        className={`flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
+          centerItems ? "justify-center" : "justify-start"
+        }`}
       >
         {config.products.map((product) => (
           <a
