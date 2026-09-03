@@ -117,7 +117,7 @@ function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
                 className="shrink-0 mt-0.5"
                 style={{ color: plan.highlighted ? "var(--product-gold)" : "var(--product-coral)" }}
               />
-              <span className={`opacity-90 ${isHighlight ? "font-semibold" : ""}`}>{text}</span>
+              <span className={`opacity-90 ${isHighlight ? "underline underline-offset-2" : ""}`}>{text}</span>
             </li>
           );
         })}
