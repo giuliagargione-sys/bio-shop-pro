@@ -263,6 +263,7 @@ export default function LandingPage() {
         </p>
 
         <div
+          id="hero-benefits"
           className="grid sm:grid-cols-3 w-full max-w-4xl mt-14 rounded-lg overflow-hidden"
           style={{ border: "1px solid var(--product-line)", background: "#ffffff" }}
         >
