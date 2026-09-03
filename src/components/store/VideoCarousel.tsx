@@ -4,6 +4,27 @@ import type { StoreConfig, VideoItem } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
 import { Button } from "@/components/ui/button";
 
+function useCenterItems<T extends HTMLElement>(deps: unknown[]) {
+  const ref = useRef<T>(null);
+  const [centerItems, setCenterItems] = useState(true);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setCenterItems(el.scrollWidth <= el.clientWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, deps);
+
+  return { ref, centerItems };
+}
+
 // Carrossel de videos (reels) mobile-first. O card inteiro é clicável e leva
 // pra página do produto no site da aluna.
 function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | null }) {
