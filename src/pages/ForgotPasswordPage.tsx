@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -42,6 +43,7 @@ export default function ForgotPasswordPage() {
       className="min-h-screen flex items-center justify-center p-4 font-product"
       style={{ background: "var(--product-cream)" }}
     >
+      <PageMeta title="Recuperar senha — Link Na Bio Que Vende" description="Receba um e-mail para criar uma nova senha e voltar a acessar sua dashboard." path="/recuperar-senha" noindex />
       <div className="w-full max-w-sm">
         <Link
           to="/login"

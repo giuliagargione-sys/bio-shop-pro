@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -157,6 +158,7 @@ export default function LandingPage() {
 
   return (
     <div className="font-product" style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}>
+      <PageMeta title="Link Na Bio Que Vende — sua loja no link da bio do Instagram" description="Monte sua loja no link da bio: produtos em destaque, quiz que vira venda e leads prontos pra fechar no WhatsApp." path="/" />
       {/* Nav */}
       <header className="sticky top-0 z-30 backdrop-blur border-b" style={{ borderColor: "var(--product-line)", background: "rgba(255,253,249,0.88)" }}>
         <div className="container flex items-center justify-between py-3">

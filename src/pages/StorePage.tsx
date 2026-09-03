@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { PageMeta } from "@/components/PageMeta";
 import { useParams } from "react-router-dom";
 import { usePublicStore } from "@/hooks/usePublicStore";
 import { StoreNav } from "@/components/store/StoreNav";
@@ -59,8 +60,17 @@ export default function StorePage() {
 
   return (
     <div className="min-h-screen font-brand store-shell">
+      <PageMeta
+        title={`${config.brand.storeName} — Link Na Bio Que Vende`}
+        description={
+          config.brand.tagline?.trim() ||
+          `Conheça as peças em destaque de ${config.brand.storeName} e descubra seu look ideal pelo quiz.`
+        }
+        path={`/loja/${slug ?? ""}`}
+      />
       <StoreNav config={config} />
       <Hero config={config} />
+
       {resolveLayoutBlocks(config)
         .filter((block) => block.enabled)
         .map((block) => {

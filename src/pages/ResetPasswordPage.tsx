@@ -1,3 +1,4 @@
+import { PageMeta } from "@/components/PageMeta";
 import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -69,6 +70,7 @@ export default function ResetPasswordPage() {
       className="min-h-screen flex items-center justify-center p-4 font-product"
       style={{ background: "var(--product-cream)" }}
     >
+      <PageMeta title="Criar nova senha — Link Na Bio Que Vende" description="Defina uma nova senha para a sua conta do Link Na Bio Que Vende." path="/reset-password" noindex />
       <div className="w-full max-w-sm">
         <Link
           to="/login"
