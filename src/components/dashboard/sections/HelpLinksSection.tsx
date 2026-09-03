@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { uid } from "@/lib/utils";
 import type { ExtraLink } from "@/types/config";
 import { ProLock } from "@/components/dashboard/ProLock";
+import { ButtonStyleFields } from "@/components/dashboard/ButtonStyleFields";
 import { usePlan } from "@/hooks/usePlan";
 
 export function HelpLinksSection() {
@@ -25,7 +26,8 @@ export function HelpLinksSection() {
           <CardTitle>Botões extras</CardTitle>
           <CardDescription>
             Botões extras na loja pra tirar dúvida, trocas/devoluções ou qualquer outro destino.
-            Coloque o link pra onde cada um deve levar — pode ser WhatsApp, Instagram, um formulário, o que for.
+            Coloque o link pra onde cada um deve levar — pode ser WhatsApp, Instagram, um formulário, o que
+            for. Você também escolhe a cor e o símbolo de cada botão pra dar destaque.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -45,6 +47,16 @@ export function HelpLinksSection() {
               placeholder="https://wa.me/55... ou https://instagram.com/..."
             />
           </div>
+          <ButtonStyleFields
+            color={helpLinks.supportColor}
+            icon={helpLinks.supportIcon ?? "suporte"}
+            onChange={(v) =>
+              updateNested("helpLinks", {
+                ...("color" in v ? { supportColor: v.color } : {}),
+                ...(v.icon !== undefined ? { supportIcon: v.icon } : {}),
+              })
+            }
+          />
 
           <Separator className="my-2" />
 
@@ -64,6 +76,16 @@ export function HelpLinksSection() {
               placeholder="https://... (política de trocas, formulário, WhatsApp)"
             />
           </div>
+          <ButtonStyleFields
+            color={helpLinks.returnsColor}
+            icon={helpLinks.returnsIcon ?? "entrega"}
+            onChange={(v) =>
+              updateNested("helpLinks", {
+                ...("color" in v ? { returnsColor: v.color } : {}),
+                ...(v.icon !== undefined ? { returnsIcon: v.icon } : {}),
+              })
+            }
+          />
           <p className="text-xs text-muted-foreground">
             Se deixar o link em branco, o botão continua aparecendo e leva pro seu WhatsApp.
           </p>
@@ -124,6 +146,23 @@ export function HelpLinksSection() {
                   }
                 />
               </div>
+              <ButtonStyleFields
+                color={item.color}
+                icon={item.icon ?? "link"}
+                onChange={(v) =>
+                  setExtra(
+                    extra.map((b) =>
+                      b.id === item.id
+                        ? {
+                            ...b,
+                            ...("color" in v ? { color: v.color } : {}),
+                            ...(v.icon !== undefined ? { icon: v.icon } : {}),
+                          }
+                        : b
+                    )
+                  )
+                }
+              />
             </div>
           ))}
           <Button
