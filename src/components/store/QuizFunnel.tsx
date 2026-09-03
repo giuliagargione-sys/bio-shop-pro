@@ -155,7 +155,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
                   onClick={submitContactAndFinish}
                 >
                   {saving && <Loader2 size={16} className="animate-spin" />}
-                  {saving ? "Enviando..." : "Ver meu look"}
+                  {saving ? "Enviando..." : "clique aqui para ver as peças que separados para você!"}
                 </Button>
               </div>
             </>
