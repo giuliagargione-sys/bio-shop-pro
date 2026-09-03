@@ -100,12 +100,16 @@ function StoreAddressCard() {
                 <Copy size={14} className="mr-1.5" />
                 {copied ? "Copiado!" : "Copiar link"}
               </Button>
-              <Button size="sm" variant="ghost" asChild>
-                <a href={`/loja/${slug}`} target="_blank" rel="noreferrer">
-                  <ExternalLink size={14} className="mr-1.5" />
-                  Ver minha loja
-                </a>
-              </Button>
+              <a
+                href={`/loja/${slug}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center h-9 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground"
+              >
+                <ExternalLink size={14} className="mr-1.5" />
+                Ver minha loja
+              </a>
+
             </>
           )}
         </div>
