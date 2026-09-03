@@ -80,10 +80,12 @@ const PLANS = [
     name: "PRO",
     price: "R$ 97",
     period: "/mês",
-    tagline: "Pra quem quer tirar o trabalho manual do caminho",
+    tagline: "Pra quem quer vender mais com menos esforço",
     features: [
       "Tudo do plano Essencial",
-      { text: "Insights com IA: a partir dos cliques e do uso do seu link, a IA te diz o que ajustar pra vender mais", highlight: true },
+      { text: "Insights com IA: melhorar vendas com base nos dados do seu negócio!", highlight: true },
+      "Banners personalizados",
+      "Vídeos Reels",
       "Botões extras personalizados",
       "Suporte prioritário",
     ] as PlanFeature[],
@@ -229,32 +231,33 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: () => void }) {
+  const isPro = plan.highlighted;
   return (
     <div
       className="rounded-lg p-7 flex flex-col gap-6 relative"
       style={{
-        background: plan.highlighted ? "var(--product-ink)" : "#ffffff",
-        color: plan.highlighted ? "var(--product-cream)" : "var(--product-ink)",
-        border: plan.highlighted ? "1px solid var(--product-ink)" : "1px solid var(--product-line)",
+        background: isPro ? "var(--product-coral)" : "#ffffff",
+        color: isPro ? "var(--product-cream)" : "var(--product-ink)",
+        border: isPro ? "1px solid var(--product-coral)" : "1px solid var(--product-line)",
       }}
     >
-      {plan.highlighted && (
+      {isPro && (
         <span
           className="absolute -top-3 left-7 text-[10px] font-semibold uppercase tracking-[0.18em] px-3 py-1 rounded-full"
-          style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
+          style={{ background: "var(--product-cream)", color: "var(--product-coral)" }}
         >
           Mais escolhido
         </span>
       )}
       <div>
         <p className="font-product font-semibold text-base uppercase tracking-[0.12em]">{plan.name}</p>
-        <p className="text-sm opacity-60 mt-1">{plan.tagline}</p>
+        <p className="text-sm opacity-75 mt-1">{plan.tagline}</p>
       </div>
       <div className="flex items-baseline gap-1.5">
         <span className="font-product text-4xl font-semibold tracking-tight">{plan.price}</span>
-        <span className="text-sm opacity-60">{plan.period}</span>
+        <span className="text-sm opacity-75">{plan.period}</span>
       </div>
-      <div className="h-px w-full" style={{ background: plan.highlighted ? "rgba(255,253,249,0.14)" : "var(--product-line)" }} />
+      <div className="h-px w-full" style={{ background: isPro ? "rgba(255,253,249,0.22)" : "var(--product-line)" }} />
       <ul className="space-y-3 flex-1">
         {plan.features.map((f, idx) => {
           const text = typeof f === "string" ? f : f.text;
@@ -264,9 +267,9 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
               <Check
                 size={15}
                 className="shrink-0 mt-1"
-                style={{ color: plan.highlighted ? "var(--product-gold)" : "var(--product-coral)" }}
+                style={{ color: isPro ? "var(--product-gold)" : "var(--product-coral)" }}
               />
-              <span className={isHighlight ? "font-medium" : "opacity-75"}>{text}</span>
+              <span className={isHighlight ? "font-semibold" : "opacity-90"}>{text}</span>
             </li>
           );
         })}
@@ -275,7 +278,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
         className="w-full min-h-11 rounded-full"
         onClick={onChoose}
         style={
-          plan.highlighted
+          isPro
             ? { background: "var(--product-cream)", color: "var(--product-ink)" }
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
