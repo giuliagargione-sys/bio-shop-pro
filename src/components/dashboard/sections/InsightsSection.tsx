@@ -216,19 +216,72 @@ export function InsightsSection() {
 
           {stats && stats.serieVisitas.length > 1 && (
             <div className="space-y-2">
-              <p className="text-sm font-semibold">Visitas por dia</p>
-              <div className="flex h-24 items-end gap-1">
-                {stats.serieVisitas.map((d) => (
-                  <div
-                    key={d.date}
-                    title={`${d.date}: ${d.count} visitas`}
-                    className="flex-1 rounded-t bg-primary/70"
-                    style={{ height: `${Math.max(4, (d.count / maxDay) * 100)}%` }}
-                  />
-                ))}
+              <div className="flex items-end justify-between gap-2">
+                <p className="text-sm font-semibold">Visitas por dia</p>
+                <p className="text-xs text-muted-foreground">
+                  Total no período:{" "}
+                  <span className="font-semibold text-foreground">
+                    {stats.serieVisitas.reduce((a, d) => a + d.count, 0)}
+                  </span>
+                </p>
               </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <div className="flex gap-2">
+                  <div className="flex w-6 flex-col justify-between py-[2px] text-right text-[9px] text-muted-foreground">
+                    <span>{maxDay}</span>
+                    <span>{Math.round(maxDay / 2)}</span>
+                    <span>0</span>
+                  </div>
+                  <div className="relative h-28 flex-1">
+                    <div className="absolute inset-0 flex flex-col justify-between">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="border-t border-dashed border-border/70" />
+                      ))}
+                    </div>
+                    <div className="relative flex h-full items-end gap-1">
+                      {stats.serieVisitas.map((d) => (
+                        <div
+                          key={d.date}
+                          title={`${d.date}: ${d.count} visitas`}
+                          className="group flex h-full flex-1 flex-col items-center justify-end gap-1"
+                        >
+                          <span className="text-[9px] font-semibold text-muted-foreground">
+                            {d.count > 0 ? d.count : ""}
+                          </span>
+                          <div
+                            className={`w-full rounded-t ${d.count > 0 ? "bg-primary" : "bg-border"}`}
+                            style={{
+                              height: d.count > 0 ? `${Math.max(6, (d.count / maxDay) * 88)}%` : "3px",
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-1 flex gap-1 pl-8">
+                  {stats.serieVisitas.map((d, i) => (
+                    <span
+                      key={d.date}
+                      className="flex-1 truncate text-center text-[9px] text-muted-foreground"
+                    >
+                      {i === 0 ||
+                      i === stats.serieVisitas.length - 1 ||
+                      i % Math.ceil(stats.serieVisitas.length / 5) === 0
+                        ? d.date.slice(5).split("-").reverse().join("/")
+                        : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {stats.serieVisitas.every((d) => d.count === 0) && (
+                <p className="text-xs text-muted-foreground">
+                  Ainda sem visitas nesse período — compartilhe seu link para começar a medir.
+                </p>
+              )}
             </div>
           )}
+
 
           {hasHeat && (
             <div className="space-y-2">
