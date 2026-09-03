@@ -15,6 +15,7 @@ import {
   X,
   ExternalLink,
   Smartphone,
+  Star,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
@@ -161,14 +162,18 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
         <div
           className="relative rounded-[2.2rem] p-2 shadow-2xl"
-          style={{ background: "var(--product-ink)" }}
+          style={{
+            background: "var(--product-ink)",
+            transform: "scale(0.82)",
+            transformOrigin: "top center",
+          }}
         >
           {/* Notch */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-black z-10" />
 
           <div
             className="relative overflow-hidden rounded-[1.7rem] bg-white"
-            style={{ width: "min(84vw, 360px)", height: "min(78vh, 680px)" }}
+            style={{ width: "min(84vw, 390px)", height: "min(78vh, 720px)" }}
           >
             {loading && !error && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm opacity-60">
@@ -433,17 +438,19 @@ export default function LandingPage() {
                 <div style={{ color: "var(--product-coral)" }}>{f.icon}</div>
                 <p className="font-semibold text-[15px]">{f.title}</p>
                 <p className="text-sm opacity-60 leading-relaxed">{f.text}</p>
-                {f.demo && (
-                  <button
-                    onClick={() => setDemoOpen(true)}
-                    className="mt-1 text-sm font-medium underline-offset-2 hover:underline flex items-center gap-1.5 w-fit"
-                    style={{ color: "var(--product-coral)" }}
-                  >
-                    Ver demonstração <ExternalLink size={14} />
-                  </button>
-                )}
               </div>
             ))}
+          </div>
+
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setDemoOpen(true)}
+              className="group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
+              style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
+            >
+              <Star size={16} className="fill-[var(--product-gold)] text-[var(--product-gold)]" />
+              Ver demonstração
+            </button>
           </div>
         </div>
       </section>
