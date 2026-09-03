@@ -122,7 +122,18 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="password">Senha</Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label htmlFor="password">Senha</Label>
+                  {mode === "signin" && (
+                    <RouterLink
+                      to="/recuperar-senha"
+                      className="text-xs underline"
+                      style={{ color: "var(--product-coral-dark)" }}
+                    >
+                      Esqueceu a senha?
+                    </RouterLink>
+                  )}
+                </div>
                 <Input
                   id="password"
                   type="password"
