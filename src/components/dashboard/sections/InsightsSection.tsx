@@ -135,7 +135,7 @@ export function InsightsSection() {
               <Button
                 key={p.days}
                 size="sm"
-                variant={days === p.days ? "default" : "outline"}
+                variant={days === p.days ? "primary" : "outline"}
                 onClick={() => setDays(p.days)}
               >
                 {p.label}
