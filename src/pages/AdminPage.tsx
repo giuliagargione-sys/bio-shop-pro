@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Pencil,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { Switch } from "@/components/ui/switch";
-import { fetchAlunas, createAluna, setStoreActive, type AlunaSummary } from "@/lib/adminApi";
+import { fetchAlunas, createAluna, setStoreActive, deleteStore, type AlunaSummary } from "@/lib/adminApi";
 
 function formatDate(iso: string | null) {
   if (!iso) return "—";
@@ -149,6 +150,7 @@ export default function AdminPage() {
   const [alunas, setAlunas] = useState<AlunaSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -170,6 +172,27 @@ export default function AdminPage() {
       setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: !value } : a)));
       setError(res.error ?? "Não foi possível mudar o link agora.");
     }
+  }
+
+  // Apaga a loja da aluna (o login dela continua).
+  async function onDeleteStore(aluna: AlunaSummary) {
+    const nome = aluna.storeName || aluna.email;
+    const ok = window.confirm(
+      `Apagar a loja de ${nome}? O link /loja/${aluna.slug ?? ""} sai do ar e a personalizacao e perdida. O login da aluna continua ativo.`
+    );
+    if (!ok) return;
+    setDeletingId(aluna.id);
+    const res = await deleteStore(aluna.id);
+    setDeletingId(null);
+    if (!res.ok) {
+      setError(res.error ?? "Não foi possível apagar a loja agora.");
+      return;
+    }
+    setAlunas((prev) =>
+      prev.map((a) =>
+        a.id === aluna.id ? { ...a, slug: null, storeName: null, storeUpdatedAt: null, active: false } : a
+      )
+    );
   }
 
   const total = alunas.length;
@@ -301,6 +324,16 @@ export default function AdminPage() {
                               {a.active ? "Link ativo" : "Link desativado"}
                             </span>
                           </label>
+                          <button
+                            type="button"
+                            onClick={() => onDeleteStore(a)}
+                            disabled={deletingId === a.id}
+                            className="text-xs underline flex items-center gap-1 disabled:opacity-50"
+                            style={{ color: "#c0392b" }}
+                          >
+                            <Trash2 size={12} />
+                            {deletingId === a.id ? "Apagando..." : "Apagar loja"}
+                          </button>
                         </>
                       ) : (
                         <span className="text-xs text-muted-foreground">sem loja ainda</span>
