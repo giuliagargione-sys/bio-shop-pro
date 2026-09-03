@@ -75,7 +75,7 @@ export function QuizSection() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Quiz de estilo</CardTitle>
-            <CardDescription>O funil que leva a cliente até o WhatsApp.</CardDescription>
+            <CardDescription>Funil que leva o cliente para o produto certo!</CardDescription>
           </div>
           <Switch
             checked={quiz.enabled}
