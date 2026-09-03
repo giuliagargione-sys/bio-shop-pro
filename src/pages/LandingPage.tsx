@@ -224,7 +224,7 @@ export default function LandingPage() {
           className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.24em] px-4 py-1.5 rounded-full"
           style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
         >
-          Para quem quer vender mais pelo Instagram
+          Venda mais pelo Instagram
         </span>
         <h1
           className="font-semibold leading-[0.98] tracking-[-0.03em] max-w-3xl mt-7"
