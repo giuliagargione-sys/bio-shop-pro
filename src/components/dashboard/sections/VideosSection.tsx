@@ -246,18 +246,25 @@ export function VideosSection() {
 
         <button
           type="button"
+          disabled={atLimit}
           onClick={() =>
             setVideos([
               ...videos,
               { id: uid("video"), videoUrl: "", productName: "", link: "", enabled: true },
             ])
           }
-          className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted"
+          className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
         >
           <Plus size={16} />
           Adicionar vídeo
         </button>
+        <p className="text-xs text-muted-foreground">
+          {atLimit
+            ? "Você chegou no limite de 4 vídeos. Exclua um pra adicionar outro — assim a loja continua leve e rápida."
+            : `Você pode adicionar até 4 vídeos (${videos.length}/4) pra não pesar a página.`}
+        </p>
       </CardContent>
     </Card>
+    </ProLock>
   );
 }
