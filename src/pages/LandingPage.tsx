@@ -560,6 +560,7 @@ export default function LandingPage() {
       </footer>
 
       <PlanSignupDialog plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
+      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }
