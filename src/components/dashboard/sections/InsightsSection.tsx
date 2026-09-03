@@ -98,11 +98,28 @@ export function InsightsSection() {
       ]
     : [];
 
+  const pct = (n: number, base: number) =>
+    base > 0 ? Math.round((n / base) * 100) : 0;
+
+  const baseVisitantes = stats?.funil.visitantes ?? 0;
   const funnelSteps = stats
     ? [
-        { label: "Visitantes", value: stats.funil.visitantes },
-        { label: "Começaram o quiz", value: stats.funil.iniciaramQuiz },
-        { label: "Viraram cliente (lead)", value: stats.funil.viraramLead },
+        { label: "Entraram no seu link", value: baseVisitantes, percent: 100 },
+        ...(stats.topButtons ?? []).map(([label, count]) => ({
+          label: `Clicaram em “${label}”`,
+          value: count,
+          percent: pct(count, baseVisitantes),
+        })),
+        {
+          label: "Participaram do quiz",
+          value: stats.funil.iniciaramQuiz,
+          percent: pct(stats.funil.iniciaramQuiz, baseVisitantes),
+        },
+        {
+          label: "Leads capturados",
+          value: stats.funil.viraramLead,
+          percent: pct(stats.funil.viraramLead, baseVisitantes),
+        },
       ]
     : [];
   const funnelMax = Math.max(1, ...funnelSteps.map((s) => s.value));
@@ -176,9 +193,11 @@ export function InsightsSection() {
               <p className="text-sm font-semibold">Funil da sua loja</p>
               {funnelSteps.map((s) => (
                 <div key={s.label} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between gap-2 text-sm">
                     <span className="text-muted-foreground">{s.label}</span>
-                    <span className="font-semibold">{s.value}</span>
+                    <span className="font-semibold">
+                      {s.value} <span className="font-normal text-muted-foreground">({s.percent}%)</span>
+                    </span>
                   </div>
                   <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
                     <div
