@@ -137,6 +137,7 @@ export function SupportTickets() {
   const [tickets, setTickets] = useState<AdminSupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<"pendentes" | "resolvidos">("pendentes");
 
   async function load() {
     setLoading(true);
@@ -150,7 +151,10 @@ export function SupportTickets() {
     void load();
   }, []);
 
-  const pendentes = tickets.filter((t) => t.awaitingAdmin && t.status !== "fechado").length;
+  const pendentes = tickets.filter((t) => t.status !== "fechado");
+  const resolvidos = tickets.filter((t) => t.status === "fechado");
+  const novas = pendentes.filter((t) => t.awaitingAdmin).length;
+  const visibleTickets = tab === "pendentes" ? pendentes : resolvidos;
 
   return (
     <Card>
@@ -158,12 +162,12 @@ export function SupportTickets() {
         <div>
           <CardTitle className="flex items-center gap-2">
             <LifeBuoy size={18} /> Solicitações de suporte
-            {pendentes > 0 && (
+            {novas > 0 && (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
                 style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
               >
-                {pendentes} novas
+                {novas} novas
               </span>
             )}
           </CardTitle>
@@ -177,17 +181,44 @@ export function SupportTickets() {
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
+        <div className="flex gap-2 border-b border-border pb-2">
+          <button
+            type="button"
+            onClick={() => setTab("pendentes")}
+            className={`text-sm font-medium pb-1 px-2 border-b-2 transition-colors ${
+              tab === "pendentes"
+                ? "border-[var(--product-coral)] text-[var(--product-coral)]"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Pendências ({pendentes.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("resolvidos")}
+            className={`text-sm font-medium pb-1 px-2 border-b-2 transition-colors ${
+              tab === "resolvidos"
+                ? "border-[var(--product-coral)] text-[var(--product-coral)]"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Resolvidos ({resolvidos.length})
+          </button>
+        </div>
+
         {error && (
           <p className="text-sm text-red-600 flex items-center gap-1">
             <AlertCircle size={14} /> {error}
           </p>
         )}
-        {!loading && tickets.length === 0 && !error && (
+        {!loading && visibleTickets.length === 0 && !error && (
           <p className="text-sm text-muted-foreground">
-            Nenhuma solicitação de suporte por enquanto.
+            {tab === "pendentes"
+              ? "Nenhuma pendência de suporte no momento."
+              : "Nenhum chamado resolvido ainda."}
           </p>
         )}
-        {tickets.map((t) => (
+        {visibleTickets.map((t) => (
           <TicketCard key={t.id} ticket={t} onChanged={load} />
         ))}
       </CardContent>
