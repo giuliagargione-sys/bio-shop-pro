@@ -14,6 +14,10 @@ import { InsightsSection } from "@/components/dashboard/sections/InsightsSection
 import { ContactSection } from "@/components/dashboard/sections/ContactSection";
 import { HelpLinksSection } from "@/components/dashboard/sections/HelpLinksSection";
 import { FooterSection } from "@/components/dashboard/sections/FooterSection";
+import { SaveBar } from "@/components/dashboard/SaveBar";
+
+// Abas que só mostram dados (não editam a loja) não precisam do botão salvar.
+const READ_ONLY_SECTIONS: DashboardSectionKey[] = ["leads", "insights"];
 
 const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
   marca: <BrandSection />,
@@ -52,6 +56,7 @@ export default function DashboardPage() {
         </div>
       )}
       {SECTION_MAP[active]}
+      {!READ_ONLY_SECTIONS.includes(active) && <SaveBar />}
     </DashboardLayout>
   );
 }

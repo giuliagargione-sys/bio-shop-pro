@@ -27,6 +27,10 @@ interface ConfigContextValue {
   /** true quando o acesso central está editando a loja de outra pessoa */
   editingAsAdmin: boolean;
   syncStatus: SyncStatus;
+  /** true quando existem mudanças ainda não gravadas na nuvem */
+  hasUnsavedChanges: boolean;
+  /** grava agora mesmo (usado pelo botão "Salvar alterações") */
+  saveNow: () => Promise<boolean>;
   updateConfig: (patch: Partial<StoreConfig>) => void;
   updateNested: <K extends keyof StoreConfig>(key: K, patch: Partial<StoreConfig[K]>) => void;
   resetConfig: () => void;
@@ -64,6 +68,9 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const readyRef = useRef(false);
   const skipNextSaveRef = useRef(false);
+  const configRef = useRef(config);
+  configRef.current = config;
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -106,10 +113,12 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     }
 
     setSyncStatus("saving");
+    setHasUnsavedChanges(true);
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       const ok = await saveMyConfig(userIdRef.current as string, config);
       setSyncStatus(ok ? "synced" : "error");
+      if (ok) setHasUnsavedChanges(false);
     }, 700);
 
     return () => {
@@ -123,6 +132,16 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       config,
       slug,
       syncStatus,
+      hasUnsavedChanges,
+      saveNow: async () => {
+        if (!userIdRef.current) return false;
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        setSyncStatus("saving");
+        const ok = await saveMyConfig(userIdRef.current, configRef.current);
+        setSyncStatus(ok ? "synced" : "error");
+        if (ok) setHasUnsavedChanges(false);
+        return ok;
+      },
       editingAsAdmin: Boolean(targetUserId),
       updateConfig: (patch) => setConfigState((prev) => ({ ...prev, ...patch })),
       updateNested: (key, patch) =>
@@ -138,7 +157,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         return result;
       },
     }),
-    [config, slug, syncStatus, targetUserId]
+    [config, slug, syncStatus, hasUnsavedChanges, targetUserId]
   );
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>;
