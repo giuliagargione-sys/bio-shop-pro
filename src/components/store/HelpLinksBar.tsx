@@ -3,7 +3,7 @@ import type { StoreConfig } from "@/types/config";
 import { resolveWhatsAppHref } from "@/lib/utils";
 
 export function HelpLinksBar({ config }: { config: StoreConfig }) {
-  const { helpLinks, contact } = config;
+  const { helpLinks, contact, theme } = config;
 
   // Se a aluna ainda não colou um link específico, os botões caem no
   // WhatsApp dela — assim eles nunca somem da loja sem querer.
@@ -16,25 +16,30 @@ export function HelpLinksBar({ config }: { config: StoreConfig }) {
 
   if (!supportHref && !returnsHref && extra.length === 0) return null;
 
+  const buttonStyle = {
+    background: theme.primary,
+    color: theme.primaryForeground,
+  } as React.CSSProperties;
+
   const itemClass =
-    "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-border px-4 py-3 text-sm hover:bg-muted active:bg-muted transition-colors";
+    "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-medium shadow-sm hover:opacity-90 active:opacity-95 transition-opacity";
 
   return (
-    <div className="container max-w-md mx-auto px-4 sm:px-0 flex flex-col items-stretch gap-2 py-6">
+    <div className="container max-w-md mx-auto px-4 sm:px-0 flex flex-col items-stretch gap-3 py-6">
       {supportHref && (
-        <a href={supportHref} target="_blank" rel="noreferrer" className={itemClass}>
+        <a href={supportHref} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
           <LifeBuoy size={18} />
           {helpLinks.supportLabel}
         </a>
       )}
       {returnsHref && (
-        <a href={returnsHref} target="_blank" rel="noreferrer" className={itemClass}>
+        <a href={returnsHref} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
           <RefreshCcw size={18} />
           {helpLinks.returnsLabel}
         </a>
       )}
       {extra.map((b) => (
-        <a key={b.id} href={b.url} target="_blank" rel="noreferrer" className={itemClass}>
+        <a key={b.id} href={b.url} target="_blank" rel="noreferrer" className={itemClass} style={buttonStyle}>
           <Link2 size={18} />
           {b.label}
         </a>
