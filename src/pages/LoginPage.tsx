@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link } from "react-router-dom";
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
@@ -121,7 +122,18 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="password">Senha</Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label htmlFor="password">Senha</Label>
+                  {mode === "signin" && (
+                    <RouterLink
+                      to="/recuperar-senha"
+                      className="text-xs underline"
+                      style={{ color: "var(--product-coral-dark)" }}
+                    >
+                      Esqueceu a senha?
+                    </RouterLink>
+                  )}
+                </div>
                 <Input
                   id="password"
                   type="password"
