@@ -117,9 +117,7 @@ export function ProductsSection() {
       <Card>
         <CardHeader>
           <CardTitle>Produtos em destaque</CardTitle>
-          <CardDescription>
-            Os produtos que aparecem no carrossel da loja. Suba a foto direto do computador ou celular.
-          </CardDescription>
+          <CardDescription>As peças que aparecem no carrossel da loja.</CardDescription>
         </CardHeader>
         <CardContent>
           <Label htmlFor="productsTitle">Título da seção na loja</Label>
