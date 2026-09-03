@@ -44,6 +44,8 @@ const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   pro: "https://pay.hub.la/SEU-LINK-PRO",
 };
 
+type PlanFeature = string | { text: string; highlight?: boolean };
+
 const PLANS = [
   {
     slug: "essencial",
@@ -57,7 +59,7 @@ const PLANS = [
       "Dashboard de leads",
       "Painel de cliques e peças mais desejadas",
       "Produtos ilimitados",
-    ],
+    ] as PlanFeature[],
     highlighted: false,
   },
   {
@@ -68,10 +70,10 @@ const PLANS = [
     tagline: "Pra quem quer tirar o trabalho manual do caminho",
     features: [
       "Tudo do plano Essencial",
-      "Insights com IA: sugestões de melhoria a partir dos seus cliques",
-      "Botões de dúvidas e trocas personalizados",
+      { text: "Insights com IA: a partir dos cliques e do uso do seu link, a IA te diz o que ajustar pra vender mais", highlight: true },
+      "Botões extras personalizados",
       "Suporte prioritário",
-    ],
+    ] as PlanFeature[],
 
     highlighted: true,
   },
@@ -105,16 +107,20 @@ function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
         <span className="text-sm opacity-70">{plan.period}</span>
       </div>
       <ul className="space-y-2 flex-1">
-        {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-2 text-sm">
-            <Check
-              size={16}
-              className="shrink-0 mt-0.5"
-              style={{ color: plan.highlighted ? "var(--product-gold)" : "var(--product-coral)" }}
-            />
-            <span className="opacity-90">{f}</span>
-          </li>
-        ))}
+        {plan.features.map((f, idx) => {
+          const text = typeof f === "string" ? f : f.text;
+          const isHighlight = typeof f !== "string" && f.highlight;
+          return (
+            <li key={`${text}-${idx}`} className="flex items-start gap-2 text-sm">
+              <Check
+                size={16}
+                className="shrink-0 mt-0.5"
+                style={{ color: plan.highlighted ? "var(--product-gold)" : "var(--product-coral)" }}
+              />
+              <span className={`opacity-90 ${isHighlight ? "font-semibold" : ""}`}>{text}</span>
+            </li>
+          );
+        })}
       </ul>
       {/* Checkout direto na Hubla — não passa pelo nosso /login. Depois de
           pagar, configure na Hubla o redirecionamento pra
