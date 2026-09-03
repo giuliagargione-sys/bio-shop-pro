@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Smartphone,
   Star,
+  Send,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
@@ -211,6 +212,14 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                 }}
               />
             )}
+          </div>
+
+          {/* Footer do celular */}
+          <div className="flex items-center justify-center gap-2 pt-3 pb-1">
+            <Send size={14} style={{ color: "var(--product-cream)" }} />
+            <span className="text-[11px] font-medium" style={{ color: "var(--product-cream)" }}>
+              Potencialize suas vendas!
+            </span>
           </div>
         </div>
 
