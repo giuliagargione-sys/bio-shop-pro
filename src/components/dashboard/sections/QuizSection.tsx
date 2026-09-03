@@ -206,7 +206,7 @@ export function QuizSection() {
                 <div>
                   <CardTitle className="text-base">Links de destino do resultado</CardTitle>
                   <CardDescription>
-                    Conforme a resposta da 1ª pergunta, a cliente vai pra um link diferente.
+                    Cada destino segue exatamente as respostas que você criou na Pergunta 1.
                     Use o link da categoria no seu site. São até {MAX_QUIZ_DESTINATIONS} destinos.
                   </CardDescription>
                 </div>
@@ -215,33 +215,39 @@ export function QuizSection() {
                     Crie a 1ª pergunta com as opções do seu nicho para configurar os destinos.
                   </p>
                 )}
-                {destinations.map((dest, index) => (
-                  <div key={dest.optionId}>
-                    {index > 0 && <Separator className="my-4" />}
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Ex: se ela responder “{dest.optionLabel}”
-                    </span>
-                    <div className="mt-2 space-y-2">
-                      <div>
-                        <Label>Texto do botão</Label>
-                        <Input
-                          value={dest.label}
-                          placeholder={`Ex: Ver ${dest.optionLabel.toLowerCase()}`}
-                          onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <Label>Link da categoria</Label>
-                        <Input
-                          value={dest.url}
-                          placeholder="https://sualoja.com.br/categoria/balada"
-                          onChange={(e) => updateDestination(dest.optionId, { url: e.target.value })}
-                        />
+                {destinations.map((dest, index) => {
+                  const answer = dest.optionLabel.trim();
+                  return (
+                    <div key={dest.optionId}>
+                      {index > 0 && <Separator className="my-4" />}
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {answer
+                          ? `Se responder “${answer}” (resposta ${index + 1} da Pergunta 1)`
+                          : `Resposta ${index + 1} da Pergunta 1 — preencha o texto da resposta acima`}
+                      </span>
+                      <div className="mt-2 space-y-2">
+                        <div>
+                          <Label>Texto do botão</Label>
+                          <Input
+                            value={dest.label}
+                            placeholder={answer ? `Ver ${answer.toLowerCase()}` : "Texto do botão"}
+                            onChange={(e) => updateDestination(dest.optionId, { label: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label>Link da categoria</Label>
+                          <Input
+                            value={dest.url}
+                            placeholder="https://sualoja.com.br/categoria"
+                            onChange={(e) => updateDestination(dest.optionId, { url: e.target.value })}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
+
             </CardContent>
           </Card>
         </>
