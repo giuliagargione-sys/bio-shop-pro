@@ -1,11 +1,8 @@
 import type { Banner, StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
 
-const RATIO_CLASS: Record<NonNullable<Banner["ratio"]>, string> = {
-  "4/5": "aspect-[4/5]",
-  "1/1": "aspect-square",
-  "16/9": "aspect-[16/9]",
-};
+// Proporção única, mobile-first (referência: 350 x 256)
+const BANNER_RATIO_CLASS = "aspect-[35/26]";
 
 // Banners clicáveis que a aluna sobe pra destacar uma coleção.
 // Formato pensado pro celular: largura total do link, sem cortes.
@@ -24,14 +21,13 @@ export function BannerStrip({
       <div className="container max-w-md mx-auto px-4 sm:px-0 space-y-3">
         {banners.map((banner) => {
           const href = banner.link?.trim();
-          const ratio = RATIO_CLASS[banner.ratio ?? "4/5"];
           const label = banner.title?.trim() || "Banner da coleção";
           const overlayTitle = banner.overlayTitle?.trim();
           const ctaLabel = banner.ctaLabel?.trim();
           const hasOverlay = Boolean(overlayTitle || ctaLabel);
 
           const image = (
-            <div className={`relative w-full ${ratio}`}>
+            <div className={`relative w-full ${BANNER_RATIO_CLASS}`}>
               <img
                 src={banner.imageUrl}
                 alt={label}
