@@ -37,10 +37,12 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("A senha precisa ter pelo menos 6 caracteres.");
+    if (password.length === 0) {
+      setError("Digite uma senha.");
       return;
     }
+
+
 
     setSubmitting(true);
 
