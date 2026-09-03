@@ -5,6 +5,7 @@ import { usePublicStore } from "@/hooks/usePublicStore";
 import { StoreNav } from "@/components/store/StoreNav";
 import { Hero } from "@/components/store/Hero";
 import { ProductCarousel } from "@/components/store/ProductCarousel";
+import { BannerStrip } from "@/components/store/BannerStrip";
 import { QuizFunnel } from "@/components/store/QuizFunnel";
 import { HelpLinksBar } from "@/components/store/HelpLinksBar";
 import { StoreFooter } from "@/components/store/StoreFooter";
@@ -74,6 +75,7 @@ export default function StorePage() {
       {resolveLayoutBlocks(config)
         .filter((block) => block.enabled)
         .map((block) => {
+          if (block.type === "banners") return <BannerStrip key={block.id} config={config} ownerId={ownerId} />;
           if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} ownerId={ownerId} />;
           if (block.type === "quiz")
             return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;

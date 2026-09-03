@@ -90,10 +90,10 @@ function BannerImageField({
 }
 
 export function BannersSection() {
-  const { config, update } = useStoreConfig();
+  const { config, updateConfig } = useStoreConfig();
   const banners = config.banners ?? [];
 
-  const setBanners = (next: Banner[]) => update({ banners: next });
+  const setBanners = (next: Banner[]) => updateConfig({ banners: next });
   const patch = (id: string, values: Partial<Banner>) =>
     setBanners(banners.map((b) => (b.id === id ? { ...b, ...values } : b)));
 

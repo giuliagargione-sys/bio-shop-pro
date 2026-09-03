@@ -2,9 +2,10 @@ import type { LayoutBlock, StoreConfig } from "@/types/config";
 import { uid } from "./utils";
 
 // Blocos fixos que toda loja tem (podem ser reordenados e desligados).
-export const FIXED_BLOCK_TYPES = ["produtos", "quiz", "ajuda"] as const;
+export const FIXED_BLOCK_TYPES = ["banners", "produtos", "quiz", "ajuda"] as const;
 
 export const BLOCK_LABELS: Record<LayoutBlock["type"], string> = {
+  banners: "Banners",
   produtos: "Carrossel de produtos",
   quiz: "Quiz de estilo",
   ajuda: "Botões extras",

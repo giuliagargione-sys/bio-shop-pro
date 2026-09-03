@@ -8,6 +8,7 @@ import { ThemeSection } from "@/components/dashboard/sections/ThemeSection";
 import { StructureSection } from "@/components/dashboard/sections/StructureSection";
 import { HeroSection } from "@/components/dashboard/sections/HeroSection";
 import { ProductsSection } from "@/components/dashboard/sections/ProductsSection";
+import { BannersSection } from "@/components/dashboard/sections/BannersSection";
 import { QuizSection } from "@/components/dashboard/sections/QuizSection";
 import { LeadsSection } from "@/components/dashboard/sections/LeadsSection";
 import { InsightsSection } from "@/components/dashboard/sections/InsightsSection";
@@ -28,6 +29,7 @@ const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
     </div>
   ),
   hero: <HeroSection />,
+  banners: <BannersSection />,
   produtos: <ProductsSection />,
   quiz: <QuizSection />,
   leads: <LeadsSection />,
