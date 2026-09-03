@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Link2,
@@ -13,6 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
 import { Button } from "@/components/ui/button";
 
 const FEATURES = [
@@ -142,6 +143,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
 
 export default function LandingPage() {
   const { hash } = useLocation();
+  const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
 
   useEffect(() => {
     if (hash) {
@@ -336,7 +338,17 @@ export default function LandingPage() {
         </div>
         <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
           {PLANS.map((plan) => (
-            <PlanCard key={plan.slug} plan={plan} />
+            <PlanCard
+              key={plan.slug}
+              plan={plan}
+              onChoose={() =>
+                setSelectedPlan({
+                  slug: plan.slug,
+                  name: plan.name,
+                  checkoutUrl: HUBLA_CHECKOUT_LINKS[plan.slug],
+                })
+              }
+            />
           ))}
         </div>
         <p className="text-center text-sm opacity-70 mt-8">
