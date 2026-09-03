@@ -453,17 +453,6 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={() => setDemoOpen(true)}
-              className="group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
-              style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
-            >
-              <Star size={16} className="fill-[var(--product-gold)] text-[var(--product-gold)]" />
-              Ver demonstração
-            </button>
-          </div>
         </div>
       </section>
 
