@@ -83,11 +83,11 @@ const PLANS = [
     tagline: "Pra quem quer vender mais com menos esforço",
     features: [
       "Tudo do plano Essencial",
-      { text: "Insights com IA: melhorar vendas com base nos dados do seu negócio!", highlight: true },
-      "Banners personalizados",
-      "Vídeos Reels",
-      "Botões extras personalizados",
-      "Suporte prioritário",
+      { text: "Insights com IA: melhorar vendas com base nos dados do seu negócio!", highlight: true, star: true },
+      { text: "Banners personalizados", star: true },
+      { text: "Vídeos Reels", star: true },
+      { text: "Botões extras personalizados", star: true },
+      { text: "Suporte prioritário", star: true },
     ] as PlanFeature[],
 
     highlighted: true,
