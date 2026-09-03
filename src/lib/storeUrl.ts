@@ -1,4 +1,6 @@
-// Link curto da loja: bioquevende.app/nome-da-loja
+// Domínio curto dos links das lojas: www.lojabio.app/nome-da-loja
+export const STORE_DOMAIN = "www.lojabio.app";
+
 export const RESERVED_SLUGS = new Set([
   "loja",
   "login",
@@ -23,14 +25,12 @@ export function storePath(slug: string) {
   return `/${slug}`;
 }
 
-/** URL completa para copiar/colar na bio. */
+/** URL completa para copiar/colar na bio (sempre no domínio curto). */
 export function storeUrl(slug: string) {
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  return `${origin}${storePath(slug)}`;
+  return `https://${STORE_DOMAIN}${storePath(slug)}`;
 }
 
-/** Host limpo, sem https:// nem www. */
+/** Host limpo exibido no painel, sem https://. */
 export function storeHost() {
-  if (typeof window === "undefined") return "";
-  return window.location.host.replace(/^www\./, "");
+  return STORE_DOMAIN;
 }
