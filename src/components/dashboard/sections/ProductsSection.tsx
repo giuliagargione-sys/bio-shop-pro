@@ -158,15 +158,16 @@ export function ProductsSection() {
             </div>
             <Button
               type="button"
-              variant="destructive"
+              variant="outline"
               size="icon"
-              className="ml-auto shrink-0"
+              className="ml-auto shrink-0 border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
               onClick={() => removeProduct(product.id)}
               aria-label="Remover produto"
               title="Excluir produto"
             >
               <Trash2 size={16} />
             </Button>
+
 
           </CardHeader>
 
