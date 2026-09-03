@@ -17,6 +17,8 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/loja/:slug" element={<StorePage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route
         path="/personalizar"
         element={
