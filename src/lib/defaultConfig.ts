@@ -97,7 +97,7 @@ export const defaultConfig: StoreConfig = {
       },
     ],
     resultTitle: "Seu look ideal está pronto! ✨",
-    resultDescription: "Conforme as suas respostas, achamos escolhemos esse para você:",
+    resultDescription: "Com base nas suas respostas, você irá gostar dessa opção:",
     resultCtaLabel: "Ver meu look",
   },
   contact: {
