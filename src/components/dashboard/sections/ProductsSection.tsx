@@ -117,7 +117,7 @@ export function ProductsSection() {
       <Card>
         <CardHeader>
           <CardTitle>Produtos em destaque</CardTitle>
-          <CardDescription>As peças que aparecem no carrossel da loja.</CardDescription>
+          <CardDescription>As peças que aparecem no carrossel da loja. — sugestão: 5 produtos.</CardDescription>
         </CardHeader>
         <CardContent>
           <Label htmlFor="productsTitle">Título da seção na loja</Label>
