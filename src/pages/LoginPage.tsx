@@ -1,54 +1,39 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link } from "react-router-dom";
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
-import { Link as RouterLink } from "react-router-dom";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-const PLAN_NAMES: Record<string, string> = {
-  essencial: "Essencial",
-  "que-vende": "Que Vende",
-};
-
 export default function LoginPage() {
-  const { session, loading, signIn, signUp } = useAuth();
+  const { session, loading, signIn } = useAuth();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const initialMode = searchParams.get("mode") === "signup" ? "signup" : "signin";
-  const plan = searchParams.get("plan");
+
+  if (searchParams.get("mode") === "signup") {
+    return <Navigate to="/#planos" replace />;
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [signupDone, setSignupDone] = useState(false);
 
   if (!loading && session) {
     const from = (location.state as { from?: string })?.from ?? "/personalizar";
     return <Navigate to={from} replace />;
   }
 
-  if (mode === "signup") {
-    return <Navigate to="/#planos" replace />;
-  }
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
-    const result =
-      mode === "signin"
-        ? await signIn(email, password)
-        : await signUp(email, password, plan ? { plano: plan } : undefined);
+    const { error: signInError } = await signIn(email, password);
     setSubmitting(false);
-    if (result.error) {
-      setError(result.error);
-    } else if (mode === "signup") {
-      setSignupDone(true);
+    if (signInError) {
+      setError(signInError);
     }
   }
 
@@ -74,23 +59,12 @@ export default function LoginPage() {
           <div className="flex items-center gap-2 mb-1">
             <Lock size={16} style={{ color: "var(--product-coral)" }} />
             <h1 className="font-semibold text-lg" style={{ color: "var(--product-ink)" }}>
-              {mode === "signin" ? "Entrar na dashboard" : "Criar sua conta"}
+              Entrar na dashboard
             </h1>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            {mode === "signin"
-              ? "Só quem tem a senha vê os leads e edita a loja."
-              : "Leva menos de um minuto — depois é só personalizar sua loja."}
+            Só quem tem a senha vê os leads e edita a loja.
           </p>
-
-          {mode === "signup" && plan && (
-            <div
-              className="mb-4 rounded-lg px-3 py-2 text-xs font-medium"
-              style={{ background: "var(--product-cream)", color: "var(--product-coral-dark)" }}
-            >
-              Plano selecionado: {PLAN_NAMES[plan] ?? plan}
-            </div>
-          )}
 
           {!isSupabaseConfigured ? (
             <div className="flex gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
@@ -101,16 +75,6 @@ export default function LoginPage() {
                 <code className="text-xs">supabase/migrations/0001_init.sql</code> — depois é só
                 recarregar essa página.
               </span>
-            </div>
-          ) : signupDone ? (
-            <div className="text-sm text-center py-4">
-              <p className="mb-3">
-                Conta criada! Verifique seu e-mail pra confirmar (se a confirmação estiver
-                ativada no Supabase) e depois entre normalmente.
-              </p>
-              <Button variant="outline" className="w-full" onClick={() => { setMode("signin"); setSignupDone(false); }}>
-                Ir para o login
-              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -128,15 +92,13 @@ export default function LoginPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <Label htmlFor="password">Senha</Label>
-                  {mode === "signin" && (
-                    <RouterLink
-                      to="/recuperar-senha"
-                      className="text-xs underline"
-                      style={{ color: "var(--product-coral-dark)" }}
-                    >
-                      Esqueceu a senha?
-                    </RouterLink>
-                  )}
+                  <Link
+                    to="/recuperar-senha"
+                    className="text-xs underline"
+                    style={{ color: "var(--product-coral-dark)" }}
+                  >
+                    Esqueceu a senha?
+                  </Link>
                 </div>
                 <Input
                   id="password"
@@ -162,12 +124,12 @@ export default function LoginPage() {
                 className="w-full"
                 style={{ background: "var(--product-coral)", color: "#fff" }}
               >
-                {submitting ? "Aguarde..." : mode === "signin" ? "Entrar" : "Criar conta"}
+                {submitting ? "Aguarde..." : "Entrar"}
               </Button>
 
               <Link
                 to="/#planos"
-                className="w-full text-center text-xs text-muted-foreground underline"
+                className="block w-full text-center text-xs text-muted-foreground underline"
               >
                 Primeira vez? Criar conta
               </Link>
