@@ -125,6 +125,7 @@ export type Database = {
           id: string
           kind: string
           label: string | null
+          session_id: string | null
           store_user_id: string
         }
         Insert: {
@@ -132,6 +133,7 @@ export type Database = {
           id?: string
           kind: string
           label?: string | null
+          session_id?: string | null
           store_user_id: string
         }
         Update: {
@@ -139,6 +141,7 @@ export type Database = {
           id?: string
           kind?: string
           label?: string | null
+          session_id?: string | null
           store_user_id?: string
         }
         Relationships: []
