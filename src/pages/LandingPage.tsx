@@ -68,8 +68,8 @@ const PLANS = [
     tagline: "Pra quem quer tirar o trabalho manual do caminho",
     features: [
       "Tudo do plano Essencial",
-      "Insights com IA: sugestões de melhoria a partir dos seus cliques",
-      "Botões de dúvidas e trocas personalizados",
+      { text: "Insights com IA: a partir dos cliques e do uso do seu link, a IA te diz o que ajustar pra vender mais", highlight: true },
+      "Botões extras personalizados",
       "Suporte prioritário",
     ],
 
