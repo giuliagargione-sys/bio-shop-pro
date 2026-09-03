@@ -51,6 +51,16 @@ export interface Banner {
   enabled?: boolean;
 }
 
+export interface VideoItem {
+  id: string;
+  videoUrl: string; // arquivo mp4 que a aluna sobe (o reel baixado)
+  posterUrl?: string; // capa opcional mostrada antes do play
+  productName: string; // nome do produto que aparece no card
+  price?: string; // preco opcional
+  link: string; // pagina do produto no site da aluna
+  enabled?: boolean;
+}
+
 export interface QuizOption {
   id: string;
   label: string;
@@ -114,7 +124,7 @@ export interface HelpLinksConfig {
 
 export interface LayoutBlock {
   id: string;
-  type: "produtos" | "quiz" | "ajuda" | "botao" | "banners" | "banner" | "helpLink";
+  type: "produtos" | "quiz" | "ajuda" | "botao" | "banners" | "banner" | "helpLink" | "videos";
   refId?: string; // id do banner ou do botao extra que este bloco representa
   enabled: boolean;
   label?: string; // usado nos blocos do tipo "botao"
@@ -143,6 +153,10 @@ export interface StoreConfig {
   products: Product[];
   /** banners clicaveis que a aluna sobe pra destacar colecoes */
   banners?: Banner[];
+  /** titulo da secao de videos na loja */
+  videosTitle?: string;
+  /** carrossel de videos clicaveis (reels) com card do produto */
+  videos?: VideoItem[];
   quiz: QuizConfig;
   contact: ContactConfig;
   helpLinks: HelpLinksConfig;
