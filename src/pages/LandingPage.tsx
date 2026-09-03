@@ -232,9 +232,8 @@ export default function LandingPage() {
         >
           O link da bio que{" "}
           <span className="italic" style={{ color: "var(--product-coral)" }}>
-            vende por você
+            vende por você!
           </span>
-          !
         </h1>
         <p className="max-w-xl text-base sm:text-lg opacity-65 leading-relaxed mt-6">
           O link da sua bio leva a cliente direto pro produto certo — pra ela comprar ali, na hora.
