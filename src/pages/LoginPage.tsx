@@ -18,28 +18,74 @@ export default function LoginPage() {
     return <Navigate to="/#planos" replace />;
   }
 
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [role, setRole] = useState<"admin" | "aluna" | null>(null);
+  const [checkingRole, setCheckingRole] = useState(true);
 
-  if (!loading && session) {
-    if (session.user?.user_metadata?.must_change_password) {
-      return <Navigate to="/trocar-senha" replace />;
-    }
-    const from = (location.state as { from?: string })?.from ?? "/personalizar";
-    return <Navigate to={from} replace />;
+  async function loadRole(userId: string) {
+    setCheckingRole(true);
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+    if (data && data.some((r) => r.role === "admin")) setRole("admin");
+    else if (data && data.some((r) => r.role === "aluna")) setRole("aluna");
+    else setRole(null);
+    setCheckingRole(false);
   }
+
+  useEffect(() => {
+    if (session?.user) {
+      loadRole(session.user.id);
+    } else if (!loading) {
+      setCheckingRole(false);
+    }
+  }, [session, loading]);
+
+  function goToDestination() {
+    if (session?.user?.user_metadata?.must_change_password) {
+      navigate("/trocar-senha", { replace: true });
+      return;
+    }
+    const from = (location.state as { from?: string })?.from;
+    if (from) {
+      navigate(from, { replace: true });
+    } else if (role === "admin") {
+      navigate("/admin", { replace: true });
+    } else {
+      navigate("/personalizar", { replace: true });
+    }
+  }
+
+  useEffect(() => {
+    if (!loading && session && !checkingRole) {
+      goToDestination();
+    }
+  }, [loading, session, checkingRole, role]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
     const { error: signInError } = await signIn(email, password);
-    setSubmitting(false);
     if (signInError) {
+      setSubmitting(false);
       setError(signInError);
+      return;
     }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      await loadRole(user.id);
+    } else {
+      setCheckingRole(false);
+    }
+    setSubmitting(false);
   }
 
   return (
