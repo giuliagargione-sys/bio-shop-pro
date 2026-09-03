@@ -68,6 +68,9 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const readyRef = useRef(false);
   const skipNextSaveRef = useRef(false);
+  const configRef = useRef(config);
+  configRef.current = config;
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
