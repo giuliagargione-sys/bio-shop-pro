@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
@@ -13,6 +13,21 @@ export function ProductCarousel({
   ownerId?: string | null;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const [centerItems, setCenterItems] = useState(true);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => setCenterItems(el.scrollWidth <= el.clientWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [config.products.length]);
 
   function scrollBy(delta: number) {
     trackRef.current?.scrollBy({ left: delta, behavior: "smooth" });
@@ -39,7 +54,9 @@ export function ProductCarousel({
       {/* No celular o carrossel mostra um cartão por vez, centralizado, com dica de arrastar. */}
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
+        className={`flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
+          centerItems ? "justify-center" : "justify-start"
+        }`}
       >
         {config.products.map((product) => (
           <a

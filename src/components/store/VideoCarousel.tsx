@@ -4,6 +4,27 @@ import type { StoreConfig, VideoItem } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
 import { Button } from "@/components/ui/button";
 
+function useCenterItems<T extends HTMLElement>(deps: unknown[]) {
+  const ref = useRef<T>(null);
+  const [centerItems, setCenterItems] = useState(true);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setCenterItems(el.scrollWidth <= el.clientWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, deps);
+
+  return { ref, centerItems };
+}
+
 // Carrossel de videos (reels) mobile-first. O card inteiro é clicável e leva
 // pra página do produto no site da aluna.
 function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | null }) {
@@ -113,7 +134,9 @@ export function VideoCarousel({
   config: StoreConfig;
   ownerId?: string | null;
 }) {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const { ref: trackRef, centerItems } = useCenterItems<HTMLDivElement>([
+    config.videos?.length,
+  ]);
   const videos = (config.videos ?? [])
     .filter((v) => v.enabled !== false && v.videoUrl?.trim())
     .slice(0, 4);
@@ -142,7 +165,9 @@ export function VideoCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
+        className={`flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
+          centerItems ? "justify-center" : "justify-start"
+        }`}
       >
         {videos.map((video) => (
           <VideoCard key={video.id} video={video} ownerId={ownerId} />
