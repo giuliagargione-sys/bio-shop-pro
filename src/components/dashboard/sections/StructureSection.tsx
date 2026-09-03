@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { GripVertical, Plus, Trash2 } from "lucide-react";
 import type { LayoutBlock } from "@/types/config";
-import { BLOCK_LABELS, newButtonBlock, resolveLayoutBlocks } from "@/lib/layout";
+import { blockIndexes, blockLabel, newButtonBlock, resolveLayoutBlocks } from "@/lib/layout";
 import { ButtonStyleFields } from "@/components/dashboard/ButtonStyleFields";
 import {
   DndContext,
@@ -30,11 +30,12 @@ import { CSS } from "@dnd-kit/utilities";
 type RowProps = {
   block: LayoutBlock;
   index: number;
+  title: string;
   patch: (id: string, values: Partial<LayoutBlock>) => void;
   remove: (id: string) => void;
 };
 
-function SortableRow({ block, index, patch, remove }: RowProps) {
+function SortableRow({ block, index, title, patch, remove }: RowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
   });
@@ -60,7 +61,7 @@ function SortableRow({ block, index, patch, remove }: RowProps) {
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs">
           {index + 1}
         </span>
-        <span className="flex-1 text-sm font-medium">{BLOCK_LABELS[block.type]}</span>
+        <span className="flex-1 text-sm font-medium">{title}</span>
         <Switch
           checked={block.enabled}
           onCheckedChange={(v) => patch(block.id, { enabled: v })}
@@ -114,6 +115,10 @@ function SortableRow({ block, index, patch, remove }: RowProps) {
 export function StructureSection() {
   const { config, updateNested } = useStoreConfig();
   const blocks = resolveLayoutBlocks(config);
+  const indexes = blockIndexes(blocks);
+  const labels = Object.fromEntries(
+    blocks.map((b) => [b.id, blockLabel(b, config, indexes)])
+  ) as Record<string, string>;
 
   const setBlocks = (next: LayoutBlock[]) => updateNested("layout", { blocks: next });
 
@@ -140,8 +145,9 @@ export function StructureSection() {
       <CardHeader>
         <CardTitle>Ordem das seções da loja</CardTitle>
         <CardDescription>
-          Escolha a ordem que você quer que o seu layout apareça. Arraste os campos pra reordenar e
-          use o interruptor pra ligar ou desligar cada seção.
+          Escolha a ordem que você quer que o seu layout apareça. Cada banner e cada botão extra
+          aparece aqui separadamente — arraste os campos pra reordenar e use o interruptor pra ligar
+          ou desligar cada um.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -162,6 +168,7 @@ export function StructureSection() {
                   key={block.id}
                   block={block}
                   index={index}
+                  title={labels[block.id]}
                   patch={patch}
                   remove={(id) => setBlocks(blocks.filter((b) => b.id !== id))}
                 />
