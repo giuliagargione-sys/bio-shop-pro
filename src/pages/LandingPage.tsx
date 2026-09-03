@@ -124,21 +124,18 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
           );
         })}
       </ul>
-      {/* Checkout direto na Hubla — não passa pelo nosso /login. Depois de
-          pagar, configure na Hubla o redirecionamento pra
-          /login?mode=signup&plan={plan.slug}, pra pessoa criar a conta. */}
-      <a href={HUBLA_CHECKOUT_LINKS[plan.slug]} target="_blank" rel="noreferrer">
-        <Button
-          className="w-full"
-          style={
-            plan.highlighted
-              ? { background: "var(--product-coral)", color: "#fff" }
-              : { background: "var(--product-cream)", color: "var(--product-ink)" }
-          }
-        >
-          Escolher {plan.name}
-        </Button>
-      </a>
+      <Button
+        className="w-full min-h-11"
+        onClick={onChoose}
+        style={
+          plan.highlighted
+            ? { background: "var(--product-coral)", color: "#fff" }
+            : { background: "var(--product-cream)", color: "var(--product-ink)" }
+        }
+      >
+        Escolher {plan.name}
+      </Button>
+
     </div>
   );
 }
