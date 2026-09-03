@@ -22,6 +22,8 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { Switch } from "@/components/ui/switch";
 import { DailyVisitsChart } from "@/components/admin/DailyVisitsChart";
+import { SupportTickets } from "@/components/admin/SupportTickets";
+
 import { fetchAlunas, createAluna, setStoreActive, deleteStore, type AlunaSummary } from "@/lib/adminApi";
 
 function formatDate(iso: string | null) {
@@ -253,7 +255,10 @@ export default function AdminPage() {
           </Card>
         </div>
 
+        <SupportTickets />
+
         <CreateAlunaCard onCreated={load} />
+
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
