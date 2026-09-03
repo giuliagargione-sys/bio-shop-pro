@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { StoreConfig } from "@/types/config";
-import { fetchStoreBySlug } from "@/lib/remoteConfig";
-import { isSupabaseConfigured } from "@/lib/supabaseClient";
+import { fetchPublicStoreBySlug } from "@/lib/publicApi";
 import { defaultConfig } from "@/lib/defaultConfig";
 import { getDemoStore } from "@/lib/demoStores";
 import { loadStoreFont } from "@/lib/loadFont";
@@ -55,16 +54,10 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
       return;
     }
 
-    if (!isSupabaseConfigured) {
-      // sem banco conectado e slug fora das lojas de exemplo
-      setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });
-      return;
-    }
-
     let cancelled = false;
     setState((s) => ({ ...s, loading: true }));
 
-    fetchStoreBySlug(slug).then((result) => {
+    fetchPublicStoreBySlug(slug).then((result) => {
       if (cancelled) return;
       if (!result) {
         setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });

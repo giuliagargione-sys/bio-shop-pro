@@ -1,4 +1,4 @@
-import { supabase, isSupabaseConfigured } from "./supabaseClient";
+import { trackPublicEvent } from "./publicApi";
 
 export type StoreEventKind = "visita" | "produto" | "whatsapp" | "botao" | "quiz";
 
@@ -28,16 +28,6 @@ export function trackStoreEvent(
   kind: StoreEventKind,
   label?: string
 ) {
-  if (!ownerId || !isSupabaseConfigured) return;
-  void supabase
-    .from("store_events")
-    .insert({
-      store_user_id: ownerId,
-      kind,
-      label: label?.slice(0, 120) ?? null,
-      session_id: getSessionId(),
-    })
-    .then(({ error }) => {
-      if (error) console.warn("Não foi possível registrar o evento:", error.message);
-    });
+  if (!ownerId) return;
+  trackPublicEvent(ownerId, kind, label ?? null, getSessionId());
 }

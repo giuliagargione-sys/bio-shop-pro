@@ -76,7 +76,7 @@ export function ProductCarousel({
                   // A primeira imagem costuma ser a LCP: prioriza ela e deixa
                   // o resto do carrossel em lazy (recomendação do PageSpeed).
                   loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
+                  {...({ fetchpriority: index === 0 ? "high" : "auto" } as object)}
                   decoding="async"
                   className="h-full w-full object-cover"
                 />

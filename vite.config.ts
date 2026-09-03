@@ -10,4 +10,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React/Router ficam num chunk próprio (cache de longa duração) e
+          // o cliente do backend só é baixado por quem abre login/dashboard,
+          // nunca pela loja pública — isso tira o JS pesado do link da bio.
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          backend: ["@supabase/supabase-js"],
+        },
+      },
+    },
+  },
 });
