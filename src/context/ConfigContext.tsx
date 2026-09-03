@@ -113,10 +113,12 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     }
 
     setSyncStatus("saving");
+    setHasUnsavedChanges(true);
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       const ok = await saveMyConfig(userIdRef.current as string, config);
       setSyncStatus(ok ? "synced" : "error");
+      if (ok) setHasUnsavedChanges(false);
     }, 700);
 
     return () => {
