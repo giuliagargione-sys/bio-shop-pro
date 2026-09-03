@@ -94,7 +94,7 @@ export function ProductCarousel({
                 <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
                   {product.salePrice?.trim() && product.price?.trim() ? (
                     <>
-                      <span className="text-xs text-muted-foreground line-through">
+                      <span className="text-xs text-foreground/70 line-through">
                         de {product.price}
                       </span>
                       <span className="text-sm font-semibold text-primary">
