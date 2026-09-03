@@ -35,12 +35,13 @@ export function ProLock({ locked, title, description, children }: ProLockProps) 
             {description ??
               "Faça upgrade para o PRO pra desbloquear esse recurso na sua loja."}
           </p>
-          <Button asChild className="mt-4 w-full">
-            <a href="/#planos">
-              <Sparkles size={16} className="mr-2" />
-              Fazer upgrade para o PRO
-            </a>
-          </Button>
+          <a
+            href="/#planos"
+            className="mt-4 inline-flex w-full items-center justify-center rounded-[var(--radius)] bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <Sparkles size={16} className="mr-2" />
+            Fazer upgrade para o PRO
+          </a>
         </div>
       </div>
     </div>
