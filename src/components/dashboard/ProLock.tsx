@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { Lock, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface ProLockProps {
   locked: boolean;
