@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uploadLogo } from "@/lib/logoUpload";
-import { isReservedSlug, storeHost, storeUrl } from "@/lib/storeUrl";
+import { isReservedSlug, storeHost, storePath, storeUrl } from "@/lib/storeUrl";
 
 function cleanSlug(input: string) {
   return input
