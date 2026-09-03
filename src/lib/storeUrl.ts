@@ -1,5 +1,11 @@
-// Domínio curto dos links das lojas: lojabio.app/nome-da-loja
-export const STORE_DOMAIN = "lojabio.app";
+// Domínio curto dos links das lojas: www.lojabio.app/nome-da-loja
+export const STORE_DOMAIN = "www.lojabio.app";
+
+/** Hosts que servem APENAS links de loja (raiz e páginas internas redirecionam para a landing). */
+export const STORE_ONLY_HOSTS = new Set(["lojabio.app", "www.lojabio.app"]);
+
+/** Domínio principal da plataforma (landing, login, dashboard). */
+export const MAIN_DOMAIN = "www.bioquevende.app";
 
 export const RESERVED_SLUGS = new Set([
   "loja",
