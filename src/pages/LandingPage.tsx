@@ -57,7 +57,7 @@ const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   pro: "https://pay.hub.la/SEU-LINK-PRO",
 };
 
-type PlanFeature = string | { text: string; highlight?: boolean };
+type PlanFeature = string | { text: string; highlight?: boolean; star?: boolean };
 
 const PLANS = [
   {
