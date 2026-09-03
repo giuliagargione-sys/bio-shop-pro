@@ -337,7 +337,7 @@ export default function LandingPage() {
           style={{ background: "linear-gradient(135deg, var(--product-plum), var(--product-ink))", color: "#fff" }}
         >
           <LogoMark size={44} />
-          <h2 className="text-2xl sm:text-3xl font-semibold max-w-md">Sua loja no link da bio pode começar a vender hoje</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold max-w-md">Crie seu link em 5 minutos e comece a aumentar suas vendas!</h2>
           <a href="#planos">
             <Button size="lg" style={{ background: "var(--product-coral)", color: "#fff" }}>
               Ver planos <ArrowRight size={18} />
