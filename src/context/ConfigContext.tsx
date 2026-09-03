@@ -157,7 +157,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         return result;
       },
     }),
-    [config, slug, syncStatus, targetUserId]
+    [config, slug, syncStatus, hasUnsavedChanges, targetUserId]
   );
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>;
