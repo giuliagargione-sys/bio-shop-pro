@@ -108,7 +108,7 @@ function StoreAddressCard() {
                 {copied ? "Copiado!" : "Copiar link"}
               </Button>
               <a
-                href={storePath(slug)}
+                href={storeUrl(slug ?? "")}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center h-9 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground"

@@ -39,7 +39,7 @@ export default function App() {
           </RequireAdmin>
         }
       />
-      {/* Link curto da bio: bioquevende.app/nome-da-loja */}
+      {/* Link curto da bio: www.lojabio.app/nome-da-loja */}
       <Route path="/:slug" element={<StorePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
