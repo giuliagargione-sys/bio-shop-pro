@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uploadLogo } from "@/lib/logoUpload";
+import { isReservedSlug, storeHost, storePath, storeUrl } from "@/lib/storeUrl";
 
 function cleanSlug(input: string) {
   return input
@@ -28,14 +29,20 @@ function StoreAddressCard() {
     if (slug) setValue(slug);
   }, [slug]);
 
-  const host = typeof window !== "undefined" ? window.location.host : "";
+  const host = storeHost();
   const preview = value.replace(/-+$/, "");
-  const fullUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/loja/${preview}`;
+  const fullUrl = `${host}${storePath(preview)}`;
   const changed = preview !== (slug ?? "");
+  const reserved = isReservedSlug(preview);
 
   async function handleSave() {
     setSaving(true);
     setFeedback(null);
+    if (reserved) {
+      setSaving(false);
+      setFeedback({ ok: false, text: "Esse endereço é reservado. Escolha outro." });
+      return;
+    }
     const result = await changeSlug(preview);
     setSaving(false);
     setFeedback(
@@ -46,7 +53,7 @@ function StoreAddressCard() {
   }
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(`${window.location.origin}/loja/${slug ?? ""}`);
+    await navigator.clipboard.writeText(storeUrl(slug ?? ""));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -65,7 +72,7 @@ function StoreAddressCard() {
           <Label htmlFor="slug">Endereço</Label>
           <div className="flex items-stretch rounded-md border border-input bg-background overflow-hidden focus-within:ring-1 focus-within:ring-ring">
             <span className="hidden sm:flex items-center px-3 text-sm text-muted-foreground bg-muted whitespace-nowrap">
-              {host}/loja/
+              {host}/
             </span>
             <Input
               id="slug"
@@ -91,7 +98,7 @@ function StoreAddressCard() {
         )}
 
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" onClick={handleSave} disabled={saving || !preview || !changed}>
+          <Button size="sm" onClick={handleSave} disabled={saving || !preview || !changed || reserved}>
             {saving ? "Salvando..." : changed ? "Salvar endereço" : "Endereço salvo"}
           </Button>
           {slug && (
@@ -101,7 +108,7 @@ function StoreAddressCard() {
                 {copied ? "Copiado!" : "Copiar link"}
               </Button>
               <a
-                href={`/loja/${slug}`}
+                href={storePath(slug)}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center h-9 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground"

@@ -66,7 +66,7 @@ export default function StorePage() {
           config.brand.tagline?.trim() ||
           `Conheça as peças em destaque de ${config.brand.storeName} e descubra seu look ideal pelo quiz.`
         }
-        path={`/loja/${slug ?? ""}`}
+        path={`/${slug ?? ""}`}
       />
       <StoreNav config={config} />
       <Hero config={config} />

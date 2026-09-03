@@ -181,7 +181,7 @@ export default function AdminPage() {
   async function onDeleteStore(aluna: AlunaSummary) {
     const nome = aluna.storeName || aluna.email;
     const ok = window.confirm(
-      `Apagar a loja de ${nome}? O link /loja/${aluna.slug ?? ""} sai do ar e a personalizacao e perdida. O login da aluna continua ativo.`
+      `Apagar a loja de ${nome}? O link /${aluna.slug ?? ""} sai do ar e a personalizacao e perdida. O login da aluna continua ativo.`
     );
     if (!ok) return;
     setDeletingId(aluna.id);
@@ -307,13 +307,13 @@ export default function AdminPage() {
                       {a.slug ? (
                         <>
                           <a
-                            href={`/loja/${a.slug}`}
+                            href={`/${a.slug}`}
                             target="_blank"
                             rel="noreferrer"
                             className="text-xs underline flex items-center gap-1"
                             style={{ color: "var(--product-coral-dark)" }}
                           >
-                            /loja/{a.slug} <ExternalLink size={12} />
+                            /{a.slug} <ExternalLink size={12} />
                           </a>
                           <Link
                             to={`/personalizar?loja=${a.id}`}

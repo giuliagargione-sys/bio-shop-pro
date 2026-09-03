@@ -108,7 +108,7 @@ export function DashboardLayout({ active, onChange, children }: DashboardLayoutP
         </nav>
         <div className="p-3 border-t border-border mt-2 space-y-2">
           <Link
-            to={slug ? `/loja/${slug}` : "#"}
+            to={slug ? `/${slug}` : "#"}
             target="_blank"
             aria-disabled={!slug}
             className={cn(
