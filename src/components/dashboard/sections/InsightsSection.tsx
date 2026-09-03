@@ -95,6 +95,11 @@ export function InsightsSection() {
         </CardContent>
       </Card>
 
+      <ProLock
+        locked={!isPro && !planLoading}
+        title="Insights com IA é do plano PRO"
+        description="No PRO a IA lê seus cliques e leads e te diz o que ajustar pra vender mais."
+      >
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
