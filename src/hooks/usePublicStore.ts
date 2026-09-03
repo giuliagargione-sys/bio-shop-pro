@@ -54,16 +54,10 @@ export function usePublicStore(slug: string | undefined): PublicStoreState {
       return;
     }
 
-    if (!isSupabaseConfigured) {
-      // sem banco conectado e slug fora das lojas de exemplo
-      setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });
-      return;
-    }
-
     let cancelled = false;
     setState((s) => ({ ...s, loading: true }));
 
-    fetchStoreBySlug(slug).then((result) => {
+    fetchPublicStoreBySlug(slug).then((result) => {
       if (cancelled) return;
       if (!result) {
         setState({ loading: false, notFound: true, inactive: false, ownerId: null, config: defaultConfig });
