@@ -114,7 +114,8 @@ export interface HelpLinksConfig {
 
 export interface LayoutBlock {
   id: string;
-  type: "produtos" | "quiz" | "ajuda" | "botao" | "banners";
+  type: "produtos" | "quiz" | "ajuda" | "botao" | "banners" | "banner" | "helpLink";
+  refId?: string; // id do banner ou do botao extra que este bloco representa
   enabled: boolean;
   label?: string; // usado nos blocos do tipo "botao"
   href?: string; // link do botao personalizado
