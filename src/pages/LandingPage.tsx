@@ -54,7 +54,9 @@ const FEATURES = [
 // oferta/plano). O botão do plano abre esse link numa aba nova.
 const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   essencial: "https://pay.hub.la/SEU-LINK-ESSENCIAL",
+  "essencial-anual": "https://pay.hub.la/SEU-LINK-ESSENCIAL-ANUAL",
   pro: "https://pay.hub.la/SEU-LINK-PRO",
+  "pro-anual": "https://pay.hub.la/SEU-LINK-PRO-ANUAL",
 };
 
 type PlanFeature = string | { text: string; highlight?: boolean; star?: boolean };
@@ -63,8 +65,7 @@ const PLANS = [
   {
     slug: "essencial",
     name: "Essencial",
-    price: "R$ 47",
-    period: "/mês",
+    monthlyPrice: 47,
     tagline: "Pra começar a vender pelo link da bio",
     features: [
       "Loja personalizável no link da bio",
@@ -78,8 +79,7 @@ const PLANS = [
   {
     slug: "pro",
     name: "PRO",
-    price: "R$ 97",
-    period: "/mês",
+    monthlyPrice: 97,
     tagline: "Pra quem quer vender mais com menos esforço",
     features: [
       "Tudo do plano Essencial",
@@ -93,6 +93,15 @@ const PLANS = [
     highlighted: true,
   },
 ];
+
+function formatCurrency(value: number) {
+  return value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+}
 
 function SectionLabel({ children, tone = "ink" }: { children: string; tone?: "ink" | "light" }) {
   return (
