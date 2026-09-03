@@ -134,7 +134,9 @@ export function VideoCarousel({
   config: StoreConfig;
   ownerId?: string | null;
 }) {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const { ref: trackRef, centerItems } = useCenterItems<HTMLDivElement>([
+    config.videos?.length,
+  ]);
   const videos = (config.videos ?? [])
     .filter((v) => v.enabled !== false && v.videoUrl?.trim())
     .slice(0, 4);
@@ -163,7 +165,9 @@ export function VideoCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto no-scrollbar snap-x-mandatory px-4 pb-2 sm:container"
+        className={`flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
+          centerItems ? "justify-center" : "justify-start"
+        }`}
       >
         {videos.map((video) => (
           <VideoCard key={video.id} video={video} ownerId={ownerId} />
