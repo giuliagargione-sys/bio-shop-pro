@@ -15,26 +15,47 @@ export function LogoMark({ size = 40 }: { size?: number }) {
       <defs>
         <linearGradient id="lnbqv-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#6B1B2B" />
-          <stop offset="1" stopColor="#0B0B0B" />
+          <stop offset="1" stopColor="#3E1019" />
         </linearGradient>
       </defs>
-      <rect width="40" height="40" rx="9" fill="url(#lnbqv-bg)" />
-      <g transform="translate(20 20) rotate(-45) translate(-20 -20)">
-        <rect x="9" y="14" width="14" height="12" rx="6" stroke="white" strokeWidth="3" />
-        <rect x="17" y="14" width="14" height="12" rx="6" stroke="white" strokeWidth="3" />
-      </g>
+      <rect width="40" height="40" rx="10" fill="url(#lnbqv-bg)" />
+      {/* Elo esquerdo da corrente */}
+      <rect
+        x="9"
+        y="14"
+        width="13"
+        height="11"
+        rx="5.5"
+        transform="rotate(-45 15.5 19.5)"
+        stroke="white"
+        strokeWidth="2.6"
+        fill="none"
+      />
+      {/* Elo direito da corrente */}
+      <rect
+        x="18"
+        y="14"
+        width="13"
+        height="11"
+        rx="5.5"
+        transform="rotate(-45 24.5 19.5)"
+        stroke="white"
+        strokeWidth="2.6"
+        fill="none"
+      />
+      {/* Seta de crescimento dourada */}
       <path
-        d="M25 12 L30.5 9.5 L28 15"
-        stroke="#E3DED6"
-        strokeWidth="2.2"
+        d="M24 11 L31 8 L28.5 15"
+        stroke="#C9A84C"
+        strokeWidth="2.4"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       />
       <path
-        d="M30.5 9.5 L21 19"
-        stroke="#E3DED6"
-        strokeWidth="2.2"
+        d="M31 8 L21 18"
+        stroke="#C9A84C"
+        strokeWidth="2.4"
         strokeLinecap="round"
       />
     </svg>
@@ -43,15 +64,18 @@ export function LogoMark({ size = 40 }: { size?: number }) {
 
 export function Logo({ size = 36, withWordmark = true, className }: LogoProps) {
   return (
-    <div className={`flex items-center gap-2.5 font-product ${className ?? ""}`}>
+    <div className={`flex items-center gap-2.5 ${className ?? ""}`}>
       <LogoMark size={size} />
       {withWordmark && (
-        <span className="leading-tight">
-          <span className="block font-semibold text-[15px] tracking-tight" style={{ color: "var(--product-ink)" }}>
+        <span className="leading-[1.05] flex flex-col">
+          <span
+            className="font-product font-semibold text-[15px] tracking-[-0.01em]"
+            style={{ color: "var(--product-ink)" }}
+          >
             link na bio
           </span>
           <span
-            className="block text-[10px] font-semibold uppercase tracking-wider -mt-0.5"
+            className="font-body text-[10px] font-bold uppercase tracking-[0.22em] -mt-0.5"
             style={{ color: "var(--product-coral)" }}
           >
             que vende!
