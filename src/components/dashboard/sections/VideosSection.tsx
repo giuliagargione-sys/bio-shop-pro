@@ -129,15 +129,24 @@ function PosterField({ value, onChange }: { value: string; onChange: (url: strin
   );
 }
 
+const MAX_VIDEOS = 4;
+
 export function VideosSection() {
   const { config, updateConfig } = useStoreConfig();
+  const { isPro, loading: planLoading } = usePlan();
   const videos = config.videos ?? [];
+  const atLimit = videos.length >= MAX_VIDEOS;
 
   const setVideos = (next: VideoItem[]) => updateConfig({ videos: next });
   const patch = (id: string, values: Partial<VideoItem>) =>
     setVideos(videos.map((v) => (v.id === id ? { ...v, ...values } : v)));
 
   return (
+    <ProLock
+      locked={!isPro && !planLoading}
+      title="Carrossel de vídeos é do plano PRO"
+      description="No PRO você sobe até 4 vídeos clicáveis com o card do produto na sua loja."
+    >
     <Card>
       <CardHeader>
         <CardTitle>Carrossel de vídeos</CardTitle>
