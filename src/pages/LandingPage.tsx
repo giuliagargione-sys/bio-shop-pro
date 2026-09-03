@@ -54,7 +54,9 @@ const FEATURES = [
 // oferta/plano). O botão do plano abre esse link numa aba nova.
 const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
   essencial: "https://pay.hub.la/SEU-LINK-ESSENCIAL",
+  "essencial-anual": "https://pay.hub.la/SEU-LINK-ESSENCIAL-ANUAL",
   pro: "https://pay.hub.la/SEU-LINK-PRO",
+  "pro-anual": "https://pay.hub.la/SEU-LINK-PRO-ANUAL",
 };
 
 type PlanFeature = string | { text: string; highlight?: boolean; star?: boolean };
@@ -63,8 +65,7 @@ const PLANS = [
   {
     slug: "essencial",
     name: "Essencial",
-    price: "R$ 47",
-    period: "/mês",
+    monthlyPrice: 47,
     tagline: "Pra começar a vender pelo link da bio",
     features: [
       "Loja personalizável no link da bio",
@@ -78,8 +79,7 @@ const PLANS = [
   {
     slug: "pro",
     name: "PRO",
-    price: "R$ 97",
-    period: "/mês",
+    monthlyPrice: 97,
     tagline: "Pra quem quer vender mais com menos esforço",
     features: [
       "Tudo do plano Essencial",
@@ -93,6 +93,15 @@ const PLANS = [
     highlighted: true,
   },
 ];
+
+function formatCurrency(value: number) {
+  return value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+}
 
 function SectionLabel({ children, tone = "ink" }: { children: string; tone?: "ink" | "light" }) {
   return (
@@ -230,8 +239,24 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: () => void }) {
+function PlanCard({
+  plan,
+  yearly,
+  onChoose,
+}: {
+  plan: (typeof PLANS)[number];
+  yearly: boolean;
+  onChoose: () => void;
+}) {
   const isPro = plan.highlighted;
+  const monthlyValue = plan.monthlyPrice;
+  const yearlyEquivalent = Math.round(monthlyValue * 0.8 * 100) / 100;
+  const yearlyTotal = Math.round(monthlyValue * 12 * 0.8 * 100) / 100;
+
+  const displayPrice = yearly ? formatCurrency(yearlyEquivalent) : formatCurrency(monthlyValue);
+  const displayPeriod = yearly ? "/mês" : "/mês";
+  const yearlyLabel = yearly ? `${formatCurrency(yearlyTotal)}/ano` : null;
+
   return (
     <div
       className="rounded-lg p-7 flex flex-col gap-6 relative"
@@ -253,9 +278,25 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
         <p className="font-product font-semibold text-base uppercase tracking-[0.12em]">{plan.name}</p>
         <p className="text-sm opacity-75 mt-1">{plan.tagline}</p>
       </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="font-product text-4xl font-semibold tracking-tight">{plan.price}</span>
-        <span className="text-sm opacity-75">{plan.period}</span>
+      <div>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="font-product text-4xl font-semibold tracking-tight">{displayPrice}</span>
+          <span className="text-sm opacity-75">{displayPeriod}</span>
+          {yearly && (
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[0.12em] px-2 py-0.5 rounded-full"
+              style={{
+                background: isPro ? "rgba(255,253,249,0.22)" : "rgba(107, 27, 43, 0.10)",
+                color: isPro ? "var(--product-gold)" : "var(--product-coral)",
+              }}
+            >
+              20% Off
+            </span>
+          )}
+        </div>
+        {yearlyLabel && (
+          <p className="text-xs opacity-70 mt-1.5">Cobrança anual de {yearlyLabel}</p>
+        )}
       </div>
       <div className="h-px w-full" style={{ background: isPro ? "rgba(255,253,249,0.22)" : "var(--product-line)" }} />
       <ul className="space-y-3 flex-1">
@@ -285,7 +326,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        Escolher {plan.name}
+        Escolher {plan.name} {yearly ? "Anual" : ""}
       </Button>
     </div>
   );
@@ -295,6 +336,7 @@ export default function LandingPage() {
   const { hash } = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
+  const [yearly, setYearly] = useState(false);
 
   useEffect(() => {
     if (hash) {
@@ -549,31 +591,77 @@ export default function LandingPage() {
 
       {/* Pricing */}
       <section id="planos" className="container py-20 sm:py-24" style={{ borderTop: "1px solid var(--product-line)" }}>
-        <div className="text-center max-w-xl mx-auto mb-14 flex flex-col items-center gap-4">
+        <div className="text-center max-w-xl mx-auto mb-10 flex flex-col items-center gap-4">
           <SectionLabel>Planos</SectionLabel>
           <h2 className="text-3xl sm:text-[42px] font-semibold tracking-[-0.02em] leading-tight">
             Escolha o plano e crie sua loja agora
           </h2>
           <p className="text-sm opacity-60">Pagamento seguro sem fidelidade.</p>
         </div>
+
+        {/* Billing toggle */}
+        <div className="flex justify-center mb-10">
+          <div
+            className="inline-flex items-center rounded-full p-1 gap-1"
+            style={{ background: "rgba(107, 27, 43, 0.08)", border: "1px solid var(--product-line)" }}
+          >
+            <button
+              type="button"
+              onClick={() => setYearly(false)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                !yearly ? "shadow-sm" : "opacity-60 hover:opacity-80"
+              }`}
+              style={
+                !yearly
+                  ? { background: "var(--product-cream)", color: "var(--product-ink)" }
+                  : { color: "var(--product-ink)" }
+              }
+            >
+              Mensal
+            </button>
+            <button
+              type="button"
+              onClick={() => setYearly(true)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${
+                yearly ? "shadow-sm" : "opacity-60 hover:opacity-80"
+              }`}
+              style={
+                yearly
+                  ? { background: "var(--product-cream)", color: "var(--product-ink)" }
+                  : { color: "var(--product-ink)" }
+              }
+            >
+              Anual
+              <span
+                className="text-[9px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-full"
+                style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}
+              >
+                20% Off
+              </span>
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
           <PlanCard
+            yearly={yearly}
             plan={PLANS[0]}
             onChoose={() =>
               setSelectedPlan({
-                slug: PLANS[0].slug,
-                name: PLANS[0].name,
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[0].slug],
+                slug: yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug,
+                name: `${PLANS[0].name} ${yearly ? "Anual" : ""}`.trim(),
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[0].slug}-anual` : PLANS[0].slug],
               })
             }
           />
           <PlanCard
+            yearly={yearly}
             plan={PLANS[1]}
             onChoose={() =>
               setSelectedPlan({
-                slug: PLANS[1].slug,
-                name: PLANS[1].name,
-                checkoutUrl: HUBLA_CHECKOUT_LINKS[PLANS[1].slug],
+                slug: yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug,
+                name: `${PLANS[1].name} ${yearly ? "Anual" : ""}`.trim(),
+                checkoutUrl: HUBLA_CHECKOUT_LINKS[yearly ? `${PLANS[1].slug}-anual` : PLANS[1].slug],
               })
             }
           />
