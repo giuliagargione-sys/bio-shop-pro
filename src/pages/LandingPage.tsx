@@ -389,41 +389,45 @@ export default function LandingPage() {
 
         <div
           id="hero-benefits"
-          className="grid sm:grid-cols-3 w-full max-w-4xl mt-14 rounded-lg overflow-hidden"
-          style={{ border: "1px solid var(--product-line)", background: "#ffffff" }}
+          className="grid sm:grid-cols-3 gap-4 w-full max-w-5xl mt-14"
         >
           {[
             {
-              icon: <TrendingUp size={18} />,
+              icon: <TrendingUp size={22} />,
               title: "Aumente faturamento",
               text: "Converta mais seguidores em clientes com um link que vende de verdade.",
             },
             {
-              icon: <Users size={18} />,
+              icon: <Users size={22} />,
               title: "Aumente sua base",
               text: "Capture leads qualificados pelo quiz e organize tudo na dashboard.",
             },
             {
-              icon: <Target size={18} />,
+              icon: <Target size={22} />,
               title: "Venda mais certeira",
               text: "Direcione cada cliente ao produto ideal e recupere a venda no WhatsApp.",
             },
-          ].map((item, idx) => (
+          ].map((item) => (
             <div
               key={item.title}
-              className="p-6 sm:p-7 text-left flex flex-col gap-3"
-              style={{
-                borderTop: idx === 0 ? "none" : "1px solid var(--product-line)",
-              }}
+              className="rounded-2xl p-6 sm:p-7 flex flex-col items-start gap-4 bg-white shadow-sm transition-all duration-300 hover:shadow-md"
+              style={{ border: "1px solid var(--product-line)" }}
             >
-              <div style={{ color: "var(--product-coral)" }}>{item.icon}</div>
-              <p className="font-semibold text-sm sm:text-[15px]">{item.title}</p>
-              <p className="text-[13px] sm:text-sm opacity-60 leading-relaxed">{item.text}</p>
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: "rgba(107, 27, 43, 0.06)", color: "var(--product-coral)" }}
+              >
+                {item.icon}
+              </div>
+              <div className="space-y-2">
+                <p className="font-semibold text-lg sm:text-xl leading-tight">{item.title}</p>
+                <p className="text-sm opacity-65 leading-relaxed">{item.text}</p>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-8">
           <button
             onClick={() => setDemoOpen(true)}
             className="group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
@@ -433,8 +437,6 @@ export default function LandingPage() {
             Ver demonstração
           </button>
         </div>
-
-        <style>{`@media (min-width: 640px) { #hero-benefits > div + div { border-top: none; border-left: 1px solid var(--product-line); } }`}</style>
       </section>
 
       {/* Features */}
