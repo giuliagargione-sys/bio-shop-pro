@@ -40,6 +40,15 @@ export interface Product {
 }
 
 
+export interface Banner {
+  id: string;
+  imageUrl: string;
+  link?: string; // destino ao clicar (categoria do site, WhatsApp, etc)
+  title?: string; // nome interno / alt da imagem
+  ratio?: "4/5" | "1/1" | "16/9"; // formato pensado pro celular
+  enabled?: boolean;
+}
+
 export interface QuizOption {
   id: string;
   label: string;
@@ -97,7 +106,7 @@ export interface HelpLinksConfig {
 
 export interface LayoutBlock {
   id: string;
-  type: "produtos" | "quiz" | "ajuda" | "botao";
+  type: "produtos" | "quiz" | "ajuda" | "botao" | "banners";
   enabled: boolean;
   label?: string; // usado nos blocos do tipo "botao"
   href?: string; // link do botao personalizado
@@ -120,6 +129,8 @@ export interface StoreConfig {
   /** titulo da secao de produtos na loja (editavel pela aluna) */
   productsTitle?: string;
   products: Product[];
+  /** banners clicaveis que a aluna sobe pra destacar colecoes */
+  banners?: Banner[];
   quiz: QuizConfig;
   contact: ContactConfig;
   helpLinks: HelpLinksConfig;
