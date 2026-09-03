@@ -113,7 +113,7 @@ export function ProductsSection() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>Produtos em destaque</CardTitle>
@@ -122,123 +122,146 @@ export function ProductsSection() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <Label htmlFor="productsTitle">Título da seção na loja</Label>
-            <Input
-              id="productsTitle"
-              value={config.productsTitle ?? ""}
-              onChange={(e) => updateConfig({ productsTitle: e.target.value })}
-              placeholder="Ex: Peças em destaque"
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Dê o nome que quiser: "Novidades da semana", "Mais amados", "Meus favoritos"...
-            </p>
-          </div>
-
-          {config.products.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Nenhuma peça ainda — adicione a primeira abaixo.
-            </p>
-          )}
-
-          {config.products.map((product, index) => (
-            <div key={product.id}>
-              {index > 0 && <Separator className="my-4" />}
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-muted-foreground">Peça {index + 1}</span>
-                <button
-                  onClick={() => removeProduct(product.id)}
-                  className="hover:opacity-70"
-                  aria-label="Remover produto"
-                  style={{ color: "#c0392b" }}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <Label>Nome da peça</Label>
-                  <Input
-                    value={product.name}
-                    onChange={(e) => updateProduct(product.id, { name: e.target.value })}
-                  />
-                </div>
-                <ProductImageField
-                  value={product.imageUrl}
-                  onChange={(url) => updateProduct(product.id, { imageUrl: url })}
-                />
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label>Selo (opcional)</Label>
-                    <Input
-                      value={product.badge}
-                      onChange={(e) => updateProduct(product.id, { badge: e.target.value })}
-                      placeholder="Ex: Mais vendida"
-                    />
-                  </div>
-                  <div>
-                    <Label>Link de compra</Label>
-                    <Input
-                      value={product.link}
-                      onChange={(e) => updateProduct(product.id, { link: e.target.value })}
-                      placeholder="https://..."
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-md border p-3 space-y-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <Label htmlFor={`showPrice-${product.id}`}>Mostrar preço na loja</Label>
-                      <p className="text-xs text-muted-foreground">
-                        Desligue se preferir não exibir valores.
-                      </p>
-                    </div>
-                    <Switch
-                      id={`showPrice-${product.id}`}
-                      checked={product.showPrice !== false}
-                      onCheckedChange={(checked) =>
-                        updateProduct(product.id, { showPrice: checked })
-                      }
-                    />
-                  </div>
-                  {product.showPrice !== false && (
-                    <>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <Label>Preço</Label>
-                          <Input
-                            value={product.price ?? ""}
-                            onChange={(e) => updateProduct(product.id, { price: e.target.value })}
-                            placeholder="R$ 189,90"
-                          />
-                        </div>
-                        <div>
-                          <Label>Preço promocional (opcional)</Label>
-                          <Input
-                            value={product.salePrice ?? ""}
-                            onChange={(e) => updateProduct(product.id, { salePrice: e.target.value })}
-                            placeholder="R$ 149,90"
-                          />
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Preenchendo o promocional, a loja mostra "de {product.price || "R$ 189,90"} por{" "}
-                        {product.salePrice || "R$ 149,90"}" com selo de oferta.
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <Button variant="outline" onClick={addProduct} className="w-full mt-4">
-            <Plus size={16} />
-            Adicionar peça
-          </Button>
+          <Label htmlFor="productsTitle">Título da seção na loja</Label>
+          <Input
+            id="productsTitle"
+            value={config.productsTitle ?? ""}
+            onChange={(e) => updateConfig({ productsTitle: e.target.value })}
+            placeholder="Ex: Peças em destaque"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Dê o nome que quiser: "Novidades da semana", "Mais amados", "Meus favoritos"...
+          </p>
         </CardContent>
       </Card>
+
+      {config.products.length === 0 && (
+        <Card>
+          <CardContent className="py-6 text-sm text-muted-foreground text-center">
+            Nenhuma peça ainda — adicione a primeira abaixo.
+          </CardContent>
+        </Card>
+      )}
+
+      {config.products.map((product, index) => (
+        <Card key={product.id}>
+          <CardHeader className="flex-row items-center justify-between space-y-0 gap-3 border-b">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-md border bg-muted flex items-center justify-center">
+                {product.imageUrl ? (
+                  <img src={product.imageUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <ImageIcon size={16} className="text-muted-foreground" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <CardTitle className="text-base truncate">
+                  {product.name?.trim() || `Peça ${index + 1}`}
+                </CardTitle>
+                <CardDescription className="text-xs">Peça {index + 1}</CardDescription>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:text-destructive shrink-0"
+              onClick={() => removeProduct(product.id)}
+              aria-label="Remover produto"
+            >
+              <Trash2 size={16} />
+            </Button>
+          </CardHeader>
+
+          <CardContent className="space-y-5 pt-5">
+            <div>
+              <Label>Nome da peça</Label>
+              <Input
+                value={product.name}
+                onChange={(e) => updateProduct(product.id, { name: e.target.value })}
+              />
+            </div>
+
+            <Separator />
+
+            <ProductImageField
+              value={product.imageUrl}
+              onChange={(url) => updateProduct(product.id, { imageUrl: url })}
+            />
+
+            <Separator />
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label>Selo (opcional)</Label>
+                <Input
+                  value={product.badge}
+                  onChange={(e) => updateProduct(product.id, { badge: e.target.value })}
+                  placeholder="Ex: Mais vendida"
+                />
+              </div>
+              <div>
+                <Label>Link de compra</Label>
+                <Input
+                  value={product.link}
+                  onChange={(e) => updateProduct(product.id, { link: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <Label htmlFor={`showPrice-${product.id}`}>Mostrar preço na loja</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Desligue se preferir não exibir valores.
+                  </p>
+                </div>
+                <Switch
+                  id={`showPrice-${product.id}`}
+                  checked={product.showPrice !== false}
+                  onCheckedChange={(checked) => updateProduct(product.id, { showPrice: checked })}
+                />
+              </div>
+              {product.showPrice !== false && (
+                <>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <Label>Preço</Label>
+                      <Input
+                        value={product.price ?? ""}
+                        onChange={(e) => updateProduct(product.id, { price: e.target.value })}
+                        placeholder="R$ 189,90"
+                      />
+                    </div>
+                    <div>
+                      <Label>Preço promocional (opcional)</Label>
+                      <Input
+                        value={product.salePrice ?? ""}
+                        onChange={(e) => updateProduct(product.id, { salePrice: e.target.value })}
+                        placeholder="R$ 149,90"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Preenchendo o promocional, a loja mostra "de {product.price || "R$ 189,90"} por{" "}
+                    {product.salePrice || "R$ 149,90"}" com selo de oferta.
+                  </p>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      <Button variant="outline" onClick={addProduct} className="w-full">
+        <Plus size={16} />
+        Adicionar peça
+      </Button>
     </div>
   );
 }
+
