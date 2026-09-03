@@ -96,13 +96,19 @@ export interface ExtraLink {
   id: string;
   label: string;
   url: string;
+  color?: string; // cor de destaque escolhida pela aluna
+  icon?: string; // chave do simbolo (ver src/lib/buttonStyle.ts)
 }
 
 export interface HelpLinksConfig {
   supportLabel: string;
   supportUrl: string; // ex: link do WhatsApp ou Direct do Instagram
+  supportColor?: string;
+  supportIcon?: string;
   returnsLabel: string;
   returnsUrl: string; // ex: link de uma pagina/PDF com a politica de trocas
+  returnsColor?: string;
+  returnsIcon?: string;
   extra?: ExtraLink[]; // botoes extras adicionais (plano PRO)
 }
 
@@ -112,7 +118,10 @@ export interface LayoutBlock {
   enabled: boolean;
   label?: string; // usado nos blocos do tipo "botao"
   href?: string; // link do botao personalizado
+  color?: string; // cor do botao personalizado
+  icon?: string; // simbolo do botao personalizado
 }
+
 
 export interface LayoutConfig {
   blocks: LayoutBlock[]; // ordem em que as seções aparecem na loja
