@@ -142,7 +142,8 @@ export function ProductsSection() {
       )}
 
       {config.products.map((product, index) => (
-        <Card key={product.id}>
+        <div key={product.id} className="flex items-start gap-2">
+        <Card className="flex-1 min-w-0">
           <CardHeader className="flex-row items-center justify-between space-y-0 gap-3 border-b">
             <div className="flex items-center gap-3 min-w-0">
               <div className="h-10 w-10 shrink-0 overflow-hidden rounded-md border bg-muted flex items-center justify-center">
@@ -156,20 +157,8 @@ export function ProductsSection() {
                 <CardTitle className="text-base truncate">Produto {index + 1}</CardTitle>
               </div>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="ml-auto shrink-0 border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-              onClick={() => removeProduct(product.id)}
-              aria-label="Remover produto"
-              title="Excluir produto"
-            >
-              <Trash2 size={16} />
-            </Button>
-
-
           </CardHeader>
+
 
           <CardContent className="space-y-5 pt-5">
             <div>
@@ -254,7 +243,20 @@ export function ProductsSection() {
             </div>
           </CardContent>
         </Card>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="mt-4 shrink-0 border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+          onClick={() => removeProduct(product.id)}
+          aria-label="Remover produto"
+          title="Excluir produto"
+        >
+          <Trash2 size={16} />
+        </Button>
+        </div>
       ))}
+
 
       <Button variant="outline" onClick={addProduct} className="w-full">
         <Plus size={16} />
