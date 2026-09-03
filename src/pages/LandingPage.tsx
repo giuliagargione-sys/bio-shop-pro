@@ -239,8 +239,24 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: () => void }) {
+function PlanCard({
+  plan,
+  yearly,
+  onChoose,
+}: {
+  plan: (typeof PLANS)[number];
+  yearly: boolean;
+  onChoose: () => void;
+}) {
   const isPro = plan.highlighted;
+  const monthlyValue = plan.monthlyPrice;
+  const yearlyEquivalent = Math.round(monthlyValue * 0.8 * 100) / 100;
+  const yearlyTotal = Math.round(monthlyValue * 12 * 0.8 * 100) / 100;
+
+  const displayPrice = yearly ? formatCurrency(yearlyEquivalent) : formatCurrency(monthlyValue);
+  const displayPeriod = yearly ? "/mês" : "/mês";
+  const yearlyLabel = yearly ? `${formatCurrency(yearlyTotal)}/ano` : null;
+
   return (
     <div
       className="rounded-lg p-7 flex flex-col gap-6 relative"
@@ -262,9 +278,25 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
         <p className="font-product font-semibold text-base uppercase tracking-[0.12em]">{plan.name}</p>
         <p className="text-sm opacity-75 mt-1">{plan.tagline}</p>
       </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="font-product text-4xl font-semibold tracking-tight">{plan.price}</span>
-        <span className="text-sm opacity-75">{plan.period}</span>
+      <div>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="font-product text-4xl font-semibold tracking-tight">{displayPrice}</span>
+          <span className="text-sm opacity-75">{displayPeriod}</span>
+          {yearly && (
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[0.12em] px-2 py-0.5 rounded-full"
+              style={{
+                background: isPro ? "rgba(255,253,249,0.22)" : "rgba(107, 27, 43, 0.10)",
+                color: isPro ? "var(--product-gold)" : "var(--product-coral)",
+              }}
+            >
+              20% Off
+            </span>
+          )}
+        </div>
+        {yearlyLabel && (
+          <p className="text-xs opacity-70 mt-1.5">Cobrança anual de {yearlyLabel}</p>
+        )}
       </div>
       <div className="h-px w-full" style={{ background: isPro ? "rgba(255,253,249,0.22)" : "var(--product-line)" }} />
       <ul className="space-y-3 flex-1">
@@ -294,7 +326,7 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        Escolher {plan.name}
+        Escolher {plan.name} {yearly ? "Anual" : ""}
       </Button>
     </div>
   );
