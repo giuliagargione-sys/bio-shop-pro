@@ -27,7 +27,7 @@ const FEATURES = [
   },
   {
     icon: <Users size={20} />,
-    title: "Leads",
+    title: "Mais Clientes",
     text: "Aumente sua base de clientes com as respostas do quiz. Cada resposta vira um lead com preferências na sua dash, pronto para ser convertido no WhatsApp.",
   },
   {
