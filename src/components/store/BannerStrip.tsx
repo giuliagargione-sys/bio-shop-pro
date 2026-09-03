@@ -26,14 +26,33 @@ export function BannerStrip({
           const href = banner.link?.trim();
           const ratio = RATIO_CLASS[banner.ratio ?? "4/5"];
           const label = banner.title?.trim() || "Banner da coleção";
+          const overlayTitle = banner.overlayTitle?.trim();
+          const ctaLabel = banner.ctaLabel?.trim();
+          const hasOverlay = Boolean(overlayTitle || ctaLabel);
 
           const image = (
-            <img
-              src={banner.imageUrl}
-              alt={label}
-              loading="lazy"
-              className={`w-full ${ratio} object-cover`}
-            />
+            <div className={`relative w-full ${ratio}`}>
+              <img
+                src={banner.imageUrl}
+                alt={label}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              {hasOverlay && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/25 px-4 text-center">
+                  {overlayTitle && (
+                    <span className="font-heading text-2xl sm:text-3xl text-white drop-shadow-sm">
+                      {overlayTitle}
+                    </span>
+                  )}
+                  {ctaLabel && (
+                    <span className="rounded-full border border-white/80 px-5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
+                      {ctaLabel}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           );
 
           const shell =

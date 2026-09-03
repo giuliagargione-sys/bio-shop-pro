@@ -45,6 +45,8 @@ export interface Banner {
   imageUrl: string;
   link?: string; // destino ao clicar (categoria do site, WhatsApp, etc)
   title?: string; // nome interno / alt da imagem
+  overlayTitle?: string; // texto grande sobre a imagem (ex.: "Tops", "Coleção Verão")
+  ctaLabel?: string; // texto do botão sobre a imagem (ex.: "Conferir")
   ratio?: "4/5" | "1/1" | "16/9"; // formato pensado pro celular
   enabled?: boolean;
 }
