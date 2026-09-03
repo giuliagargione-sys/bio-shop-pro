@@ -4,6 +4,7 @@ import { fetchStoreBySlug } from "@/lib/remoteConfig";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { defaultConfig } from "@/lib/defaultConfig";
 import { getDemoStore } from "@/lib/demoStores";
+import { loadStoreFont } from "@/lib/loadFont";
 
 
 // Usado pela loja pública (rota /loja/:slug) — leitura só, sem login.
@@ -19,6 +20,7 @@ function applyThemeToDocument(theme: StoreConfig["theme"]) {
   root.setProperty("--brand-accent", theme.accent);
   root.setProperty("--brand-accent-foreground", theme.accentForeground);
   root.setProperty("--brand-font", theme.font);
+  loadStoreFont(theme.font);
   root.setProperty("--radius", theme.radius);
 }
 

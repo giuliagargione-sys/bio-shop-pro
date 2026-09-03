@@ -12,6 +12,9 @@ export function StoreNav({ config }: { config: StoreConfig }) {
             <img
               src={config.brand.logoUrl}
               alt={config.brand.storeName}
+              width={40}
+              height={40}
+              decoding="async"
               className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover"
             />
           ) : (
