@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { StoreConfig } from "@/types/config";
-import { fetchStoreBySlug } from "@/lib/remoteConfig";
-import { isSupabaseConfigured } from "@/lib/supabaseClient";
+import { fetchPublicStoreBySlug } from "@/lib/publicApi";
 import { defaultConfig } from "@/lib/defaultConfig";
 import { getDemoStore } from "@/lib/demoStores";
 import { loadStoreFont } from "@/lib/loadFont";
