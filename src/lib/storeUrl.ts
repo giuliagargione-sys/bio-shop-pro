@@ -1,5 +1,5 @@
-// Domínio curto dos links das lojas: www.lojabio.app/nome-da-loja
-export const STORE_DOMAIN = "www.lojabio.app";
+// Domínio curto dos links das lojas: lojabio.app/nome-da-loja
+export const STORE_DOMAIN = "lojabio.app";
 
 export const RESERVED_SLUGS = new Set([
   "loja",
