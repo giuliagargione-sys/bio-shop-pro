@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { Switch } from "@/components/ui/switch";
+import { DailyVisitsChart } from "@/components/admin/DailyVisitsChart";
 import { fetchAlunas, createAluna, setStoreActive, deleteStore, type AlunaSummary } from "@/lib/adminApi";
 
 function formatDate(iso: string | null) {
@@ -221,7 +222,8 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <main className="container py-8 max-w-4xl space-y-6">
+      <main className="container py-8 max-w-6xl grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] items-start">
+        <div className="space-y-6 min-w-0">
         <div>
           <h1 className="text-xl font-semibold">Todas as alunas</h1>
           <p className="text-sm text-muted-foreground">
@@ -363,6 +365,11 @@ export default function AdminPage() {
             </p>
           </CardContent>
         </Card>
+        </div>
+
+        <aside className="lg:sticky lg:top-6 space-y-6">
+          <DailyVisitsChart />
+        </aside>
       </main>
     </div>
   );
