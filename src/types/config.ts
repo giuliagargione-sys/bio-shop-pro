@@ -34,7 +34,11 @@ export interface Product {
   imageUrl: string;
   badge: string; // ex: "Mais vendida da semana", "Novidade"
   link: string;
+  showPrice?: boolean; // mostrar ou esconder o preço na loja
+  price?: string; // preço cheio, ex: "R$ 189,90"
+  salePrice?: string; // preço promocional (ativa o "de / por")
 }
+
 
 export interface QuizOption {
   id: string;

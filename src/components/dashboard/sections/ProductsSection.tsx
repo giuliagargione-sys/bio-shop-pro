@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { uid } from "@/lib/utils";
 import { uploadStoreImage } from "@/lib/logoUpload";
 import type { Product } from "@/types/config";
@@ -104,6 +105,9 @@ export function ProductsSection() {
       imageUrl: "",
       badge: "",
       link: "#",
+      showPrice: true,
+      price: "",
+      salePrice: "",
     };
     updateConfig({ products: [...config.products, newProduct] });
   }
@@ -180,6 +184,50 @@ export function ProductsSection() {
                       placeholder="https://..."
                     />
                   </div>
+                </div>
+
+                <div className="rounded-md border p-3 space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label htmlFor={`showPrice-${product.id}`}>Mostrar preço na loja</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Desligue se preferir não exibir valores.
+                      </p>
+                    </div>
+                    <Switch
+                      id={`showPrice-${product.id}`}
+                      checked={product.showPrice !== false}
+                      onCheckedChange={(checked) =>
+                        updateProduct(product.id, { showPrice: checked })
+                      }
+                    />
+                  </div>
+                  {product.showPrice !== false && (
+                    <>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label>Preço</Label>
+                          <Input
+                            value={product.price ?? ""}
+                            onChange={(e) => updateProduct(product.id, { price: e.target.value })}
+                            placeholder="R$ 189,90"
+                          />
+                        </div>
+                        <div>
+                          <Label>Preço promocional (opcional)</Label>
+                          <Input
+                            value={product.salePrice ?? ""}
+                            onChange={(e) => updateProduct(product.id, { salePrice: e.target.value })}
+                            placeholder="R$ 149,90"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Preenchendo o promocional, a loja mostra "de {product.price || "R$ 189,90"} por{" "}
+                        {product.salePrice || "R$ 149,90"}" com selo de oferta.
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
