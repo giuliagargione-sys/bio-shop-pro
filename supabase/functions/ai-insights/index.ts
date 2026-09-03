@@ -61,6 +61,8 @@ Deno.serve(async (req: Request) => {
     const uniqueSessions = new Set<string>();
     const quizSessions = new Set<string>();
     const byDay: Record<string, number> = {};
+    // heatmap[diaDaSemana][hora] em horário de Brasília (UTC-3)
+    const heatmap: number[][] = Array.from({ length: 7 }, () => new Array(24).fill(0));
     const byKind: Record<string, number> = {};
     const byProduct: Record<string, number> = {};
     const byButton: Record<string, number> = {};
@@ -74,6 +76,8 @@ Deno.serve(async (req: Request) => {
       if (e.kind === "visita") {
         const day = String(e.created_at).slice(0, 10);
         byDay[day] = (byDay[day] ?? 0) + 1;
+        const local = new Date(new Date(e.created_at).getTime() - 3 * 60 * 60 * 1000);
+        heatmap[local.getUTCDay()][local.getUTCHours()] += 1;
       }
       if (e.kind === "produto" && e.label) byProduct[e.label] = (byProduct[e.label] ?? 0) + 1;
       if ((e.kind === "botao" || e.kind === "whatsapp") && e.label)
@@ -115,6 +119,7 @@ Deno.serve(async (req: Request) => {
           : 0,
       },
       serieVisitas,
+      heatmap,
       cliquesProduto,
       cliquesWhats,
       cliquesBotao,
