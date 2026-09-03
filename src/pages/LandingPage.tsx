@@ -443,16 +443,39 @@ export default function LandingPage() {
               Venda mais do jeito certo!
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            {FEATURES.map((f) => (
+          <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+            {FEATURES.map((f, idx) => (
               <div
                 key={f.title}
-                className="rounded-lg p-6 flex flex-col gap-3"
-                style={{ background: "var(--product-cream)", color: "var(--product-ink)" }}
+                className="group rounded-xl p-5 sm:p-6 flex items-start gap-4 sm:gap-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                style={{
+                  background: "var(--product-cream)",
+                  color: "var(--product-ink)",
+                  border: "1px solid rgba(107, 27, 43, 0.08)",
+                  boxShadow: "0 4px 18px -8px rgba(11,11,11,0.08)",
+                }}
               >
-                <div style={{ color: "var(--product-coral)" }}>{f.icon}</div>
-                <p className="font-semibold text-[15px]">{f.title}</p>
-                <p className="text-sm opacity-60 leading-relaxed">{f.text}</p>
+                <div
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105"
+                  style={{
+                    background: "rgba(107, 27, 43, 0.08)",
+                    color: "var(--product-coral)",
+                  }}
+                >
+                  {f.icon}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(107, 27, 43, 0.08)", color: "var(--product-coral)" }}
+                    >
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <p className="font-semibold text-[15px] sm:text-base leading-tight">{f.title}</p>
+                  </div>
+                  <p className="text-sm opacity-60 leading-relaxed">{f.text}</p>
+                </div>
               </div>
             ))}
           </div>
