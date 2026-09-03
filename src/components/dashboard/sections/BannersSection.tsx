@@ -9,21 +9,16 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { uid } from "@/lib/utils";
 import { uploadStoreImage } from "@/lib/logoUpload";
+import { cropToBannerRatio } from "@/lib/bannerImage";
 import type { Banner } from "@/types/config";
 
-const RATIOS: { value: NonNullable<Banner["ratio"]>; label: string; hint: string }[] = [
-  { value: "4/5", label: "Vertical 4:5", hint: "1080 x 1350 px" },
-  { value: "1/1", label: "Quadrado 1:1", hint: "1080 x 1080 px" },
-  { value: "16/9", label: "Faixa 16:9", hint: "1280 x 720 px" },
-];
+
 
 function BannerImageField({
   value,
-  ratio,
   onChange,
 }: {
   value: string;
-  ratio: NonNullable<Banner["ratio"]>;
   onChange: (url: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,7 +29,8 @@ function BannerImageField({
     if (!file) return;
     setError(null);
     setBusy(true);
-    const { url, error: uploadError } = await uploadStoreImage(file, "banner");
+    const cropped = await cropToBannerRatio(file);
+    const { url, error: uploadError } = await uploadStoreImage(cropped, "banner");
     setBusy(false);
     if (uploadError || !url) {
       setError(uploadError || "Não conseguimos enviar a imagem.");
@@ -43,15 +39,12 @@ function BannerImageField({
     onChange(url);
   }
 
-  const previewRatio =
-    ratio === "1/1" ? "aspect-square" : ratio === "16/9" ? "aspect-[16/9]" : "aspect-[4/5]";
-
   return (
     <div>
       <Label>Imagem do banner</Label>
       <div className="mt-1 flex items-start gap-3">
         <div
-          className={`w-24 shrink-0 overflow-hidden rounded-md border bg-muted flex items-center justify-center ${previewRatio}`}
+          className="w-28 shrink-0 aspect-[35/26] overflow-hidden rounded-md border bg-muted flex items-center justify-center"
         >
           {value ? (
             <img src={value} alt="Banner" className="h-full w-full object-cover" />
@@ -103,7 +96,7 @@ export function BannersSection() {
         <CardTitle>Banners da loja</CardTitle>
         <CardDescription>
           Suba uma imagem e a deixe clicável pra destacar uma coleção, promoção ou lançamento. Os
-          banners serão adequados para formato mobile.
+          banners serão ajustados automaticamente para o formato mobile.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -131,33 +124,8 @@ export function BannersSection() {
 
             <BannerImageField
               value={banner.imageUrl}
-              ratio={banner.ratio ?? "4/5"}
               onChange={(url) => patch(banner.id, { imageUrl: url })}
             />
-
-            <div>
-              <Label>Formato (pensado pro celular)</Label>
-              <div className="mt-1 flex flex-wrap gap-2">
-                {RATIOS.map((r) => {
-                  const activeRatio = (banner.ratio ?? "4/5") === r.value;
-                  return (
-                    <button
-                      key={r.value}
-                      type="button"
-                      onClick={() => patch(banner.id, { ratio: r.value })}
-                      className={`rounded-[var(--radius)] border px-3 py-2 text-left text-xs ${
-                        activeRatio
-                          ? "border-primary bg-primary/10 text-foreground"
-                          : "border-border hover:bg-muted"
-                      }`}
-                    >
-                      <span className="block font-medium">{r.label}</span>
-                      <span className="block text-muted-foreground">{r.hint}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
             <div>
               <Label htmlFor={`banner-title-${banner.id}`}>Nome do banner (só pra você)</Label>
@@ -222,7 +190,7 @@ export function BannersSection() {
           onClick={() =>
             setBanners([
               ...banners,
-              { id: uid("banner"), imageUrl: "", link: "", title: "", ratio: "4/5", enabled: true },
+              { id: uid("banner"), imageUrl: "", link: "", title: "", enabled: true },
             ])
           }
           className="flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-dashed border-border py-3 text-sm hover:bg-muted"
