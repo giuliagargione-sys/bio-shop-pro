@@ -132,6 +132,16 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       config,
       slug,
       syncStatus,
+      hasUnsavedChanges,
+      saveNow: async () => {
+        if (!userIdRef.current) return false;
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        setSyncStatus("saving");
+        const ok = await saveMyConfig(userIdRef.current, configRef.current);
+        setSyncStatus(ok ? "synced" : "error");
+        if (ok) setHasUnsavedChanges(false);
+        return ok;
+      },
       editingAsAdmin: Boolean(targetUserId),
       updateConfig: (patch) => setConfigState((prev) => ({ ...prev, ...patch })),
       updateNested: (key, patch) =>
