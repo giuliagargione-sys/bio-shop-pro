@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Check, AlertCircle, Upload, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, AlertCircle, Upload, Trash2, Copy, ExternalLink } from "lucide-react";
 import { useStoreConfig } from "@/context/ConfigContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -7,17 +7,36 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uploadLogo } from "@/lib/logoUpload";
 
+function cleanSlug(input: string) {
+  return input
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+/, "");
+}
 
 function StoreAddressCard() {
   const { slug, changeSlug } = useStoreConfig();
   const [value, setValue] = useState(slug ?? "");
   const [saving, setSaving] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
+
+  // Quando a loja termina de carregar, o endereço salvo entra no campo.
+  useEffect(() => {
+    if (slug) setValue(slug);
+  }, [slug]);
+
+  const host = typeof window !== "undefined" ? window.location.host : "";
+  const preview = value.replace(/-+$/, "");
+  const fullUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/loja/${preview}`;
+  const changed = preview !== (slug ?? "");
 
   async function handleSave() {
     setSaving(true);
     setFeedback(null);
-    const result = await changeSlug(value);
+    const result = await changeSlug(preview);
     setSaving(false);
     setFeedback(
       result.ok
@@ -26,27 +45,41 @@ function StoreAddressCard() {
     );
   }
 
+  async function handleCopy() {
+    await navigator.clipboard.writeText(`${window.location.origin}/loja/${slug ?? ""}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Endereço da sua loja</CardTitle>
         <CardDescription>
-          É esse link que vai no "link da bio" do seu Instagram/TikTok.
+          É esse link que vai no "link da bio" do seu Instagram/TikTok. Escolha algo curto e fácil de
+          lembrar — o nome da sua marca costuma ser a melhor opção.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div>
+      <CardContent className="space-y-4">
+        <div className="space-y-1.5">
           <Label htmlFor="slug">Endereço</Label>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground whitespace-nowrap">.../loja/</span>
+          <div className="flex items-stretch rounded-md border border-input bg-background overflow-hidden focus-within:ring-1 focus-within:ring-ring">
+            <span className="hidden sm:flex items-center px-3 text-sm text-muted-foreground bg-muted whitespace-nowrap">
+              {host}/loja/
+            </span>
             <Input
               id="slug"
               value={value}
-              onChange={(e) => setValue(e.target.value.toLowerCase())}
+              onChange={(e) => setValue(cleanSlug(e.target.value))}
               placeholder="sua-loja"
+              className="border-0 shadow-none focus-visible:ring-0"
             />
           </div>
+          <p className="text-xs text-muted-foreground break-all">
+            Seu link fica: <span className="font-medium text-foreground">{fullUrl}</span>
+          </p>
         </div>
+
         {feedback && (
           <p
             className="text-xs flex items-center gap-1"
@@ -56,13 +89,31 @@ function StoreAddressCard() {
             {feedback.text}
           </p>
         )}
-        <Button size="sm" onClick={handleSave} disabled={saving || !value.trim()}>
-          {saving ? "Salvando..." : "Salvar endereço"}
-        </Button>
+
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" onClick={handleSave} disabled={saving || !preview || !changed}>
+            {saving ? "Salvando..." : changed ? "Salvar endereço" : "Endereço salvo"}
+          </Button>
+          {slug && (
+            <>
+              <Button size="sm" variant="outline" onClick={handleCopy}>
+                <Copy size={14} className="mr-1.5" />
+                {copied ? "Copiado!" : "Copiar link"}
+              </Button>
+              <Button size="sm" variant="ghost" asChild>
+                <a href={`/loja/${slug}`} target="_blank" rel="noreferrer">
+                  <ExternalLink size={14} className="mr-1.5" />
+                  Ver minha loja
+                </a>
+              </Button>
+            </>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
 }
+
 
 export function BrandSection() {
   const { config, updateNested } = useStoreConfig();
