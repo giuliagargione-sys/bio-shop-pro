@@ -162,14 +162,18 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
         <div
           className="relative rounded-[2.2rem] p-2 shadow-2xl"
-          style={{ background: "var(--product-ink)" }}
+          style={{
+            background: "var(--product-ink)",
+            transform: "scale(0.82)",
+            transformOrigin: "top center",
+          }}
         >
           {/* Notch */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-black z-10" />
 
           <div
             className="relative overflow-hidden rounded-[1.7rem] bg-white"
-            style={{ width: "min(84vw, 360px)", height: "min(78vh, 680px)" }}
+            style={{ width: "min(84vw, 390px)", height: "min(78vh, 720px)" }}
           >
             {loading && !error && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm opacity-60">
