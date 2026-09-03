@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      checkout_signups: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          plan: string
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          plan: string
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          plan?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           answers: Json
