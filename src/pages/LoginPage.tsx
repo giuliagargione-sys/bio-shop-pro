@@ -165,13 +165,12 @@ export default function LoginPage() {
                 {submitting ? "Aguarde..." : mode === "signin" ? "Entrar" : "Criar conta"}
               </Button>
 
-              <button
-                type="button"
-                onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+              <Link
+                to="/#planos"
                 className="w-full text-center text-xs text-muted-foreground underline"
               >
-                {mode === "signin" ? "Primeira vez? Criar conta" : "Já tenho conta — entrar"}
-              </button>
+                Primeira vez? Criar conta
+              </Link>
             </form>
           )}
         </div>
