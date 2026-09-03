@@ -282,7 +282,7 @@ export default function LandingPage() {
           ].map((item) => (
             <div
               key={item.step}
-              className={`rounded-xl p-5 flex gap-4 ${item.highlight ? "lg:col-start-2" : ""}`}
+              className={`rounded-xl p-5 flex gap-4 ${item.highlight ? "sm:col-span-2 lg:col-span-1 lg:col-start-2 justify-center" : ""}`}
               style={
                 item.highlight
                   ? { background: "var(--product-coral)", color: "#ffffff", boxShadow: "0 12px 28px -10px rgba(107,27,43,0.35)" }
