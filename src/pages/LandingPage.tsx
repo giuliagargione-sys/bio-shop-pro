@@ -410,17 +410,17 @@ export default function LandingPage() {
           ].map((item) => (
             <div
               key={item.title}
-              className="rounded-2xl p-6 sm:p-7 flex flex-col items-start gap-4 bg-white shadow-sm transition-all duration-300 hover:shadow-md"
+              className="rounded-2xl p-5 sm:p-6 flex items-center gap-4 bg-white shadow-sm transition-all duration-300 hover:shadow-md"
               style={{ border: "1px solid var(--product-line)" }}
             >
               <div
-                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
                 style={{ background: "rgba(107, 27, 43, 0.06)", color: "var(--product-coral)" }}
               >
                 {item.icon}
               </div>
-              <div className="space-y-2">
-                <p className="font-semibold text-lg sm:text-xl leading-tight">{item.title}</p>
+              <div className="space-y-1">
+                <p className="font-semibold text-base sm:text-lg leading-tight">{item.title}</p>
                 <p className="text-sm opacity-65 leading-relaxed">{item.text}</p>
               </div>
             </div>
