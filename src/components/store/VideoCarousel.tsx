@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import type { StoreConfig, VideoItem } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | null }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
 
   function togglePlay(e: React.MouseEvent) {
     // O play não deve abrir o link — só o card/nome do produto abre.
@@ -17,13 +18,38 @@ function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | nu
     const el = videoRef.current;
     if (!el) return;
     if (el.paused) {
-      el.play();
-      setPlaying(true);
+      setUserPaused(false);
+      el.play().catch(() => {});
     } else {
+      setUserPaused(true);
       el.pause();
-      setPlaying(false);
     }
   }
+
+  // Autoplay quando o card entra na viewport; pausa quando sai.
+  // Só volta a tocar sozinho se a usuária não tiver pausado manualmente.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+            if (!userPaused) {
+              el.play().catch(() => {});
+            }
+          } else {
+            el.pause();
+          }
+        });
+      },
+      { threshold: [0, 0.55, 1] }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [userPaused, video.videoUrl]);
 
   const href = video.link?.trim();
 
@@ -38,30 +64,19 @@ function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | nu
           muted
           loop
           preload="metadata"
+          autoPlay
           className="h-full w-full object-cover"
           onPause={() => setPlaying(false)}
           onPlay={() => setPlaying(true)}
         />
-        {!playing && (
-          <button
-            type="button"
-            onClick={togglePlay}
-            aria-label="Assistir vídeo"
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/80 bg-black/30 text-white">
-              <Play size={22} className="ml-0.5" />
-            </span>
-          </button>
-        )}
-        {playing && (
-          <button
-            type="button"
-            onClick={togglePlay}
-            aria-label="Pausar vídeo"
-            className="absolute inset-0"
-          />
-        )}
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-label={playing ? "Pausar vídeo" : "Assistir vídeo"}
+          className="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 bg-black/40 text-white backdrop-blur-sm"
+        >
+          {playing ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+        </button>
       </div>
       <div className="p-3">
         <p className="font-medium text-sm leading-snug line-clamp-2">{video.productName}</p>
