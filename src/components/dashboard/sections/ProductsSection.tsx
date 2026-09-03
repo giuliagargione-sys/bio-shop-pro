@@ -172,10 +172,11 @@ export function ProductsSection() {
 
           <CardContent className="space-y-5 pt-5">
             <div>
-              <Label>Nome da peça</Label>
+              <Label>Nome do produto</Label>
               <Input
                 value={product.name}
                 onChange={(e) => updateProduct(product.id, { name: e.target.value })}
+                placeholder="Ex: Conjunto Nice"
               />
             </div>
 
@@ -194,7 +195,7 @@ export function ProductsSection() {
                 <Input
                   value={product.badge}
                   onChange={(e) => updateProduct(product.id, { badge: e.target.value })}
-                  placeholder="Ex: Mais vendida"
+                  placeholder="Ex: Mais vendido"
                 />
               </div>
               <div>
@@ -256,7 +257,7 @@ export function ProductsSection() {
 
       <Button variant="outline" onClick={addProduct} className="w-full">
         <Plus size={16} />
-        Adicionar peça
+        Adicionar produto
       </Button>
     </div>
   );
