@@ -9,6 +9,7 @@ import { StructureSection } from "@/components/dashboard/sections/StructureSecti
 import { HeroSection } from "@/components/dashboard/sections/HeroSection";
 import { ProductsSection } from "@/components/dashboard/sections/ProductsSection";
 import { BannersSection } from "@/components/dashboard/sections/BannersSection";
+import { VideosSection } from "@/components/dashboard/sections/VideosSection";
 import { QuizSection } from "@/components/dashboard/sections/QuizSection";
 import { LeadsSection } from "@/components/dashboard/sections/LeadsSection";
 import { InsightsSection } from "@/components/dashboard/sections/InsightsSection";
@@ -30,6 +31,7 @@ const SECTION_MAP: Record<DashboardSectionKey, ReactNode> = {
   ),
   hero: <HeroSection />,
   banners: <BannersSection />,
+  videos: <VideosSection />,
   produtos: <ProductsSection />,
   quiz: <QuizSection />,
   leads: <LeadsSection />,
