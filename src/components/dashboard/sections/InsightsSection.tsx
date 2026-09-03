@@ -241,12 +241,15 @@ export function InsightsSection() {
                           <span
                             key={h}
                             title={`${day} ${String(h).padStart(2, "0")}h: ${value} visitas`}
-                            className="h-4 flex-1 rounded-sm"
-                            style={{
-                              backgroundColor: value
-                                ? `hsl(var(--primary) / ${intensity})`
-                                : "hsl(var(--muted))",
-                            }}
+                            className="h-4 flex-1 rounded-sm bg-muted"
+                            style={
+                              value
+                                ? {
+                                    backgroundColor: "var(--brand-primary)",
+                                    opacity: intensity,
+                                  }
+                                : undefined
+                            }
                           />
                         );
                       })}
