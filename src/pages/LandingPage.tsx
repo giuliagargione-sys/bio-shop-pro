@@ -438,17 +438,19 @@ export default function LandingPage() {
                 <div style={{ color: "var(--product-coral)" }}>{f.icon}</div>
                 <p className="font-semibold text-[15px]">{f.title}</p>
                 <p className="text-sm opacity-60 leading-relaxed">{f.text}</p>
-                {f.demo && (
-                  <button
-                    onClick={() => setDemoOpen(true)}
-                    className="mt-1 text-sm font-medium underline-offset-2 hover:underline flex items-center gap-1.5 w-fit"
-                    style={{ color: "var(--product-coral)" }}
-                  >
-                    Ver demonstração <ExternalLink size={14} />
-                  </button>
-                )}
               </div>
             ))}
+          </div>
+
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setDemoOpen(true)}
+              className="group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-transform hover:scale-[1.02]"
+              style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}
+            >
+              <Star size={16} className="fill-[var(--product-gold)] text-[var(--product-gold)]" />
+              Ver demonstração
+            </button>
           </div>
         </div>
       </section>
