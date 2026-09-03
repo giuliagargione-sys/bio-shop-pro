@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { optimizeImage } from "./optimizeImage";
 
 // A aluna sobe a imagem do logo direto do computador/celular. O arquivo vai
 // pra uma pasta privada dela dentro do bucket "store-logos" e a gente guarda
