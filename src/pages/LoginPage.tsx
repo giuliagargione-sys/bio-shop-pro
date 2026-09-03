@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link } from "react-router-dom";
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
