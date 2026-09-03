@@ -213,6 +213,14 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
               />
             )}
           </div>
+
+          {/* Footer do celular */}
+          <div className="flex items-center justify-center gap-2 pt-3 pb-1">
+            <Send size={14} style={{ color: "var(--product-cream)" }} />
+            <span className="text-[11px] font-medium" style={{ color: "var(--product-cream)" }}>
+              Potencialize suas vendas!
+            </span>
+          </div>
         </div>
 
         <p className="text-white/60 text-xs mt-4 text-center max-w-xs">
