@@ -32,6 +32,10 @@ export default function LoginPage() {
     return <Navigate to={from} replace />;
   }
 
+  if (mode === "signup") {
+    return <Navigate to="/#planos" replace />;
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
