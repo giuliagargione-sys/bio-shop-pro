@@ -80,7 +80,8 @@ const PLANS = [
   },
 ];
 
-function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
+function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: () => void }) {
+
   return (
     <div
       className="rounded-xl p-6 flex flex-col gap-5 relative"
