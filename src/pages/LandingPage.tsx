@@ -262,9 +262,11 @@ function PlanCard({ plan, onChoose }: { plan: (typeof PLANS)[number]; onChoose: 
         {plan.features.map((f, idx) => {
           const text = typeof f === "string" ? f : f.text;
           const isHighlight = typeof f !== "string" && f.highlight;
+          const isStar = typeof f !== "string" && f.star;
+          const Icon = isStar ? Star : Check;
           return (
             <li key={`${text}-${idx}`} className="flex items-start gap-2.5 text-sm leading-relaxed">
-              <Check
+              <Icon
                 size={15}
                 className="shrink-0 mt-1"
                 style={{ color: isPro ? "var(--product-gold)" : "var(--product-coral)" }}
