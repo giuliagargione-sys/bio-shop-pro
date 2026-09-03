@@ -1,8 +1,9 @@
 import { PageMeta } from "@/components/PageMeta";
-import { useState, type FormEvent } from "react";
-import { Navigate, useLocation, useSearchParams, Link } from "react-router-dom";
+import { useEffect, useState, type FormEvent } from "react";
+import { Navigate, useLocation, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
