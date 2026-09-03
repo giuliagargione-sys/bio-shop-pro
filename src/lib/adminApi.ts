@@ -37,3 +37,64 @@ export async function createAluna(
   if (data?.error) return { error: data.error as string };
   return { email: data.email as string, tempPassword: data.tempPassword as string };
 }
+
+// ---- Suporte humano (painel central) ----
+
+export interface AdminSupportMessage {
+  id: string;
+  sender: "aluna" | "admin";
+  body: string;
+  createdAt: string;
+}
+
+export interface AdminSupportTicket {
+  id: string;
+  userId: string;
+  email: string;
+  storeName: string | null;
+  plan: string | null;
+  isPro: boolean;
+  status: string;
+  awaitingAdmin: boolean;
+  lastMessageAt: string;
+  createdAt: string;
+  messages: AdminSupportMessage[];
+}
+
+export async function fetchSupportTickets(): Promise<{
+  tickets: AdminSupportTicket[];
+  error: string | null;
+}> {
+  if (!supabase) return { tickets: [], error: "Backend não conectado." };
+  const { data, error } = await supabase.functions.invoke("admin-support", {
+    body: { action: "list" },
+  });
+  if (error) return { tickets: [], error: error.message };
+  if (data?.error) return { tickets: [], error: data.error as string };
+  return { tickets: (data?.tickets as AdminSupportTicket[]) ?? [], error: null };
+}
+
+export async function replySupportTicket(
+  ticketId: string,
+  body: string
+): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: false, error: "Backend não conectado." };
+  const { data, error } = await supabase.functions.invoke("admin-support", {
+    body: { action: "reply", ticketId, body },
+  });
+  if (error) return { ok: false, error: error.message };
+  if (data?.error) return { ok: false, error: data.error as string };
+  return { ok: true };
+}
+
+export async function closeSupportTicket(
+  ticketId: string
+): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: false, error: "Backend não conectado." };
+  const { data, error } = await supabase.functions.invoke("admin-support", {
+    body: { action: "close", ticketId },
+  });
+  if (error) return { ok: false, error: error.message };
+  if (data?.error) return { ok: false, error: data.error as string };
+  return { ok: true };
+}
