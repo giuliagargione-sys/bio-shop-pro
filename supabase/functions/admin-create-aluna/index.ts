@@ -62,6 +62,7 @@ Deno.serve(async (req: Request) => {
       email,
       password: tempPassword,
       email_confirm: true, // já entra confirmada, sem precisar clicar em e-mail
+      user_metadata: { must_change_password: true }, // força criar senha própria no 1º login
     });
 
     if (error) {

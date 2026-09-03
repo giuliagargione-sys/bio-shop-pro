@@ -23,6 +23,9 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   if (!loading && session) {
+    if (session.user?.user_metadata?.must_change_password) {
+      return <Navigate to="/trocar-senha" replace />;
+    }
     const from = (location.state as { from?: string })?.from ?? "/personalizar";
     return <Navigate to={from} replace />;
   }
