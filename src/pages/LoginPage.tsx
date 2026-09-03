@@ -61,15 +61,12 @@ export default function LoginPage() {
         </div>
 
         <div className="rounded-xl bg-white shadow-lg p-6 border" style={{ borderColor: "var(--product-line)" }}>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-4">
             <Lock size={16} style={{ color: "var(--product-coral)" }} />
             <h1 className="font-semibold text-lg" style={{ color: "var(--product-ink)" }}>
-              Entrar na dashboard
+              Painel do administrador
             </h1>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Só quem tem a senha vê os leads e edita a loja.
-          </p>
 
           {!isSupabaseConfigured ? (
             <div className="flex gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
