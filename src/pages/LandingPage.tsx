@@ -1,6 +1,6 @@
 import { PageMeta } from "@/components/PageMeta";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Link2,
@@ -12,10 +12,14 @@ import {
   TrendingUp,
   Target,
   Zap,
+  X,
+  ExternalLink,
+  Smartphone,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
 import { Button } from "@/components/ui/button";
+import { storeUrl } from "@/lib/storeUrl";
 
 const FEATURES = [
   {
