@@ -98,7 +98,7 @@ export function HelpChat() {
     const reply = await askHelpAssistant(
       next.filter((m) => !m.support).map(({ role, content }) => ({ role, content }))
     );
-    const clean = reply.replaceAll(SUPPORT_MARK, "").trim();
+    const clean = reply.split(SUPPORT_MARK).join("").trim();
     setMessages((prev) => [...prev, { role: "assistant", content: clean }]);
     if (needsHuman(reply)) setOfferSupport(true);
     setLoading(false);

@@ -36,7 +36,7 @@ function PlanTag({ isPro, plan }: { isPro: boolean; plan: string | null }) {
     );
   }
   return (
-    <Badge variant="outline" className="whitespace-nowrap text-muted-foreground">
+    <Badge className="whitespace-nowrap text-muted-foreground bg-transparent border border-border">
       {plan ? plan : "Essencial"}
     </Badge>
   );
@@ -75,7 +75,7 @@ function TicketCard({ ticket, onChanged }: { ticket: AdminSupportTicket; onChang
         {ticket.awaitingAdmin && (
           <Badge style={{ background: "#fff8e6", color: "#a06b00" }}>Aguardando resposta</Badge>
         )}
-        {ticket.status === "fechado" && <Badge variant="outline">Fechado</Badge>}
+        {ticket.status === "fechado" && <Badge className="bg-transparent border border-border text-muted-foreground">Fechado</Badge>}
         <span className="ml-auto text-[11px] text-muted-foreground">
           {formatWhen(ticket.lastMessageAt)}
         </span>
