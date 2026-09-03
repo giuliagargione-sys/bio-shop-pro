@@ -247,7 +247,7 @@ export default function LandingPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-9">
           <a href="#planos">
             <Button size="lg" className="rounded-full px-7" style={{ background: "var(--product-ink)", color: "var(--product-cream)" }}>
-              Quero minha loja <ArrowRight size={17} />
+              Quero criar! <ArrowRight size={17} />
             </Button>
           </a>
           <Link to="/login">
