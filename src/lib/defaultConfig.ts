@@ -98,7 +98,7 @@ export const defaultConfig: StoreConfig = {
     ],
     resultTitle: "Seu look ideal está pronto! ✨",
     resultDescription: "Com base nas suas respostas, você irá gostar dessa opção:",
-    resultCtaLabel: "Ver meu look",
+    resultCtaLabel: "clique aqui para ver as peças que separados para você!",
   },
   contact: {
     whatsappNumber: "5511999999999",
