@@ -149,11 +149,12 @@ export function VideoCarousel({
 
   return (
     <section id="videos" className="py-8 sm:py-12">
-      <div className="container max-w-md mx-auto flex items-center justify-between mb-4 sm:mb-5 px-4 sm:px-0">
-        <h2 className="font-brand text-xl sm:text-2xl font-semibold">
+      <div className="container max-w-md mx-auto grid grid-cols-[1fr_auto_1fr] items-center mb-4 sm:mb-5 px-4 sm:px-0">
+        <div />
+        <h2 className="font-brand text-xl sm:text-2xl font-semibold text-center">
           {(config.videosTitle || "").trim() || "Peças no vídeo"}
         </h2>
-        <div className="hidden sm:flex gap-2">
+        <div className="hidden sm:flex gap-2 justify-end">
           <Button variant="outline" size="icon" onClick={() => scrollBy(-280)} aria-label="Anterior">
             <ChevronLeft size={18} />
           </Button>
