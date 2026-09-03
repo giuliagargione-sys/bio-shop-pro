@@ -49,8 +49,28 @@ export function HeroSection() {
             />
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="ctaPrimaryHref">Link do botão principal</Label>
+            <Input
+              id="ctaPrimaryHref"
+              value={hero.primaryCtaHref}
+              onChange={(e) => updateNested("hero", { primaryCtaHref: e.target.value })}
+              placeholder="#quiz"
+            />
+          </div>
+          <div>
+            <Label htmlFor="ctaSecondaryHref">Link do botão secundário</Label>
+            <Input
+              id="ctaSecondaryHref"
+              value={hero.secondaryCtaHref}
+              onChange={(e) => updateNested("hero", { secondaryCtaHref: e.target.value })}
+              placeholder="#produtos"
+            />
+          </div>
+        </div>
         <p className="text-xs text-muted-foreground">
-          Os botões levam para as seções "#quiz" e "#produtos" por padrão — não precisa mexer nisso.
+          Use #quiz, #produtos ou o link que quiser (WhatsApp, categoria do site etc.). Deixe em branco para não exibir o botão.
         </p>
       </CardContent>
     </Card>
