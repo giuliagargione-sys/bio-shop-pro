@@ -329,7 +329,7 @@ export function InsightsSection() {
               </span>
             </CardTitle>
             <CardDescription>
-              A IA lê esses mesmos números e sugere o que mudar na loja pra vender mais.
+              Sugestões com base nos seus dados para melhorar resultado.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
