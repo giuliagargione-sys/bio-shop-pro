@@ -258,28 +258,30 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="como-funciona" className="container py-16 border-t" style={{ borderColor: "var(--product-line)" }}>
-        <div className="text-center max-w-md mx-auto mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-coral-dark)" }}>
-            Como funciona
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold">Venda mais do jeito certo!</h2>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-          {FEATURES.map((f) => (
-            <div key={f.title} className="rounded-xl bg-white p-5 flex gap-4" style={{ border: "1px solid var(--product-line)" }}>
-              <div
-                className="shrink-0 h-10 w-10 rounded-xl flex items-center justify-center"
-                style={{ background: "var(--product-cream)", color: "var(--product-coral)" }}
-              >
-                {f.icon}
+      <section id="como-funciona" className="py-16" style={{ background: "var(--product-coral)", color: "var(--product-cream)" }}>
+        <div className="container">
+          <div className="text-center max-w-md mx-auto mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--product-gold)" }}>
+              Como funciona
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-semibold">Venda mais do jeito certo!</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="rounded-xl p-5 flex gap-4" style={{ background: "#ffffff", color: "var(--product-ink)" }}>
+                <div
+                  className="shrink-0 h-10 w-10 rounded-xl flex items-center justify-center"
+                  style={{ background: "var(--product-cream)", color: "var(--product-coral)" }}
+                >
+                  {f.icon}
+                </div>
+                <div>
+                  <p className="font-medium mb-1">{f.title}</p>
+                  <p className="text-sm opacity-70 leading-relaxed">{f.text}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium mb-1">{f.title}</p>
-                <p className="text-sm opacity-70 leading-relaxed">{f.text}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
