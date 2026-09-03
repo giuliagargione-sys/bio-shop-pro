@@ -6,6 +6,7 @@ import { StoreNav } from "@/components/store/StoreNav";
 import { Hero } from "@/components/store/Hero";
 import { ProductCarousel } from "@/components/store/ProductCarousel";
 import { BannerCard } from "@/components/store/BannerStrip";
+import { VideoCarousel } from "@/components/store/VideoCarousel";
 import { QuizFunnel } from "@/components/store/QuizFunnel";
 import { HelpLinkButton } from "@/components/store/HelpLinksBar";
 import { StoreFooter } from "@/components/store/StoreFooter";
@@ -86,6 +87,8 @@ export default function StorePage() {
             return <HelpLinkButton key={block.id} item={item} config={config} />;
           }
           if (block.type === "produtos") return <ProductCarousel key={block.id} config={config} ownerId={ownerId} />;
+          if (block.type === "videos")
+            return <VideoCarousel key={block.id} config={config} ownerId={ownerId} />;
           if (block.type === "quiz")
             return <QuizFunnel key={block.id} config={config} ownerId={ownerId} />;
           return <CustomButtonBlock key={block.id} block={block} ownerId={ownerId} />;
