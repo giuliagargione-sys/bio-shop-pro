@@ -12,9 +12,6 @@ import NotFound from "./pages/NotFound";
 import { RequireAuth } from "./components/RequireAuth";
 import { RequireAdmin } from "./components/RequireAdmin";
 import { ConfigProvider } from "./context/ConfigContext";
-
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { MAIN_DOMAIN, STORE_ONLY_HOSTS, isReservedSlug } from "./lib/storeUrl";
 
 /**
@@ -73,6 +70,7 @@ export default function App() {
       {/* Link curto da bio: www.lojabio.app/nome-da-loja */}
       <Route path="/:slug" element={<StorePage />} />
       <Route path="*" element={<NotFound />} />
-    </Routes>
+      </Routes>
+    </>
   );
 }
