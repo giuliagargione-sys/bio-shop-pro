@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uploadLogo } from "@/lib/logoUpload";
-import { isReservedSlug, STORE_DOMAIN, storeHost, storePath, storeUrl } from "@/lib/storeUrl";
+import { isReservedSlug, storeHost, storeUrl } from "@/lib/storeUrl";
 
 function cleanSlug(input: string) {
   return input
@@ -108,7 +108,7 @@ function StoreAddressCard() {
                 {copied ? "Copiado!" : "Copiar link"}
               </Button>
               <a
-                href={storePath(slug)}
+                href={storeUrl(slug ?? "")}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center h-9 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground"
