@@ -125,10 +125,10 @@ export function ProductsSection() {
             id="productsTitle"
             value={config.productsTitle ?? ""}
             onChange={(e) => updateConfig({ productsTitle: e.target.value })}
-            placeholder="Ex: Produtos em destaque"
+            placeholder="Ex: Best sellers / Novidades"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Dê o nome que quiser: "Novidades da semana", "Mais amados", "Meus favoritos"...
+            Sugestões: "Best sellers", "Novidades da semana", "Mais amados", "Meus favoritos", "Peças em destaque".
           </p>
         </CardContent>
       </Card>
