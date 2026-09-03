@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
+  CalendarClock,
   Eye,
   Loader2,
   MousePointerClick,
@@ -27,6 +28,7 @@ interface Stats {
     conversao: number;
   };
   serieVisitas: { date: string; count: number }[];
+  heatmap?: number[][];
   cliquesProduto: number;
   cliquesWhats: number;
   cliquesBotao: number;
@@ -105,6 +107,10 @@ export function InsightsSection() {
     : [];
   const funnelMax = Math.max(1, ...funnelSteps.map((s) => s.value));
   const maxDay = Math.max(1, ...(stats?.serieVisitas ?? []).map((d) => d.count));
+  const heatmap = stats?.heatmap;
+  const heatMax = Math.max(1, ...(heatmap ?? []).flat());
+  const hasHeat = !!heatmap && heatmap.flat().some((v) => v > 0);
+  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
   return (
     <div className="space-y-6">
@@ -202,6 +208,59 @@ export function InsightsSection() {
                   />
                 ))}
               </div>
+            </div>
+          )}
+
+          {hasHeat && (
+            <div className="space-y-2">
+              <p className="flex items-center gap-2 text-sm font-semibold">
+                <CalendarClock size={16} />
+                Quando seu público acessa
+              </p>
+              <div className="overflow-x-auto">
+                <div className="min-w-[520px]">
+                  <div className="mb-1 flex gap-1 pl-9">
+                    {Array.from({ length: 24 }, (_, h) => (
+                      <span
+                        key={h}
+                        className="flex-1 text-center text-[9px] text-muted-foreground"
+                      >
+                        {h % 3 === 0 ? h : ""}
+                      </span>
+                    ))}
+                  </div>
+                  {weekDays.map((day, d) => (
+                    <div key={day} className="mb-1 flex items-center gap-1">
+                      <span className="w-8 text-[10px] font-medium text-muted-foreground">
+                        {day}
+                      </span>
+                      {Array.from({ length: 24 }, (_, h) => {
+                        const value = heatmap?.[d]?.[h] ?? 0;
+                        const intensity = value ? 0.15 + (value / heatMax) * 0.85 : 0;
+                        return (
+                          <span
+                            key={h}
+                            title={`${day} ${String(h).padStart(2, "0")}h: ${value} visitas`}
+                            className="h-4 flex-1 rounded-sm bg-muted"
+                            style={
+                              value
+                                ? {
+                                    backgroundColor: "var(--brand-primary)",
+                                    opacity: intensity,
+                                  }
+                                : undefined
+                            }
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Quanto mais escuro, mais acessos naquele horário (horário de Brasília). Use pra
+                postar e lançar novidades na melhor hora.
+              </p>
             </div>
           )}
 
