@@ -101,7 +101,7 @@ export function ProductsSection() {
   function addProduct() {
     const newProduct: Product = {
       id: uid("prod"),
-      name: "Nova peça",
+      name: "",
       imageUrl: "",
       badge: "",
       link: "#",
@@ -118,7 +118,7 @@ export function ProductsSection() {
         <CardHeader>
           <CardTitle>Produtos em destaque</CardTitle>
           <CardDescription>
-            As peças que aparecem no carrossel da loja. Suba a foto direto do computador ou celular.
+            Os produtos que aparecem no carrossel da loja. Suba a foto direto do computador ou celular.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -127,7 +127,7 @@ export function ProductsSection() {
             id="productsTitle"
             value={config.productsTitle ?? ""}
             onChange={(e) => updateConfig({ productsTitle: e.target.value })}
-            placeholder="Ex: Peças em destaque"
+            placeholder="Ex: Produtos em destaque"
           />
           <p className="text-xs text-muted-foreground mt-1">
             Dê o nome que quiser: "Novidades da semana", "Mais amados", "Meus favoritos"...
@@ -138,7 +138,7 @@ export function ProductsSection() {
       {config.products.length === 0 && (
         <Card>
           <CardContent className="py-6 text-sm text-muted-foreground text-center">
-            Nenhuma peça ainda — adicione a primeira abaixo.
+            Nenhum produto ainda — adicione o primeiro abaixo.
           </CardContent>
         </Card>
       )}
@@ -155,10 +155,7 @@ export function ProductsSection() {
                 )}
               </div>
               <div className="min-w-0">
-                <CardTitle className="text-base truncate">
-                  {product.name?.trim() || `Peça ${index + 1}`}
-                </CardTitle>
-                <CardDescription className="text-xs">Peça {index + 1}</CardDescription>
+                <CardTitle className="text-base truncate">Produto {index + 1}</CardTitle>
               </div>
             </div>
             <Button
