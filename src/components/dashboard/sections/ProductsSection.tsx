@@ -243,7 +243,20 @@ export function ProductsSection() {
             </div>
           </CardContent>
         </Card>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="mt-4 shrink-0 border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+          onClick={() => removeProduct(product.id)}
+          aria-label="Remover produto"
+          title="Excluir produto"
+        >
+          <Trash2 size={16} />
+        </Button>
+        </div>
       ))}
+
 
       <Button variant="outline" onClick={addProduct} className="w-full">
         <Plus size={16} />
