@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient";
-export { setStoreActive } from "./remoteConfig";
+export { setStoreActive, deleteStore } from "./remoteConfig";
 
 // Tudo aqui passa pelas Edge Functions admin-list-alunas / admin-create-aluna
 // (nunca consulta as tabelas direto) — são elas que conferem se quem está

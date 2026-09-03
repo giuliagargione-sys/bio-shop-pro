@@ -165,3 +165,11 @@ export async function setStoreActive(
   const { error } = await supabase.from("store_config").update({ active }).eq("user_id", userId);
   return { ok: !error, error: error?.message ?? null };
 }
+
+// Apaga a loja de uma aluna (só admin passa pela RLS). O login da aluna
+// continua existindo — ela pode montar a loja de novo se quiser.
+export async function deleteStore(userId: string): Promise<{ ok: boolean; error: string | null }> {
+  if (!supabase) return { ok: false, error: "Banco não conectado." };
+  const { error } = await supabase.from("store_config").delete().eq("user_id", userId);
+  return { ok: !error, error: error?.message ?? null };
+}
