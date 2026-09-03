@@ -170,6 +170,29 @@ export function BannersSection() {
               />
             </div>
 
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label htmlFor={`banner-overlay-${banner.id}`}>
+                  Texto sobre a imagem (opcional)
+                </Label>
+                <Input
+                  id={`banner-overlay-${banner.id}`}
+                  value={banner.overlayTitle ?? ""}
+                  onChange={(e) => patch(banner.id, { overlayTitle: e.target.value })}
+                  placeholder="Coleção Verão"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`banner-cta-${banner.id}`}>Texto do botão (opcional)</Label>
+                <Input
+                  id={`banner-cta-${banner.id}`}
+                  value={banner.ctaLabel ?? ""}
+                  onChange={(e) => patch(banner.id, { ctaLabel: e.target.value })}
+                  placeholder="Conferir"
+                />
+              </div>
+            </div>
+
             <div>
               <Label htmlFor={`banner-link-${banner.id}`}>Link ao clicar</Label>
               <Input
