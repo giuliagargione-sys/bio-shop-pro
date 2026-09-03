@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { uid } from "@/lib/utils";
 import type { ExtraLink } from "@/types/config";
+import { ProLock } from "@/components/dashboard/ProLock";
+import { usePlan } from "@/hooks/usePlan";
 
 export function HelpLinksSection() {
   const { config, updateNested } = useStoreConfig();
+  const { isPro, loading: planLoading } = usePlan();
   const { helpLinks } = config;
   const extra: ExtraLink[] = helpLinks.extra ?? [];
 
@@ -67,6 +70,11 @@ export function HelpLinksSection() {
         </CardContent>
       </Card>
 
+      <ProLock
+        locked={!isPro && !planLoading}
+        title="Botões extras ilimitados é do plano PRO"
+        description="No PRO você adiciona quantos botões quiser na sua loja (catálogo, medidas, grupo do WhatsApp)."
+      >
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -127,6 +135,7 @@ export function HelpLinksSection() {
           </Button>
         </CardContent>
       </Card>
+      </ProLock>
     </div>
   );
 }
