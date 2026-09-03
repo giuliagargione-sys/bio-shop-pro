@@ -315,7 +315,7 @@ export default function LandingPage() {
             Planos
           </p>
           <h2 className="text-2xl sm:text-3xl font-semibold">Escolha o plano e crie sua loja agora</h2>
-          <p className="text-sm opacity-70 mt-2">Pagamento seguro pela Hubla. Cancele quando quiser.</p>
+          <p className="text-sm opacity-70 mt-2">Pagamento seguro sem fidelidade.</p>
         </div>
         <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
           {PLANS.map((plan) => (
