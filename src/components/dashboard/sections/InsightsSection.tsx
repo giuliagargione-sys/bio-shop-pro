@@ -98,11 +98,28 @@ export function InsightsSection() {
       ]
     : [];
 
+  const pct = (n: number, base: number) =>
+    base > 0 ? Math.round((n / base) * 100) : 0;
+
+  const baseVisitantes = stats?.funil.visitantes ?? 0;
   const funnelSteps = stats
     ? [
-        { label: "Visitantes", value: stats.funil.visitantes },
-        { label: "Começaram o quiz", value: stats.funil.iniciaramQuiz },
-        { label: "Viraram cliente (lead)", value: stats.funil.viraramLead },
+        { label: "Entraram no seu link", value: baseVisitantes, percent: 100 },
+        ...(stats.topButtons ?? []).map(([label, count]) => ({
+          label: `Clicaram em “${label}”`,
+          value: count,
+          percent: pct(count, baseVisitantes),
+        })),
+        {
+          label: "Participaram do quiz",
+          value: stats.funil.iniciaramQuiz,
+          percent: pct(stats.funil.iniciaramQuiz, baseVisitantes),
+        },
+        {
+          label: "Leads capturados",
+          value: stats.funil.viraramLead,
+          percent: pct(stats.funil.viraramLead, baseVisitantes),
+        },
       ]
     : [];
   const funnelMax = Math.max(1, ...funnelSteps.map((s) => s.value));
