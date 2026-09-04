@@ -30,11 +30,27 @@ export default function WelcomePage() {
     }
 
     setSubmitting(true);
+
+    // Só libera o cadastro se o e-mail tiver compra ativa na Hubla.
+    const { data: check, error: checkError } = await supabase.functions.invoke(
+      "verificar-compra",
+      { body: { email: cleanEmail } }
+    );
+
+    if (checkError || !check?.allowed) {
+      setSubmitting(false);
+      setError(
+        "Este e-mail não possui uma compra ativa na Hubla. Verifique se digitou o e-mail correto da compra ou fale com o nosso suporte."
+      );
+      return;
+    }
+
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: cleanEmail,
       password,
       options: { emailRedirectTo: `${window.location.origin}/personalizar` },
     });
+
 
     if (signUpError) {
       const msg = signUpError.message || "";
