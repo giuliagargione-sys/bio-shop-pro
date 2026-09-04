@@ -343,15 +343,17 @@ function PlanCard({
         })}
       </ul>
       <Button
+        asChild
         className="w-full min-h-11 rounded-full"
-        onClick={onChoose}
         style={
           isPro
             ? { background: "var(--product-cream)", color: "var(--product-ink)" }
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        Escolher {plan.name} {vip ? "" : yearly ? "Anual" : ""}
+        <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+          {ctaLabel}
+        </a>
       </Button>
     </div>
   );
