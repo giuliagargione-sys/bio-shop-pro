@@ -361,11 +361,8 @@ function PlanCard({
 
 export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
   const { hash } = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
   const [yearly, setYearly] = useState(false);
-  const planSuffix = vip ? "-vip" : yearly ? "-anual" : "";
-  const planNameSuffix = vip ? "Alunas" : yearly ? "Anual" : "";
 
   useEffect(() => {
     if (hash) {
