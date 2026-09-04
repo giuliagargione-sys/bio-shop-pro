@@ -60,17 +60,14 @@ export default function WelcomePage() {
             </span>
           </div>
 
-          <Button
-            asChild
-            size="lg"
-            className="w-full"
+          <Link
+            to="/login"
+            className="inline-flex items-center justify-center gap-2 w-full h-12 px-6 text-base font-medium rounded-[var(--radius)] transition-opacity hover:opacity-90"
             style={{ background: "var(--product-coral)", color: "#fff" }}
           >
-            <Link to="/login" className="inline-flex items-center justify-center gap-2">
-              Ir para o Login
-              <ArrowRight size={18} />
-            </Link>
-          </Button>
+            Ir para o Login
+            <ArrowRight size={18} />
+          </Link>
         </div>
 
         <p className="text-center text-xs mt-5" style={{ color: "var(--product-plum)" }}>
