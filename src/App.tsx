@@ -56,6 +56,7 @@ export default function App() {
       <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/trocar-senha" element={<FirstPasswordPage />} />
+      <Route path="/bem-vindo" element={<WelcomePage />} />
       <Route
         path="/personalizar"
         element={
