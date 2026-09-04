@@ -30,11 +30,27 @@ export default function WelcomePage() {
     }
 
     setSubmitting(true);
+
+    // Só libera o cadastro se o e-mail tiver compra ativa na Hubla.
+    const { data: check, error: checkError } = await supabase.functions.invoke(
+      "verificar-compra",
+      { body: { email: cleanEmail } }
+    );
+
+    if (checkError || !check?.allowed) {
+      setSubmitting(false);
+      setError(
+        "Este e-mail não possui uma compra ativa na Hubla. Verifique se digitou o e-mail correto da compra ou fale com o nosso suporte."
+      );
+      return;
+    }
+
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: cleanEmail,
       password,
       options: { emailRedirectTo: `${window.location.origin}/personalizar` },
     });
+
 
     if (signUpError) {
       const msg = signUpError.message || "";
@@ -226,6 +242,22 @@ export default function WelcomePage() {
             Ir para o login
           </Link>
         </p>
+
+        <p
+          className="text-center text-[11px] leading-relaxed mt-4 opacity-80"
+          style={{ color: "var(--product-plum)" }}
+        >
+          Está com problemas para acessar?{" "}
+          <a
+            href="https://wa.me/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2"
+          >
+            Clique aqui para falar com o nosso Suporte no WhatsApp
+          </a>
+        </p>
+
       </div>
     </div>
   );
