@@ -249,12 +249,14 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 function PlanCard({
   plan,
   yearly,
-  onChoose,
+  checkoutUrl,
+  ctaLabel,
   vip = false,
 }: {
   plan: (typeof PLANS)[number];
   yearly: boolean;
-  onChoose: () => void;
+  checkoutUrl: string;
+  ctaLabel: string;
   vip?: boolean;
 }) {
   const isPro = plan.highlighted;
