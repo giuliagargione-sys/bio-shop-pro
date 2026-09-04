@@ -734,7 +734,6 @@ export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
         </a>
       </footer>
 
-      <PlanSignupDialog plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
       <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
