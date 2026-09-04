@@ -19,7 +19,6 @@ import {
   Send,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
-import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
 import { Button } from "@/components/ui/button";
 import { storeUrl } from "@/lib/storeUrl";
 
@@ -50,14 +49,13 @@ const FEATURES = [
   },
 ];
 
-// TROQUE pelos links reais de checkout direto criados na Hubla (um por
-// oferta/plano). O botão do plano abre esse link numa aba nova.
+// Links de checkout direto da Hubla. O botão do plano abre esse link numa aba nova.
 const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
-  essencial: "https://pay.hub.la/SEU-LINK-ESSENCIAL",
-  "essencial-anual": "https://pay.hub.la/SEU-LINK-ESSENCIAL-ANUAL",
-  pro: "https://pay.hub.la/SEU-LINK-PRO",
-  "pro-anual": "https://pay.hub.la/SEU-LINK-PRO-ANUAL",
-  // Ofertas exclusivas da página /VIP (convite pra alunas)
+  essencial: "https://pay.hub.la/iAOkp8rxyHpqSFRI3uMi",
+  "essencial-anual": "https://pay.hub.la/0hREHGC9ZXVNfzBtwwFi",
+  pro: "https://pay.hub.la/S4COKdt38PWGnWEHCnWi",
+  "pro-anual": "https://pay.hub.la/t4lUs4AIHqiJ3k05S8FZ",
+  // Ofertas exclusivas da página /VIP (convite pra alunas) — substituir quando disponíveis
   "essencial-vip": "https://pay.hub.la/SEU-LINK-ESSENCIAL-VIP",
   "pro-vip": "https://pay.hub.la/SEU-LINK-PRO-VIP",
 };
@@ -251,12 +249,14 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 function PlanCard({
   plan,
   yearly,
-  onChoose,
+  checkoutUrl,
+  ctaLabel,
   vip = false,
 }: {
   plan: (typeof PLANS)[number];
   yearly: boolean;
-  onChoose: () => void;
+  checkoutUrl: string;
+  ctaLabel: string;
   vip?: boolean;
 }) {
   const isPro = plan.highlighted;
@@ -342,28 +342,27 @@ function PlanCard({
           );
         })}
       </ul>
-      <Button
-        className="w-full min-h-11 rounded-full"
-        onClick={onChoose}
+      <a
+        href={checkoutUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 w-full min-h-11 rounded-full font-medium text-center"
         style={
           isPro
             ? { background: "var(--product-cream)", color: "var(--product-ink)" }
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        Escolher {plan.name} {vip ? "" : yearly ? "Anual" : ""}
-      </Button>
+        {ctaLabel}
+      </a>
     </div>
   );
 }
 
 export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
   const { hash } = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<PlanSignupTarget | null>(null);
   const [demoOpen, setDemoOpen] = useState(false);
   const [yearly, setYearly] = useState(false);
-  const planSuffix = vip ? "-vip" : yearly ? "-anual" : "";
-  const planNameSuffix = vip ? "Alunas" : yearly ? "Anual" : "";
 
   useEffect(() => {
     if (hash) {
@@ -683,21 +682,21 @@ export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
-          {PLANS.map((plan) => (
-            <PlanCard
-              key={plan.slug}
-              vip={vip}
-              yearly={vip ? false : yearly}
-              plan={plan}
-              onChoose={() =>
-                setSelectedPlan({
-                  slug: `${plan.slug}${planSuffix}`,
-                  name: `${plan.name} ${planNameSuffix}`.trim(),
-                  checkoutUrl: HUBLA_CHECKOUT_LINKS[`${plan.slug}${planSuffix}`],
-                })
-              }
-            />
-          ))}
+          {PLANS.map((plan) => {
+            const suffix = vip ? "-vip" : yearly ? "-anual" : "";
+            const url = HUBLA_CHECKOUT_LINKS[`${plan.slug}${suffix}`];
+            const label = `Escolher ${plan.name} ${vip ? "" : yearly ? "Anual" : ""}`.trim();
+            return (
+              <PlanCard
+                key={plan.slug}
+                vip={vip}
+                yearly={vip ? false : yearly}
+                plan={plan}
+                checkoutUrl={url}
+                ctaLabel={label}
+              />
+            );
+          })}
         </div>
         <p className="text-center text-sm opacity-60 mt-10">
           Já pagou e ainda não criou sua conta?{" "}
@@ -735,7 +734,6 @@ export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
         </a>
       </footer>
 
-      <PlanSignupDialog plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
       <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
