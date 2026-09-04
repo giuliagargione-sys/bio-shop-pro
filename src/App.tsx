@@ -11,6 +11,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 const FirstPasswordPage = lazy(() => import("./pages/FirstPasswordPage"));
+const WelcomePage = lazy(() => import("./pages/WelcomePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 import { RequireAuth } from "./components/RequireAuth";
 import { RequireAdmin } from "./components/RequireAdmin";
