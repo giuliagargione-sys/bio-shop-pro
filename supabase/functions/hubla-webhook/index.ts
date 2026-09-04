@@ -36,7 +36,23 @@ const corsHeaders = {
 
 // Eventos "bons" (libera acesso) vs "ruins" (marca inadimplente/cancelado).
 // Ajuste essas listas quando confirmar os nomes reais que a Hubla manda.
-const ACTIVE_HINTS = ["paid", "approved", "aprovad", "renew", "active", "confirmed"];
+const ACTIVE_HINTS = [
+  "newsale",
+  "new_sale",
+  "new.sale",
+  "nova venda",
+  "novavenda",
+  "sale",
+  "venda",
+  "purchase",
+  "paid",
+  "approved",
+  "aprovad",
+  "renew",
+  "active",
+  "confirmed",
+  "payment_succeeded",
+];
 const PAST_DUE_HINTS = ["late", "atras", "overdue", "past_due", "failed", "recusad", "chargeback"];
 const CANCELED_HINTS = ["cancel", "refund", "estorn", "expired", "expirad"];
 
@@ -104,8 +120,11 @@ Deno.serve(async (req: Request) => {
       ["type"],
       ["eventType"],
       ["event_type"],
+      ["event", "type"],
       ["data", "event"],
       ["data", "type"],
+      ["data", "event", "type"],
+      ["topic"],
     ]) ?? "";
 
   const plan = dig(body, [
@@ -145,7 +164,26 @@ Deno.serve(async (req: Request) => {
 
   if (error) return json({ ok: false, error: error.message }, 500);
 
-  return json({ ok: true, email, status });
+  // Nova venda / pagamento aprovado → libera o link da loja da aluna.
+  // Cancelamento ou inadimplência → tira do ar automaticamente.
+  let storeUpdated = false;
+  if (status === "ativo" || status === "cancelado" || status === "inadimplente") {
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("id")
+      .ilike("email", email)
+      .maybeSingle();
+
+    if (profile?.id) {
+      const { error: storeError } = await adminClient
+        .from("store_config")
+        .update({ active: status === "ativo" })
+        .eq("user_id", profile.id);
+      storeUpdated = !storeError;
+    }
+  }
+
+  return json({ ok: true, email, status, event: eventType || null, storeUpdated });
 });
 
 function json(body: unknown, status = 200) {
