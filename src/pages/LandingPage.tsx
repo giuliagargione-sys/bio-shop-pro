@@ -49,14 +49,13 @@ const FEATURES = [
   },
 ];
 
-// TROQUE pelos links reais de checkout direto criados na Hubla (um por
-// oferta/plano). O botão do plano abre esse link numa aba nova.
+// Links de checkout direto da Hubla. O botão do plano abre esse link numa aba nova.
 const HUBLA_CHECKOUT_LINKS: Record<string, string> = {
-  essencial: "https://pay.hub.la/SEU-LINK-ESSENCIAL",
-  "essencial-anual": "https://pay.hub.la/SEU-LINK-ESSENCIAL-ANUAL",
-  pro: "https://pay.hub.la/SEU-LINK-PRO",
-  "pro-anual": "https://pay.hub.la/SEU-LINK-PRO-ANUAL",
-  // Ofertas exclusivas da página /VIP (convite pra alunas)
+  essencial: "https://pay.hub.la/iAOkp8rxyHpqSFRI3uMi",
+  "essencial-anual": "https://pay.hub.la/0hREHGC9ZXVNfzBtwwFi",
+  pro: "https://pay.hub.la/S4COKdt38PWGnWEHCnWi",
+  "pro-anual": "https://pay.hub.la/t4lUs4AIHqiJ3k05S8FZ",
+  // Ofertas exclusivas da página /VIP (convite pra alunas) — substituir quando disponíveis
   "essencial-vip": "https://pay.hub.la/SEU-LINK-ESSENCIAL-VIP",
   "pro-vip": "https://pay.hub.la/SEU-LINK-PRO-VIP",
 };
