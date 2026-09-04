@@ -242,6 +242,22 @@ export default function WelcomePage() {
             Ir para o login
           </Link>
         </p>
+
+        <p
+          className="text-center text-[11px] leading-relaxed mt-4 opacity-80"
+          style={{ color: "var(--product-plum)" }}
+        >
+          Está com problemas para acessar?{" "}
+          <a
+            href="https://wa.me/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2"
+          >
+            Clique aqui para falar com o nosso Suporte no WhatsApp
+          </a>
+        </p>
+
       </div>
     </div>
   );
