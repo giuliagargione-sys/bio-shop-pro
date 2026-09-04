@@ -1,6 +1,5 @@
 import { PageMeta } from "@/components/PageMeta";
 import { Logo } from "@/components/brand/Logo";
-import { Button } from "@/components/ui/button";
 import { Sparkles, Mail, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
