@@ -41,6 +41,36 @@ export type Database = {
         }
         Relationships: []
       }
+      compradores_ativos: {
+        Row: {
+          created_at: string
+          email: string
+          hubla_event: string | null
+          id: string
+          plano: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          hubla_event?: string | null
+          id?: string
+          plano?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          hubla_event?: string | null
+          id?: string
+          plano?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           answers: Json
