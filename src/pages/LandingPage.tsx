@@ -685,21 +685,21 @@ export default function LandingPage({ vip = false }: { vip?: boolean } = {}) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto items-stretch">
-          {PLANS.map((plan) => (
-            <PlanCard
-              key={plan.slug}
-              vip={vip}
-              yearly={vip ? false : yearly}
-              plan={plan}
-              onChoose={() =>
-                setSelectedPlan({
-                  slug: `${plan.slug}${planSuffix}`,
-                  name: `${plan.name} ${planNameSuffix}`.trim(),
-                  checkoutUrl: HUBLA_CHECKOUT_LINKS[`${plan.slug}${planSuffix}`],
-                })
-              }
-            />
-          ))}
+          {PLANS.map((plan) => {
+            const suffix = vip ? "-vip" : yearly ? "-anual" : "";
+            const url = HUBLA_CHECKOUT_LINKS[`${plan.slug}${suffix}`];
+            const label = `Escolher ${plan.name} ${vip ? "" : yearly ? "Anual" : ""}`.trim();
+            return (
+              <PlanCard
+                key={plan.slug}
+                vip={vip}
+                yearly={vip ? false : yearly}
+                plan={plan}
+                checkoutUrl={url}
+                ctaLabel={label}
+              />
+            );
+          })}
         </div>
         <p className="text-center text-sm opacity-60 mt-10">
           Já pagou e ainda não criou sua conta?{" "}
