@@ -64,7 +64,7 @@ export default function WelcomePage() {
           setError("Esse e-mail já tem conta. Faça login ou recupere sua senha.");
           return;
         }
-        navigate("/personalizar", { replace: true });
+        await enterApp();
         return;
       }
       setSubmitting(false);
@@ -84,6 +84,33 @@ export default function WelcomePage() {
         );
         return;
       }
+    }
+
+    await enterApp();
+  }
+
+  /**
+   * Garante que a sessão já está salva (e sem a flag de troca de senha
+   * obrigatória) antes de mandar a aluna direto pro painel.
+   */
+  async function enterApp() {
+    let session = null;
+    for (let i = 0; i < 20; i++) {
+      const { data } = await supabase.auth.getSession();
+      session = data.session;
+      if (session) break;
+      await new Promise((r) => setTimeout(r, 150));
+    }
+
+    if (!session) {
+      setSubmitting(false);
+      setError("Conta criada, mas não conseguimos entrar automaticamente. Faça login.");
+      return;
+    }
+
+    // A senha foi criada pela própria aluna aqui: não pedir troca depois.
+    if (session.user?.user_metadata?.must_change_password) {
+      await supabase.auth.updateUser({ data: { must_change_password: false } });
     }
 
     navigate("/personalizar", { replace: true });
