@@ -89,8 +89,15 @@ Deno.serve(async (req: Request) => {
   const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const WEBHOOK_SECRET = Deno.env.get("HUBLA_WEBHOOK_SECRET");
 
+  // A Hubla pode mandar o segredo no header (x-hubla-token / authorization)
+  // ou a gente coloca ele na própria URL (?secret=...). Aceitamos os dois.
   const url = new URL(req.url);
-  const secret = url.searchParams.get("secret");
+  const headerSecret =
+    req.headers.get("x-hubla-token") ??
+    req.headers.get("x-hubla-signature") ??
+    req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
+    null;
+  const secret = url.searchParams.get("secret") ?? headerSecret;
   if (!WEBHOOK_SECRET || secret !== WEBHOOK_SECRET) {
     return json({ error: "Não autorizado." }, 401);
   }
