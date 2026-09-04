@@ -15,6 +15,7 @@ export const RESERVED_SLUGS = new Set([
   "recuperar-senha",
   "reset-password",
   "trocar-senha",
+  "bem-vindo",
   "api",
   "assets",
   "planos",
