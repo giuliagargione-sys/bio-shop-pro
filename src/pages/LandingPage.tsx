@@ -342,19 +342,19 @@ function PlanCard({
           );
         })}
       </ul>
-      <Button
-        asChild
-        className="w-full min-h-11 rounded-full"
+      <a
+        href={checkoutUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 w-full min-h-11 rounded-full font-medium text-center"
         style={
           isPro
             ? { background: "var(--product-cream)", color: "var(--product-ink)" }
             : { background: "var(--product-ink)", color: "var(--product-cream)" }
         }
       >
-        <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
-          {ctaLabel}
-        </a>
-      </Button>
+        {ctaLabel}
+      </a>
     </div>
   );
 }
