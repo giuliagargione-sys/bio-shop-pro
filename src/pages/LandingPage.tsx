@@ -19,7 +19,6 @@ import {
   Send,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
-import { PlanSignupDialog, type PlanSignupTarget } from "@/components/PlanSignupDialog";
 import { Button } from "@/components/ui/button";
 import { storeUrl } from "@/lib/storeUrl";
 
