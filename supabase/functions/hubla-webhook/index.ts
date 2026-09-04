@@ -171,6 +171,23 @@ Deno.serve(async (req: Request) => {
 
   if (error) return json({ ok: false, error: error.message }, 500);
 
+  // Espelha em compradores_ativos: venda aprovada → 'ativo';
+  // cancelamento/reembolso/inadimplência → 'inativo'.
+  if (status === "ativo" || status === "cancelado" || status === "inadimplente") {
+    await adminClient.from("compradores_ativos").upsert(
+      {
+        email: email.trim().toLowerCase(),
+        status: status === "ativo" ? "ativo" : "inativo",
+        plano: plan,
+        hubla_event: eventType || null,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "email" }
+    );
+  }
+
+
+
   // Nova venda / pagamento aprovado → libera o link da loja da aluna.
   // Cancelamento ou inadimplência → tira do ar automaticamente.
   let storeUpdated = false;
