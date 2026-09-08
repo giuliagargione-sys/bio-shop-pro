@@ -18,6 +18,7 @@ import {
   fetchStoreByUserId,
 } from "@/lib/remoteConfig";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
+import { cachedQuery } from "@/lib/queryCache";
 
 export type SyncStatus = "loading" | "synced" | "saving" | "error";
 
@@ -90,7 +91,13 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     (async () => {
-      let store = targetUserId ? await fetchStoreByUserId(targetUserId) : await fetchMyStore();
+      // Deduplica: se este efeito rodar duas vezes (remontagem do React),
+      // a segunda vez reaproveita a mesma leitura em vez de consultar de novo.
+      let store = await cachedQuery(
+        `store-load:${targetUserId ?? "me"}`,
+        () => (targetUserId ? fetchStoreByUserId(targetUserId) : fetchMyStore()),
+        { ttl: 15 * 1000 }
+      );
       if (!store && !targetUserId) store = await createMyStore();
       if (cancelled) return;
 

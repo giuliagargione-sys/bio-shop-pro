@@ -1,6 +1,7 @@
 import type { StoreConfig } from "@/types/config";
 import { mergeWithDefaults } from "./storage";
 import type { StoreEventKind } from "./trackEvent";
+import { cachedQuery } from "./queryCache";
 
 // Acesso leve ao backend para a LOJA PÚBLICA: em vez de carregar o
 // cliente completo (~60 kB gzip) só pra ler uma linha e gravar eventos,
@@ -17,6 +18,14 @@ const headers = {
 };
 
 export async function fetchPublicStoreBySlug(
+  slug: string,
+): Promise<{ ownerId: string; config: StoreConfig; active: boolean } | null> {
+  // A mesma loja aberta duas vezes na mesma visita (remontagem, voltar
+  // de página) reaproveita a leitura já feita.
+  return cachedQuery(`public-store:${slug}`, () => loadPublicStore(slug), { ttl: 60 * 1000 });
+}
+
+async function loadPublicStore(
   slug: string,
 ): Promise<{ ownerId: string; config: StoreConfig; active: boolean } | null> {
   try {
