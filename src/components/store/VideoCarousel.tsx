@@ -172,7 +172,7 @@ export function VideoCarousel({
 
       <div
         ref={trackRef}
-        className={`flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
+        className={`flex gap-4 overflow-x-auto overscroll-x-contain touch-pan-x no-scrollbar snap-x snap-mandatory px-4 pb-2 sm:container ${
           centerItems ? "justify-center" : "justify-start"
         }`}
       >
