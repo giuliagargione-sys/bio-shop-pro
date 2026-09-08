@@ -74,6 +74,10 @@ body {
 }
 .store-shell {
   padding-bottom: env(safe-area-inset-bottom);
+  /* Só o carrossel desliza pro lado: a página nunca acompanha o arrasto. */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  max-width: 100%;
 }
 @media (min-width: 640px) {
   .store-shell {
