@@ -2,6 +2,7 @@ import { supabase } from "./supabaseClient";
 import type { StoreConfig } from "@/types/config";
 import { mergeWithDefaults } from "./storage";
 import { defaultConfig } from "./defaultConfig";
+import { getCurrentUser } from "./currentUser";
 
 // Cada aluna tem UMA linha em store_config, dona dela (user_id) e com um
 // endereço público (slug) — é o que forma a URL /loja/:slug que vai na
@@ -32,8 +33,7 @@ function randomSuffix() {
 
 export async function fetchMyStore(): Promise<RemoteStore | null> {
   if (!supabase) return null;
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  const user = await getCurrentUser();
   if (!user) return null;
 
   const { data, error } = await supabase
@@ -56,8 +56,7 @@ export async function fetchMyStore(): Promise<RemoteStore | null> {
 // slug tentando de novo com um sufixo diferente.
 export async function createMyStore(): Promise<RemoteStore | null> {
   if (!supabase) return null;
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  const user = await getCurrentUser();
   if (!user) return null;
 
   const base = slugify(user.email?.split("@")[0] || "minha-loja") || "loja";

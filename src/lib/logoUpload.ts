@@ -25,8 +25,8 @@ export async function uploadStoreImage(
     return { url: null, error: "A imagem é muito grande. Use uma de até 5 MB." };
   }
 
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  const { data: userData } = await supabase.auth.getSession();
+  const user = userData.session?.user;
   if (!user) return { url: null, error: "Faça login novamente para enviar a imagem." };
 
   // Redimensiona/recomprime antes de subir — fotos em tamanho cheio deixavam

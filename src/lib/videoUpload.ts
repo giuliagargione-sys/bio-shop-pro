@@ -19,8 +19,8 @@ export async function uploadStoreVideo(
     return { url: null, error: "O vídeo é muito grande. Use um de até 50 MB." };
   }
 
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  const { data: userData } = await supabase.auth.getSession();
+  const user = userData.session?.user;
   if (!user) return { url: null, error: "Faça login novamente para enviar o vídeo." };
 
   const ext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "");
