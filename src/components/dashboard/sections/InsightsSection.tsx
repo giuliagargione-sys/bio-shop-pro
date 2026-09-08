@@ -14,6 +14,7 @@ import {
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { ProLock } from "@/components/dashboard/ProLock";
 import { usePlan } from "@/hooks/usePlan";
+import { cachedQuery, peekCache, setCache } from "@/lib/queryCache";
 
 interface Stats {
   periodo: string;
@@ -184,7 +185,7 @@ export function InsightsSection() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => void loadStats(days)}
+              onClick={() => void loadStats(days, true)}
               disabled={statsLoading}
             >
               <RefreshCw size={14} className={statsLoading ? "animate-spin" : ""} />
