@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
         .limit(5000),
       client
         .from("leads")
-        .select("id,answers,created_at")
+        .select("id")
         .eq("store_user_id", user.id)
         .gte("created_at", since)
         .limit(1000),
