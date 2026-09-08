@@ -276,7 +276,7 @@ export default function WelcomePage() {
         >
           Está com problemas para acessar?{" "}
           <a
-            href="https://wa.me/"
+            href="https://wa.me/5519995550029"
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-2"
