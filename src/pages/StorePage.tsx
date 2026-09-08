@@ -15,13 +15,23 @@ import { CustomButtonBlock } from "@/components/store/CustomButtonBlock";
 import { resolveHelpLinkItems, resolveLayoutBlocks } from "@/lib/layout";
 import { trackStoreEvent } from "@/lib/trackEvent";
 
+// Evita registrar a mesma abertura duas vezes quando o React remonta o
+// componente — sem isso a mesma visita pode gerar dois eventos.
+const lastVisit = { key: "", at: 0 };
+
 export default function StorePage() {
   const { slug } = useParams<{ slug: string }>();
   const { loading, notFound, inactive, ownerId, config } = usePublicStore(slug);
 
   // Conta uma visita por abertura da loja (alimenta os Insights com IA).
   useEffect(() => {
-    if (!loading && !notFound && !inactive && ownerId) trackStoreEvent(ownerId, "visita", slug);
+    if (loading || notFound || inactive || !ownerId) return;
+    const key = `${ownerId}:${slug ?? ""}`;
+    const now = Date.now();
+    if (lastVisit.key === key && now - lastVisit.at < 10000) return;
+    lastVisit.key = key;
+    lastVisit.at = now;
+    trackStoreEvent(ownerId, "visita", slug);
   }, [loading, notFound, inactive, ownerId, slug]);
 
   if (loading) {
