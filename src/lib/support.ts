@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 import { getCurrentUserId } from "./currentUser";
+import { cachedQuery, invalidateCache } from "./queryCache";
 
 // Suporte humano: quando a IA não consegue resolver, a aluna abre (ou
 // reaproveita) um ticket e manda a mensagem. A administração central
@@ -59,6 +60,7 @@ export async function sendSupportRequest(
     .update({ status: "aberto", awaiting_admin: true, last_message_at: new Date().toISOString() })
     .eq("id", ticketId);
 
+  invalidateCache("support-messages");
   return { ok: true };
 }
 
@@ -66,6 +68,14 @@ export async function fetchMySupportMessages(): Promise<SupportMessage[]> {
   if (!supabase) return [];
   const userId = await getCurrentUserId();
   if (!userId) return [];
+  // Abrir e fechar o chat de ajuda reaproveita o histórico já carregado.
+  return cachedQuery(`support-messages:${userId}`, () => loadSupportMessages(userId), {
+    ttl: 60 * 1000,
+  });
+}
+
+async function loadSupportMessages(userId: string): Promise<SupportMessage[]> {
+  if (!supabase) return [];
 
   const { data: tickets } = await supabase
     .from("support_tickets")

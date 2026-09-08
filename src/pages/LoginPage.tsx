@@ -4,6 +4,7 @@ import { Navigate, useLocation, useSearchParams, Link, useNavigate } from "react
 import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { cachedQuery, setCache } from "@/lib/queryCache";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,25 +27,36 @@ export default function LoginPage() {
   const [role, setRole] = useState<"admin" | "aluna" | null>(null);
   const [checkingRole, setCheckingRole] = useState(true);
 
+  // Consulta o papel uma única vez por pessoa e guarda o resultado — o
+  // painel reaproveita esse mesmo dado depois do login.
   async function loadRole(userId: string) {
     setCheckingRole(true);
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-    if (data && data.some((r) => r.role === "admin")) setRole("admin");
-    else if (data && data.some((r) => r.role === "aluna")) setRole("aluna");
-    else setRole(null);
+    const found = await cachedQuery(
+      `login-role:${userId}`,
+      async () => {
+        const { data } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId);
+        if (data && data.some((r) => r.role === "admin")) return "admin" as const;
+        if (data && data.some((r) => r.role === "aluna")) return "aluna" as const;
+        return null;
+      },
+      { ttl: 15 * 60 * 1000 }
+    );
+    setRole(found);
+    setCache(`is-admin:${userId}`, found === "admin");
     setCheckingRole(false);
   }
 
   useEffect(() => {
-    if (session?.user) {
-      loadRole(session.user.id);
+    if (session?.user?.id) {
+      void loadRole(session.user.id);
     } else if (!loading) {
       setCheckingRole(false);
     }
-  }, [session, loading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.id, loading]);
 
   function goToDestination() {
     if (session?.user?.user_metadata?.must_change_password) {
