@@ -14,6 +14,7 @@ import {
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { ProLock } from "@/components/dashboard/ProLock";
 import { usePlan } from "@/hooks/usePlan";
+import { cachedQuery, peekCache, setCache } from "@/lib/queryCache";
 
 interface Stats {
   periodo: string;
@@ -44,28 +45,60 @@ const PERIODS = [
   { label: "90 dias", days: 90 },
 ];
 
+// Números e análise ficam guardados por período: trocar de aba e voltar,
+// ou alternar entre "7 dias" e "30 dias" e voltar, mostra o que já foi
+// carregado em vez de pedir tudo de novo. O botão "Atualizar" e o botão
+// "Gerar nova análise" continuam buscando na hora.
+const statsKey = (period: number) => `insights-stats:${period}`;
+const aiKey = (period: number) => `insights-ai:${period}`;
+const STATS_TTL = 5 * 60 * 1000;
+// A análise da IA é a operação mais cara do app: só roda por clique, e o
+// resultado fica guardado por 6 horas pro mesmo período.
+const AI_TTL = 6 * 60 * 60 * 1000;
+
 export function InsightsSection() {
   const [days, setDays] = useState(30);
-  const [statsLoading, setStatsLoading] = useState(true);
+  const cachedStats = peekCache<Stats | null>(statsKey(30), STATS_TTL) ?? null;
+  const [statsLoading, setStatsLoading] = useState(!cachedStats);
   const [aiLoading, setAiLoading] = useState(false);
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [insights, setInsights] = useState<string | null>(null);
+  const [stats, setStats] = useState<Stats | null>(cachedStats);
+  const [insights, setInsights] = useState<string | null>(
+    peekCache<string | null>(aiKey(30), AI_TTL) ?? null
+  );
   const [error, setError] = useState<string | null>(null);
   const { isPro, loading: planLoading } = usePlan();
 
-  const loadStats = useCallback(async (period: number) => {
+  const loadStats = useCallback(async (period: number, force = false) => {
     if (!isSupabaseConfigured) {
       setError("Backend não conectado.");
       setStatsLoading(false);
       return;
     }
+    const hit = force ? undefined : peekCache<Stats | null>(statsKey(period), STATS_TTL);
+    if (hit !== undefined) {
+      setStats(hit);
+      setStatsLoading(false);
+      setError(null);
+      return;
+    }
     setStatsLoading(true);
     setError(null);
-    const { data, error: fnError } = await supabase.functions.invoke("ai-insights", {
-      body: { days: period, statsOnly: true },
-    });
-    if (fnError) setError("Não consegui carregar seus números agora. Tente de novo em instantes.");
-    else setStats((data?.stats as Stats) ?? null);
+    try {
+      const result = await cachedQuery(
+        statsKey(period),
+        async () => {
+          const { data, error: fnError } = await supabase.functions.invoke("ai-insights", {
+            body: { days: period, statsOnly: true },
+          });
+          if (fnError) throw fnError;
+          return (data?.stats as Stats) ?? null;
+        },
+        { ttl: STATS_TTL, force }
+      );
+      setStats(result);
+    } catch {
+      setError("Não consegui carregar seus números agora. Tente de novo em instantes.");
+    }
     setStatsLoading(false);
   }, []);
 
@@ -78,8 +111,12 @@ export function InsightsSection() {
     if (fnError) {
       setError("Não consegui gerar a análise agora. Tente de novo em instantes.");
     } else {
-      setStats((data?.stats as Stats) ?? null);
-      setInsights((data?.insights as string) ?? null);
+      const freshStats = (data?.stats as Stats) ?? null;
+      const freshInsights = (data?.insights as string) ?? null;
+      setStats(freshStats);
+      setInsights(freshInsights);
+      setCache(statsKey(days), freshStats);
+      if (freshInsights) setCache(aiKey(days), freshInsights);
       if (data?.error) setError(data.error as string);
     }
     setAiLoading(false);
@@ -87,7 +124,9 @@ export function InsightsSection() {
 
   useEffect(() => {
     void loadStats(days);
+    setInsights(peekCache<string | null>(aiKey(days), AI_TTL) ?? null);
   }, [days, loadStats]);
+
 
   const cards = stats
     ? [
@@ -146,7 +185,7 @@ export function InsightsSection() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => void loadStats(days)}
+              onClick={() => void loadStats(days, true)}
               disabled={statsLoading}
             >
               <RefreshCw size={14} className={statsLoading ? "animate-spin" : ""} />

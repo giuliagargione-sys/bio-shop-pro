@@ -26,7 +26,14 @@ import { Switch } from "@/components/ui/switch";
 import { DailyVisitsChart } from "@/components/admin/DailyVisitsChart";
 import { SupportTickets } from "@/components/admin/SupportTickets";
 
-import { fetchAlunas, createAluna, setStoreActive, deleteStore, type AlunaSummary } from "@/lib/adminApi";
+import {
+  fetchAlunas,
+  createAluna,
+  setStoreActive,
+  deleteStore,
+  invalidateAlunas,
+  type AlunaSummary,
+} from "@/lib/adminApi";
 
 function formatDate(iso: string | null) {
   if (!iso) return "—";
@@ -160,9 +167,9 @@ export default function AdminPage() {
   const [tab, setTab] = useState<"ativas" | "inativas">("ativas");
 
 
-  async function load() {
+  async function load(force = false) {
     setLoading(true);
-    const res = await fetchAlunas();
+    const res = await fetchAlunas(force);
     setAlunas(res.alunas);
     setError(res.error);
     setLoading(false);
@@ -176,6 +183,7 @@ export default function AdminPage() {
   async function onToggleActive(aluna: AlunaSummary, value: boolean) {
     setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: value } : a)));
     const res = await setStoreActive(aluna.id, value);
+    if (res.ok) invalidateAlunas();
     if (!res.ok) {
       setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: !value } : a)));
       setError(res.error ?? "Não foi possível mudar o link agora.");
@@ -192,6 +200,7 @@ export default function AdminPage() {
     setDeletingId(aluna.id);
     const res = await deleteStore(aluna.id);
     setDeletingId(null);
+    if (res.ok) invalidateAlunas();
     if (!res.ok) {
       setError(res.error ?? "Não foi possível apagar a loja agora.");
       return;
@@ -276,7 +285,7 @@ export default function AdminPage() {
 
         <SupportTickets />
 
-        <CreateAlunaCard onCreated={load} />
+        <CreateAlunaCard onCreated={() => void load(true)} />
 
 
         <Card>
@@ -288,7 +297,7 @@ export default function AdminPage() {
                 não estiver configurado lá, tudo aparece como "sem info de pagamento".
               </CardDescription>
             </div>
-            <Button variant="outline" size="icon" onClick={load} aria-label="Atualizar">
+            <Button variant="outline" size="icon" onClick={() => void load(true)} aria-label="Atualizar">
               <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
             </Button>
           </CardHeader>

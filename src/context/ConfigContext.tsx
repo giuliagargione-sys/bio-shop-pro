@@ -18,6 +18,7 @@ import {
   fetchStoreByUserId,
 } from "@/lib/remoteConfig";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
+import { cachedQuery } from "@/lib/queryCache";
 
 export type SyncStatus = "loading" | "synced" | "saving" | "error";
 
@@ -77,6 +78,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const readyRef = useRef(false);
   const skipNextSaveRef = useRef(false);
+  const lastSavedRef = useRef<string | null>(null);
   const configRef = useRef(config);
   configRef.current = config;
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -89,13 +91,20 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     (async () => {
-      let store = targetUserId ? await fetchStoreByUserId(targetUserId) : await fetchMyStore();
+      // Deduplica: se este efeito rodar duas vezes (remontagem do React),
+      // a segunda vez reaproveita a mesma leitura em vez de consultar de novo.
+      let store = await cachedQuery(
+        `store-load:${targetUserId ?? "me"}`,
+        () => (targetUserId ? fetchStoreByUserId(targetUserId) : fetchMyStore()),
+        { ttl: 15 * 1000 }
+      );
       if (!store && !targetUserId) store = await createMyStore();
       if (cancelled) return;
 
       if (store) {
         userIdRef.current = store.userId;
         skipNextSaveRef.current = true;
+        lastSavedRef.current = JSON.stringify(store.config);
         setConfigState(store.config);
         setSlug(store.slug);
         setSyncStatus("synced");
@@ -121,14 +130,23 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // Se o conteúdo é exatamente o que já está gravado (re-render, abrir e
+    // fechar um campo sem mudar nada), não grava de novo.
+    const serialized = JSON.stringify(config);
+    if (serialized === lastSavedRef.current) return;
+
     setSyncStatus("saving");
     setHasUnsavedChanges(true);
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    // Rede de segurança (o botão "Salvar alterações" continua gravando na
+    // hora): espera a pessoa terminar de editar antes de gravar, o que
+    // junta várias edições seguidas numa única gravação.
     saveTimerRef.current = setTimeout(async () => {
       const ok = await saveMyConfig(userIdRef.current as string, config);
+      if (ok) lastSavedRef.current = serialized;
       setSyncStatus(ok ? "synced" : "error");
       if (ok) setHasUnsavedChanges(false);
-    }, 700);
+    }, 2500);
 
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -146,7 +164,14 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         if (!userIdRef.current) return false;
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         setSyncStatus("saving");
+        const snapshot = JSON.stringify(configRef.current);
+        if (snapshot === lastSavedRef.current) {
+          setSyncStatus("synced");
+          setHasUnsavedChanges(false);
+          return true;
+        }
         const ok = await saveMyConfig(userIdRef.current, configRef.current);
+        if (ok) lastSavedRef.current = snapshot;
         setSyncStatus(ok ? "synced" : "error");
         if (ok) setHasUnsavedChanges(false);
         return ok;

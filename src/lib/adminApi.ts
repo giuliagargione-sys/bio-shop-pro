@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { cachedQuery, invalidateCache } from "./queryCache";
 export { setStoreActive, deleteStore } from "./remoteConfig";
 
 // Tudo aqui passa pelas Edge Functions admin-list-alunas / admin-create-aluna
@@ -18,12 +19,29 @@ export interface AlunaSummary {
   lastPaymentEventAt: string | null;
 }
 
-export async function fetchAlunas(): Promise<{ alunas: AlunaSummary[]; error: string | null }> {
+const ALUNAS_KEY = "admin-alunas";
+
+export async function fetchAlunas(
+  force = false
+): Promise<{ alunas: AlunaSummary[]; error: string | null }> {
   if (!supabase) return { alunas: [], error: "Supabase não conectado." };
-  const { data, error } = await supabase.functions.invoke("admin-list-alunas");
-  if (error) return { alunas: [], error: error.message };
-  if (data?.error) return { alunas: [], error: data.error as string };
-  return { alunas: (data?.alunas as AlunaSummary[]) ?? [], error: null };
+  // Reaproveita a lista por 2 minutos: abrir e fechar o painel, ou voltar
+  // pra ele, não repete a consulta de todas as alunas.
+  return cachedQuery(
+    ALUNAS_KEY,
+    async () => {
+      const { data, error } = await supabase!.functions.invoke("admin-list-alunas");
+      if (error) return { alunas: [], error: error.message };
+      if (data?.error) return { alunas: [], error: data.error as string };
+      return { alunas: (data?.alunas as AlunaSummary[]) ?? [], error: null };
+    },
+    { ttl: 2 * 60 * 1000, force }
+  );
+}
+
+/** Usado depois de criar/ativar/apagar uma loja, pra lista voltar correta. */
+export function invalidateAlunas() {
+  invalidateCache(ALUNAS_KEY);
 }
 
 export async function createAluna(

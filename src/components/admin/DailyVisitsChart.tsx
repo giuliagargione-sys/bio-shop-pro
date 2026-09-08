@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BarChart3, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { cachedQuery } from "@/lib/queryCache";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -30,39 +31,47 @@ export function DailyVisitsChart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function load() {
+  // O gráfico agrega os dias no próprio navegador e guarda o resultado por
+  // 5 minutos — voltar ao painel não repete a consulta de visitas.
+  async function load(force = false) {
     if (!supabase) {
       setError("Banco não conectado.");
       setLoading(false);
       return;
     }
     setLoading(true);
-    const since = new Date();
-    since.setDate(since.getDate() - (DAYS - 1));
-    since.setHours(0, 0, 0, 0);
+    try {
+      const base = await cachedQuery(
+        "admin-daily-visits",
+        async () => {
+          const since = new Date();
+          since.setDate(since.getDate() - (DAYS - 1));
+          since.setHours(0, 0, 0, 0);
 
-    const { data, error: qError } = await supabase
-      .from("store_events")
-      .select("created_at")
-      .eq("kind", "visita")
-      .gte("created_at", since.toISOString())
-      .limit(10000);
+          const { data, error: qError } = await supabase!
+            .from("store_events")
+            .select("created_at")
+            .eq("kind", "visita")
+            .gte("created_at", since.toISOString())
+            .limit(10000);
+          if (qError) throw qError;
 
-    if (qError) {
-      setError(qError.message);
-      setLoading(false);
-      return;
+          const rows = buildDays();
+          const index = new Map(rows.map((d, i) => [d.date, i]));
+          for (const row of data ?? []) {
+            const key = new Date(row.created_at as string).toISOString().slice(0, 10);
+            const i = index.get(key);
+            if (i !== undefined) rows[i].count += 1;
+          }
+          return rows;
+        },
+        { ttl: 5 * 60 * 1000, force }
+      );
+      setDays(base);
+      setError(null);
+    } catch (err) {
+      setError((err as { message?: string })?.message ?? "Não consegui carregar o gráfico.");
     }
-
-    const base = buildDays();
-    const index = new Map(base.map((d, i) => [d.date, i]));
-    for (const row of data ?? []) {
-      const key = new Date(row.created_at as string).toISOString().slice(0, 10);
-      const i = index.get(key);
-      if (i !== undefined) base[i].count += 1;
-    }
-    setDays(base);
-    setError(null);
     setLoading(false);
   }
 
@@ -83,7 +92,7 @@ export function DailyVisitsChart() {
           </CardTitle>
           <CardDescription>Visitas nas lojas nos últimos {DAYS} dias.</CardDescription>
         </div>
-        <Button variant="outline" size="icon" onClick={load} aria-label="Atualizar gráfico">
+        <Button variant="outline" size="icon" onClick={() => void load(true)} aria-label="Atualizar gráfico">
           <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
         </Button>
       </CardHeader>

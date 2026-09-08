@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { cachedQuery, invalidateCache } from "./queryCache";
 
 export interface NewLead {
   storeUserId: string; // dono da loja onde o quiz foi respondido
@@ -29,18 +30,33 @@ export interface Lead {
   contacted: boolean;
 }
 
-export async function fetchLeads(): Promise<Lead[]> {
+const LEADS_KEY = "leads";
+const LEADS_TTL = 3 * 60 * 1000;
+// Trazemos só o que a tela mostra e limitamos o volume — a lista é
+// agrupada por data, então os mais recentes são o que importa.
+const LEADS_LIMIT = 500;
+
+export async function fetchLeads(force = false): Promise<Lead[]> {
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from("leads")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error || !data) return [];
-  return data as Lead[];
+  return cachedQuery(
+    LEADS_KEY,
+    async () => {
+      const { data, error } = await supabase!
+        .from("leads")
+        .select("id, created_at, name, whatsapp, answers, contacted")
+        .order("created_at", { ascending: false })
+        .limit(LEADS_LIMIT);
+      if (error || !data) return [];
+      return data as Lead[];
+    },
+    { ttl: LEADS_TTL, force }
+  );
 }
 
 export async function setLeadContacted(id: string, contacted: boolean): Promise<boolean> {
   if (!supabase) return false;
   const { error } = await supabase.from("leads").update({ contacted }).eq("id", id);
+  // O que está em cache ficou desatualizado depois da mudança.
+  if (!error) invalidateCache(LEADS_KEY);
   return !error;
 }
