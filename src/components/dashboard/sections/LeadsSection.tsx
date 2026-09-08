@@ -54,9 +54,9 @@ export function LeadsSection() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"abertos" | "contatados">("abertos");
 
-  async function load() {
+  async function load(force = false) {
     setLoading(true);
-    const data = await fetchLeads();
+    const data = await fetchLeads(force);
     setLeads(data);
     setLoading(false);
   }
@@ -125,7 +125,7 @@ export function LeadsSection() {
           </CardTitle>
           <CardDescription>Quem respondeu o quiz e deixou o contato.</CardDescription>
         </div>
-        <Button variant="outline" size="icon" onClick={load} aria-label="Atualizar">
+        <Button variant="outline" size="icon" onClick={() => void load(true)} aria-label="Atualizar">
           <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
         </Button>
       </CardHeader>

@@ -297,7 +297,7 @@ export default function AdminPage() {
                 não estiver configurado lá, tudo aparece como "sem info de pagamento".
               </CardDescription>
             </div>
-            <Button variant="outline" size="icon" onClick={load} aria-label="Atualizar">
+            <Button variant="outline" size="icon" onClick={() => void load(true)} aria-label="Atualizar">
               <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
             </Button>
           </CardHeader>
