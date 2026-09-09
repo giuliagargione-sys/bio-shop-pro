@@ -9,10 +9,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const MODEL = "google/gemini-2.5-flash";
 import { resolveAccess } from "../_shared/access.ts";
 
+const MODEL = "google/gemini-2.5-flash";
+
 Deno.serve(async (req: Request) => {
+
 
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -146,9 +148,17 @@ Deno.serve(async (req: Request) => {
       topButtons,
     };
 
-    if (statsOnly) {
-      return json({ stats, insights: null, error: null });
+    // Os números aparecem para todos os planos; a análise escrita pela IA
+    // é recurso do PRO (definido em plan_features, não no código).
+    if (statsOnly || access.features.ai_insights === false) {
+      return json({
+        stats,
+        insights: null,
+        error: null,
+        locked: access.features.ai_insights === false,
+      });
     }
+
 
     if (!LOVABLE_API_KEY) {
       return json({ stats, insights: null, error: "IA não configurada neste projeto." });
