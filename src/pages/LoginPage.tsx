@@ -1,7 +1,7 @@
 import { PageMeta } from "@/components/PageMeta";
 import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link, useNavigate } from "react-router-dom";
-import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { cachedQuery, setCache } from "@/lib/queryCache";
@@ -120,12 +120,6 @@ export default function LoginPage() {
         </div>
 
         <div className="rounded-xl bg-white shadow-lg p-6 border" style={{ borderColor: "var(--product-line)" }}>
-          <div className="flex items-center gap-2 mb-4">
-            <Lock size={16} style={{ color: "var(--product-coral)" }} />
-            <h1 className="font-semibold text-lg" style={{ color: "var(--product-ink)" }}>
-              Painel do administrador
-            </h1>
-          </div>
 
           {!isSupabaseConfigured ? (
             <div className="flex gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
