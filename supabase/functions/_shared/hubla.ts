@@ -27,6 +27,7 @@
 export type HublaAction =
   | "activate"
   | "cancel_renewal"
+  | "resume_renewal"
   | "deactivate"
   | "payment_issue"
   | "unknown";
