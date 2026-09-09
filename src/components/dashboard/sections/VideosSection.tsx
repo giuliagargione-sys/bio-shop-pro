@@ -135,7 +135,8 @@ const MAX_VIDEOS = 4;
 
 export function VideosSection() {
   const { config, updateConfig } = useStoreConfig();
-  const { isPro, loading: planLoading } = usePlan();
+  const { can, loading: planLoading } = usePlan();
+  const liberado = can("videos");
   const videos = config.videos ?? [];
   const atLimit = videos.length >= MAX_VIDEOS;
 
@@ -145,7 +146,7 @@ export function VideosSection() {
 
   return (
     <ProLock
-      locked={!isPro && !planLoading}
+      locked={!liberado && !planLoading}
       title="Carrossel de vídeos é do plano PRO"
       description="No PRO você sobe até 4 vídeos clicáveis com o card do produto na sua loja."
     >
