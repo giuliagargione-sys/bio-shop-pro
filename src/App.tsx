@@ -14,7 +14,9 @@ const FirstPasswordPage = lazy(() => import("./pages/FirstPasswordPage"));
 const WelcomePage = lazy(() => import("./pages/WelcomePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 import { RequireAuth } from "./components/RequireAuth";
+import { RequireActiveAccess } from "./components/RequireActiveAccess";
 import { RequireAdmin } from "./components/RequireAdmin";
+
 import { ConfigProvider } from "./context/ConfigContext";
 import { MAIN_DOMAIN, STORE_ONLY_HOSTS, isReservedSlug } from "./lib/storeUrl";
 
@@ -61,12 +63,15 @@ export default function App() {
         path="/personalizar"
         element={
           <RequireAuth>
-            <ConfigProvider>
-              <DashboardPage />
-            </ConfigProvider>
+            <RequireActiveAccess>
+              <ConfigProvider>
+                <DashboardPage />
+              </ConfigProvider>
+            </RequireActiveAccess>
           </RequireAuth>
         }
       />
+
       <Route
         path="/admin"
         element={

@@ -13,6 +13,7 @@
 //   que a IA ainda não foi ligada, em vez de quebrar.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { requireAccess } from "../_shared/access.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -66,6 +67,19 @@ Deno.serve(async (req: Request) => {
     });
     const { data: callerData } = await callerClient.auth.getUser();
     if (!callerData.user) return json({ error: "Não autenticado." }, 401);
+
+    // Acesso suspenso não usa os recursos protegidos.
+    const serviceClient = createClient(
+      SUPABASE_URL,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const denied = await requireAccess(
+      serviceClient,
+      callerData.user.id,
+      callerData.user.email ?? null
+    );
+    if (denied) return json({ error: denied.error }, denied.status);
+
 
     if (!ANTHROPIC_API_KEY) {
       return json({

@@ -13,7 +13,8 @@ import { usePlan } from "@/hooks/usePlan";
 
 export function HelpLinksSection() {
   const { config, updateNested } = useStoreConfig();
-  const { isPro, loading: planLoading } = usePlan();
+  const { can, loading: planLoading } = usePlan();
+  const liberado = can("extra_buttons");
   const { helpLinks } = config;
   const extra: ExtraLink[] = helpLinks.extra ?? [];
 
@@ -93,7 +94,7 @@ export function HelpLinksSection() {
       </Card>
 
       <ProLock
-        locked={!isPro && !planLoading}
+        locked={!liberado && !planLoading}
         title="Botões extras ilimitados é do plano PRO"
         description="No PRO você adiciona quantos botões quiser na sua loja (catálogo, medidas, grupo do WhatsApp)."
       >

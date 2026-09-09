@@ -66,7 +66,8 @@ export function InsightsSection() {
     peekCache<string | null>(aiKey(30), AI_TTL) ?? null
   );
   const [error, setError] = useState<string | null>(null);
-  const { isPro, loading: planLoading } = usePlan();
+  const { can, loading: planLoading } = usePlan();
+  const liberado = can("ai_insights");
 
   const loadStats = useCallback(async (period: number, force = false) => {
     if (!isSupabaseConfigured) {
@@ -407,7 +408,7 @@ export function InsightsSection() {
       </Card>
 
       <ProLock
-        locked={!isPro && !planLoading}
+        locked={!liberado && !planLoading}
         title="Insights com IA é do plano PRO"
         description="No PRO a IA lê seus cliques e leads e te diz o que ajustar pra vender mais."
       >

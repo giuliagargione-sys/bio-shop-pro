@@ -1,11 +1,9 @@
-// Edge Function: devolve o plano da aluna logada (Essencial/PRO).
-// A tabela subscribers só é visível pela service role, por isso essa checagem
-// não pode ser feita direto do front.
-//
-// Deploy:
-//   supabase functions deploy my-plan
-
+// Edge Function: plano da aluna logada (Essencial/PRO).
+// Mantida por compatibilidade com o app: hoje ela apenas repassa o
+// resultado da fonte única de verdade (_shared/access.ts), a mesma usada
+// por my-access e pelas funções protegidas.
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { resolveAccess } from "../_shared/access.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,48 +26,16 @@ Deno.serve(async (req: Request) => {
     const caller = callerData.user;
     if (!caller) return json({ error: "Não autenticado." }, 401);
 
-    const { data: adminRole } = await admin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", caller.id)
-      .eq("role", "admin")
-      .maybeSingle();
+    const access = await resolveAccess(admin, caller.id, caller.email ?? null);
 
-    if (adminRole) {
-      return json({ plan: "admin", isPro: true, isAdmin: true });
-    }
-
-    // Liberação manual feita pela administração central tem prioridade
-    // sobre o que veio do pagamento (Hubla).
-    const { data: override } = await admin
-      .from("plan_overrides")
-      .select("plan")
-      .eq("user_id", caller.id)
-      .maybeSingle();
-
-    if (override?.plan) {
-      const forced = String(override.plan).toLowerCase();
-      return json({
-        plan: forced,
-        isPro: forced.includes("pro"),
-        isAdmin: false,
-        status: "manual",
-      });
-    }
-
-    const email = (caller.email ?? "").toLowerCase();
-    const { data: sub } = email
-      ? await admin
-          .from("subscribers")
-          .select("plan, status")
-          .ilike("email", email)
-          .maybeSingle()
-      : { data: null };
-
-    const plan = (sub?.plan as string | null) ?? null;
-    const isPro = typeof plan === "string" && plan.toLowerCase().includes("pro");
-
-    return json({ plan, isPro, isAdmin: false, status: sub?.status ?? "desconhecido" });
+    return json({
+      plan: access.plan,
+      isPro: access.isPro,
+      isAdmin: access.isAdmin,
+      status: access.planSource,
+      canUse: access.canUse,
+      features: access.features,
+    });
   } catch (e) {
     return json({ error: String((e as Error).message ?? e) }, 500);
   }
