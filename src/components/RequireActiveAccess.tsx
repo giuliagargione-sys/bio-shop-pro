@@ -51,7 +51,7 @@ export function RequireActiveAccess({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background px-4 py-10">
-      <PageMeta title="Acesso suspenso" description="Reative sua assinatura para voltar a usar sua loja." noindex />
+      <PageMeta title="Acesso suspenso" description="Reative sua assinatura para voltar a usar sua loja." path="/personalizar" noindex />
       <div className="mx-auto max-w-lg">
         <div className="mb-8 flex justify-center">
           <Logo />

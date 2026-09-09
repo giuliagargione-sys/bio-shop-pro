@@ -88,6 +88,53 @@ function StatusBadge({ status }: { status: AlunaSummary["paymentStatus"] }) {
   );
 }
 
+/** Situação da loja no ciclo de assinatura (guardada / arquivada). */
+function StoreStatusBadge({ status }: { status?: string | null }) {
+  if (!status || status === "active") return null;
+  const map: Record<string, { label: string; bg: string; color: string }> = {
+    suspended: { label: "Guardada (vencida)", bg: "#fdecec", color: "#c0392b" },
+    archived: { label: "Arquivada", bg: "#f1f1f1", color: "#737373" },
+  };
+  const s = map[status] ?? { label: status, bg: "#f1f1f1", color: "#737373" };
+  return (
+    <Badge style={{ background: s.bg, color: s.color }} className="whitespace-nowrap">
+      {s.label}
+    </Badge>
+  );
+}
+
+/** Resumo da assinatura: vencimento real, renovação e identificação na Hubla. */
+function SubscriptionInfo({ aluna }: { aluna: AlunaSummary }) {
+  if (!aluna.subscriptionStatus && !aluna.currentPeriodEnd) {
+    return (
+      <p className="text-xs text-muted-foreground">
+        Sem assinatura registrada da Hubla para este e-mail.
+      </p>
+    );
+  }
+  const cancelou = aluna.autoRenew === false;
+  return (
+    <div className="rounded-lg bg-muted/40 px-3 py-2 text-xs text-muted-foreground space-y-1">
+      <p>
+        Assinatura:{" "}
+        <span className="font-medium text-foreground">
+          {aluna.subscriptionPlan === "pro" ? "PRO" : aluna.subscriptionPlan === "essential" ? "Essencial" : "—"}
+        </span>{" "}
+        · {aluna.subscriptionStatus ?? "—"}
+        {cancelou ? " · renovação cancelada" : ""}
+      </p>
+      <p>
+        Válida até <span className="font-medium text-foreground">{formatDate(aluna.currentPeriodEnd ?? null)}</span>
+        {aluna.backupUntil ? ` · dados guardados até ${formatDate(aluna.backupUntil)}` : ""}
+      </p>
+      {aluna.hublaSubscriptionId && (
+        <p className="break-all">Hubla: {aluna.hublaSubscriptionId}</p>
+      )}
+    </div>
+  );
+}
+
+
 function CreateAlunaCard({ onCreated }: { onCreated: () => void }) {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -261,7 +308,8 @@ export default function AdminPage() {
     return (
       (a.email ?? "").toLowerCase().includes(term) ||
       (a.storeName ?? "").toLowerCase().includes(term) ||
-      (a.slug ?? "").toLowerCase().includes(term)
+      (a.slug ?? "").toLowerCase().includes(term) ||
+      (a.hublaSubscriptionId ?? "").toLowerCase().includes(term)
     );
   });
   const lojasAtivas = filtradas.filter((a) => a.slug && a.active);
@@ -419,7 +467,10 @@ export default function AdminPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <PlanBadge aluna={a} />
                       <StatusBadge status={a.paymentStatus} />
+                      <StoreStatusBadge status={a.storeStatus} />
                     </div>
+
+                    <SubscriptionInfo aluna={a} />
 
                     {/* Link da loja */}
                     {a.slug ? (
