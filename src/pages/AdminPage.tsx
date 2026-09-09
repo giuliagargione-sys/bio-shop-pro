@@ -53,7 +53,7 @@ const STATUS_STYLE: Record<AlunaSummary["paymentStatus"], { label: string; bg: s
   ativo: { label: "Adimplente", bg: "#e6f7ef", color: "#1a9c5b" },
   inadimplente: { label: "Inadimplente", bg: "#fdecec", color: "#c0392b" },
   cancelado: { label: "Cancelado", bg: "#f1f1f1", color: "#737373" },
-  desconhecido: { label: "Sem info de pagamento", bg: "#fff8e6", color: "#a06b00" },
+  desconhecido: { label: "Sem info Hubla", bg: "#fff8e6", color: "#a06b00" },
 };
 
 /** Qual plano vale pra aluna: liberação manual na frente do que veio do pagamento. */
