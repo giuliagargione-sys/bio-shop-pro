@@ -72,7 +72,7 @@ function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | nu
     return () => observer.disconnect();
   }, [userPaused, video.videoUrl]);
 
-  const href = video.link?.trim();
+  const href = resolveExternalHref(video.link ?? "");
 
   const card = (
     <>

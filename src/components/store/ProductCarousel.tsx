@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
+import { resolveExternalHref } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -62,7 +63,7 @@ export function ProductCarousel({
         {config.products.map((product, index) => (
           <a
             key={product.id}
-            href={product.link}
+            href={resolveExternalHref(product.link)}
             target={product.link?.startsWith("#") ? undefined : "_blank"}
             rel="noreferrer"
             onClick={() => trackStoreEvent(ownerId, "produto", product.name)}

@@ -11,7 +11,7 @@ export function CustomButtonBlock({
   ownerId?: string | null;
 }) {
   const label = block.label?.trim();
-  const href = block.href?.trim();
+  const href = resolveExternalHref(block.href ?? "");
   if (!label || !href) return null;
 
   const Icon = getButtonIcon(block.icon);

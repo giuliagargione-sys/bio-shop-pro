@@ -17,7 +17,7 @@ export function HelpLinkButton({
   const { contact, theme } = config;
   const label = item.label?.trim();
   const fallback = resolveWhatsAppHref(contact, `Oi! ${label || "Tenho uma dúvida"} 💛`);
-  const href = item.url?.trim() || (item.refId === "support" || item.refId === "returns" ? fallback : "");
+  const href = resolveExternalHref(item.url?.trim() || (item.refId === "support" || item.refId === "returns" ? fallback : ""));
   if (!label || !href) return null;
 
   const Icon = getButtonIcon(item.icon);

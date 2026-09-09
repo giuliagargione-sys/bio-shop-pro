@@ -17,14 +17,14 @@ export function Hero({ config }: { config: StoreConfig }) {
         </p>
         <div className="flex w-full max-w-sm flex-col items-stretch justify-center gap-3 pt-1">
           {config.hero.primaryCtaHref && (
-            <a href={config.hero.primaryCtaHref}>
+            <a href={resolveExternalHref(config.hero.primaryCtaHref)}>
               <Button size="lg" className="w-full h-12">
                 {config.hero.primaryCtaLabel}
               </Button>
             </a>
           )}
           {config.hero.secondaryCtaHref && (
-            <a href={config.hero.secondaryCtaHref}>
+            <a href={resolveExternalHref(config.hero.secondaryCtaHref)}>
               <Button
                 size="lg"
                 variant="outline"

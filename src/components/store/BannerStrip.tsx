@@ -15,7 +15,7 @@ export function BannerCard({
 }) {
   if (banner.enabled === false || !banner.imageUrl?.trim()) return null;
 
-  const href = banner.link?.trim();
+  const href = resolveExternalHref(banner.link ?? "");
   const label = banner.title?.trim() || "Banner da coleção";
   const overlayTitle = banner.overlayTitle?.trim();
   const ctaLabel = banner.ctaLabel?.trim();

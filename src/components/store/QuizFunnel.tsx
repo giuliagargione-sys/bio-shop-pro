@@ -166,7 +166,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
               <h3 className="font-brand text-xl font-bold">{quiz.resultTitle}</h3>
               <p className="text-sm text-muted-foreground">{quiz.resultDescription}</p>
               {destination ? (
-                <a href={destination.url} target="_blank" rel="noreferrer" className="w-full">
+                <a href={resolveExternalHref(destination.url)} target="_blank" rel="noreferrer" className="w-full">
                   <Button size="lg" className="w-full mt-2">
                     {destination.label.trim() || quiz.resultCtaLabel}
                     <ArrowRight size={18} />
