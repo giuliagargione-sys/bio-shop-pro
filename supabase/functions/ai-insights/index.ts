@@ -10,8 +10,10 @@ const corsHeaders = {
 };
 
 const MODEL = "google/gemini-2.5-flash";
+import { resolveAccess } from "../_shared/access.ts";
 
 Deno.serve(async (req: Request) => {
+
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -28,6 +30,20 @@ Deno.serve(async (req: Request) => {
     const { data: userData } = await client.auth.getUser();
     const user = userData.user;
     if (!user) return json({ error: "Não autenticado." }, 401);
+
+    // Fonte única de verdade do acesso: assinatura vigente + loja ativa.
+    const serviceClient = createClient(
+      SUPABASE_URL,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const access = await resolveAccess(serviceClient, user.id, user.email ?? null);
+    if (!access.canUse) {
+      return json(
+        { error: "Seu acesso está suspenso. Reative sua assinatura para continuar.", access: access.reason },
+        403
+      );
+    }
+
 
     let days = 30;
     try {
