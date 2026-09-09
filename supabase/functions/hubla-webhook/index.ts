@@ -271,10 +271,13 @@ Deno.serve(async (req: Request) => {
     cancelledAt = null;
     deactivatedAt = null;
   } else if (action === "deactivate") {
+    // Assinatura desativada / fatura reembolsada / estorno: o direito de
+    // acesso terminou AGORA, mesmo que a data paga fosse mais longe —
+    // o dinheiro voltou para a cliente. A loja e os dados sao guardados
+    // por 30 dias (nada e apagado).
     autoRenew = false;
     deactivatedAt = parsed.deactivatedAt ?? parsed.eventAt ?? nowIso;
-    // So expira se o periodo pago realmente acabou.
-    status = stillPaid ? "cancelled" : "expired";
+    status = "expired";
     if (!cancelledAt) cancelledAt = parsed.cancelledAt ?? parsed.eventAt ?? nowIso;
   }
 
