@@ -403,51 +403,68 @@ export default function AdminPage() {
                 {visiveis.map((a) => (
                   <div
                     key={a.id}
-                    className="rounded-lg border border-border p-3 space-y-2"
+                    className="rounded-xl border border-border bg-white p-4 space-y-3"
                   >
+                    {/* Identidade da loja */}
                     <div className="min-w-0">
-                      <p className="font-medium break-words">{a.storeName || a.email}</p>
-                      <p className="text-xs text-muted-foreground break-all">
+                      <p className="font-semibold text-base break-words leading-tight">
+                        {a.storeName || a.email}
+                      </p>
+                      <p className="text-xs text-muted-foreground break-all mt-0.5">
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+
+                    {/* Selos de plano e pagamento */}
+                    <div className="flex flex-wrap items-center gap-2">
                       <PlanBadge aluna={a} />
                       <StatusBadge status={a.paymentStatus} />
-                      <label className="flex items-center gap-2 text-xs">
+                    </div>
+
+                    {/* Link da loja */}
+                    {a.slug ? (
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg bg-muted/60 px-3 py-2">
+                        <a
+                          href={`/${a.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm font-medium underline flex items-center gap-1 break-all"
+                          style={{ color: "var(--product-coral-dark)" }}
+                        >
+                          /{a.slug} <ExternalLink size={13} className="shrink-0" />
+                        </a>
+                        <Link
+                          to={`/personalizar?loja=${a.id}`}
+                          className="text-xs underline flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                        >
+                          <Pencil size={12} /> Editar loja
+                        </Link>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">Sem loja criada ainda.</p>
+                    )}
+
+                    {/* Controles */}
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 border-t border-border/60">
+                      <label className="flex items-center gap-2 text-xs pt-2">
                         <Switch
                           checked={planInfo(a).isPro}
                           onCheckedChange={(value) => onTogglePro(a, value)}
                           aria-label="Liberar recursos PRO"
                         />
-                        <span className={planInfo(a).isPro ? "" : "text-muted-foreground"}>
+                        <span className={planInfo(a).isPro ? "font-medium" : "text-muted-foreground"}>
                           {planInfo(a).isPro ? "PRO liberado" : "Liberar PRO"}
                         </span>
                       </label>
-                      {a.slug ? (
+                      {a.slug && (
                         <>
-                          <a
-                            href={`/${a.slug}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs underline flex items-center gap-1"
-                            style={{ color: "var(--product-coral-dark)" }}
-                          >
-                            /{a.slug} <ExternalLink size={12} />
-                          </a>
-                          <Link
-                            to={`/personalizar?loja=${a.id}`}
-                            className="text-xs underline flex items-center gap-1 text-muted-foreground"
-                          >
-                            <Pencil size={12} /> Editar loja
-                          </Link>
-                          <label className="flex items-center gap-2 text-xs">
+                          <label className="flex items-center gap-2 text-xs pt-2">
                             <Switch
                               checked={a.active}
                               onCheckedChange={(value) => onToggleActive(a, value)}
                               aria-label="Link ativo"
                             />
-                            <span className={a.active ? "" : "text-muted-foreground"}>
+                            <span className={a.active ? "font-medium" : "text-muted-foreground"}>
                               {a.active ? "Link ativo" : "Link desativado"}
                             </span>
                           </label>
@@ -455,15 +472,13 @@ export default function AdminPage() {
                             type="button"
                             onClick={() => onDeleteStore(a)}
                             disabled={deletingId === a.id}
-                            className="text-xs underline flex items-center gap-1 disabled:opacity-50"
+                            className="text-xs underline flex items-center gap-1 disabled:opacity-50 pt-2 sm:ml-auto"
                             style={{ color: "#c0392b" }}
                           >
                             <Trash2 size={12} />
                             {deletingId === a.id ? "Apagando..." : "Apagar loja"}
                           </button>
                         </>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">sem loja ainda</span>
                       )}
                     </div>
                   </div>
