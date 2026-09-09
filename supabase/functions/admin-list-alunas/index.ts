@@ -64,6 +64,13 @@ Deno.serve(async (req: Request) => {
 
     const { data: subs } = await adminClient.from("subscribers").select("*");
 
+    const { data: overrides } = await adminClient
+      .from("plan_overrides")
+      .select("user_id, plan");
+    const overrideByUser = new Map(
+      (overrides ?? []).map((o) => [o.user_id as string, String(o.plan)])
+    );
+
     const storeByUser = new Map((stores ?? []).map((s) => [s.user_id, s]));
     const subByEmail = new Map(
       (subs ?? []).map((s) => [String(s.email).toLowerCase(), s])

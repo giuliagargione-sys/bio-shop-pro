@@ -39,6 +39,24 @@ Deno.serve(async (req: Request) => {
       return json({ plan: "admin", isPro: true, isAdmin: true });
     }
 
+    // Liberação manual feita pela administração central tem prioridade
+    // sobre o que veio do pagamento (Hubla).
+    const { data: override } = await admin
+      .from("plan_overrides")
+      .select("plan")
+      .eq("user_id", caller.id)
+      .maybeSingle();
+
+    if (override?.plan) {
+      const forced = String(override.plan).toLowerCase();
+      return json({
+        plan: forced,
+        isPro: forced.includes("pro"),
+        isAdmin: false,
+        status: "manual",
+      });
+    }
+
     const email = (caller.email ?? "").toLowerCase();
     const { data: sub } = email
       ? await admin
