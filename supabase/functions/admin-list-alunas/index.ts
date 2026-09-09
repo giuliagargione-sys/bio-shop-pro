@@ -93,6 +93,7 @@ Deno.serve(async (req: Request) => {
           paymentStatus: sub?.status ?? "desconhecido",
           plan: sub?.plan ?? null,
           lastPaymentEventAt: sub?.hubla_event_at ?? null,
+          planOverride: overrideByUser.get(u.id) ?? null,
         };
       })
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
