@@ -347,7 +347,10 @@ Deno.serve(async (req: Request) => {
       storeUpdated = !error;
       if (storeUpdated) log("loja-restaurada-ou-mantida-ativa", email);
     } else {
-      const base = periodEnd ? new Date(periodEnd) : new Date();
+      // Reembolso/desativacao: guarda contada de hoje. Vencimento normal:
+      // contada da data em que o periodo pago terminou.
+      const base =
+        action === "deactivate" || !periodEnd ? new Date() : new Date(periodEnd);
       const backupUntil = new Date(base.getTime() + RETENTION_DAYS * 24 * 60 * 60 * 1000);
       const { error } = await admin
         .from("store_config")
