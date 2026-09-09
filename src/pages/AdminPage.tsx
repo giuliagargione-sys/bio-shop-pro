@@ -308,7 +308,8 @@ export default function AdminPage() {
     return (
       (a.email ?? "").toLowerCase().includes(term) ||
       (a.storeName ?? "").toLowerCase().includes(term) ||
-      (a.slug ?? "").toLowerCase().includes(term)
+      (a.slug ?? "").toLowerCase().includes(term) ||
+      (a.hublaSubscriptionId ?? "").toLowerCase().includes(term)
     );
   });
   const lojasAtivas = filtradas.filter((a) => a.slug && a.active);
@@ -466,7 +467,10 @@ export default function AdminPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <PlanBadge aluna={a} />
                       <StatusBadge status={a.paymentStatus} />
+                      <StoreStatusBadge status={a.storeStatus} />
                     </div>
+
+                    <SubscriptionInfo aluna={a} />
 
                     {/* Link da loja */}
                     {a.slug ? (
