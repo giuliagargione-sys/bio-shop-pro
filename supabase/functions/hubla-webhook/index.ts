@@ -271,10 +271,13 @@ Deno.serve(async (req: Request) => {
     cancelledAt = null;
     deactivatedAt = null;
   } else if (action === "deactivate") {
+    // Assinatura desativada / fatura reembolsada / estorno: o direito de
+    // acesso terminou AGORA, mesmo que a data paga fosse mais longe —
+    // o dinheiro voltou para a cliente. A loja e os dados sao guardados
+    // por 30 dias (nada e apagado).
     autoRenew = false;
     deactivatedAt = parsed.deactivatedAt ?? parsed.eventAt ?? nowIso;
-    // So expira se o periodo pago realmente acabou.
-    status = stillPaid ? "cancelled" : "expired";
+    status = "expired";
     if (!cancelledAt) cancelledAt = parsed.cancelledAt ?? parsed.eventAt ?? nowIso;
   }
 
@@ -344,7 +347,10 @@ Deno.serve(async (req: Request) => {
       storeUpdated = !error;
       if (storeUpdated) log("loja-restaurada-ou-mantida-ativa", email);
     } else {
-      const base = periodEnd ? new Date(periodEnd) : new Date();
+      // Reembolso/desativacao: guarda contada de hoje. Vencimento normal:
+      // contada da data em que o periodo pago terminou.
+      const base =
+        action === "deactivate" || !periodEnd ? new Date() : new Date(periodEnd);
       const backupUntil = new Date(base.getTime() + RETENTION_DAYS * 24 * 60 * 60 * 1000);
       const { error } = await admin
         .from("store_config")
