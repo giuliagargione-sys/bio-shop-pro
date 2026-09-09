@@ -43,11 +43,21 @@ const ACTION_BY_TYPE: Record<string, HublaAction> = {
   "newsale": "activate",
   "new_sale": "activate",
   "customer.member_added": "activate",
+  // Renovação automática religada ("Assinatura: Renovação ativada")
+  "subscription.autorenew.activated": "resume_renewal",
+  "subscription.autorenew.enabled": "resume_renewal",
+  "subscription.autorenew.reactivated": "resume_renewal",
+  "subscription.autorenewactivated": "resume_renewal",
+  "subscription.renewal.activated": "resume_renewal",
   // Cancelamento da renovação automática (NÃO tira acesso na hora)
   "subscription.canceled": "cancel_renewal",
   "subscription.cancelled": "cancel_renewal",
   "subscription.autorenew.canceled": "cancel_renewal",
+  "subscription.autorenew.cancelled": "cancel_renewal",
   "subscription.autorenew.disabled": "cancel_renewal",
+  "subscription.autorenew.deactivated": "cancel_renewal",
+  "subscription.autorenewdeactivated": "cancel_renewal",
+  "subscription.renewal.deactivated": "cancel_renewal",
   // Fim real do direito de acesso
   "subscription.deactivated": "deactivate",
   "subscription.expired": "deactivate",
