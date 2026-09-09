@@ -13,6 +13,7 @@
 //   que a IA ainda não foi ligada, em vez de quebrar.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { requireAccess } from "../_shared/access.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
