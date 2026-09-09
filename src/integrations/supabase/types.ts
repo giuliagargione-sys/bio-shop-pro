@@ -513,6 +513,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      run_subscription_lifecycle: { Args: never; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "aluna"
