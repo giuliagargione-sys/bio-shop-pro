@@ -101,6 +101,60 @@ export type Database = {
         }
         Relationships: []
       }
+      plan_features: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          feature: string
+          plan: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          feature: string
+          plan: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          feature?: string
+          plan?: string
+        }
+        Relationships: []
+      }
+      plan_mapping: {
+        Row: {
+          active: boolean
+          created_at: string
+          hubla_offer_id: string
+          hubla_product_id: string | null
+          id: string
+          label: string | null
+          plan: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          hubla_offer_id: string
+          hubla_product_id?: string | null
+          id?: string
+          label?: string | null
+          plan: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          hubla_offer_id?: string
+          hubla_product_id?: string | null
+          id?: string
+          label?: string | null
+          plan?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       plan_overrides: {
         Row: {
           created_at: string
@@ -143,28 +197,34 @@ export type Database = {
       store_config: {
         Row: {
           active: boolean
+          backup_until: string | null
           created_at: string
           data: Json
           id: string
           slug: string
+          status: string
           updated_at: string
           user_id: string
         }
         Insert: {
           active?: boolean
+          backup_until?: string | null
           created_at?: string
           data?: Json
           id?: string
           slug: string
+          status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           active?: boolean
+          backup_until?: string | null
           created_at?: string
           data?: Json
           id?: string
           slug?: string
+          status?: string
           updated_at?: string
           user_id?: string
         }
@@ -229,6 +289,86 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          auto_renew: boolean
+          cancelled_at: string | null
+          created_at: string
+          current_period_end: string | null
+          deactivated_at: string | null
+          email: string
+          hubla_offer_id: string | null
+          hubla_product_id: string | null
+          hubla_subscription_id: string | null
+          id: string
+          is_current: boolean
+          last_event_at: string | null
+          last_event_type: string | null
+          last_event_version: number | null
+          period_end_source: string | null
+          plan: string | null
+          started_at: string | null
+          status: string
+          store_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          auto_renew?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          deactivated_at?: string | null
+          email: string
+          hubla_offer_id?: string | null
+          hubla_product_id?: string | null
+          hubla_subscription_id?: string | null
+          id?: string
+          is_current?: boolean
+          last_event_at?: string | null
+          last_event_type?: string | null
+          last_event_version?: number | null
+          period_end_source?: string | null
+          plan?: string | null
+          started_at?: string | null
+          status?: string
+          store_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          auto_renew?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          deactivated_at?: string | null
+          email?: string
+          hubla_offer_id?: string | null
+          hubla_product_id?: string | null
+          hubla_subscription_id?: string | null
+          id?: string
+          is_current?: boolean
+          last_event_at?: string | null
+          last_event_type?: string | null
+          last_event_version?: number | null
+          period_end_source?: string | null
+          plan?: string | null
+          started_at?: string | null
+          status?: string
+          store_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "store_config"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       support_messages: {
         Row: {
@@ -313,6 +453,51 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_events: {
+        Row: {
+          created_at: string
+          email: string | null
+          event_at: string | null
+          event_type: string | null
+          hubla_event_id: string
+          hubla_subscription_id: string | null
+          id: string
+          note: string | null
+          payload: Json | null
+          processed: boolean
+          processed_at: string | null
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          event_at?: string | null
+          event_type?: string | null
+          hubla_event_id: string
+          hubla_subscription_id?: string | null
+          id?: string
+          note?: string | null
+          payload?: Json | null
+          processed?: boolean
+          processed_at?: string | null
+          source?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          event_at?: string | null
+          event_type?: string | null
+          hubla_event_id?: string
+          hubla_subscription_id?: string | null
+          id?: string
+          note?: string | null
+          payload?: Json | null
+          processed?: boolean
+          processed_at?: string | null
+          source?: string
         }
         Relationships: []
       }
