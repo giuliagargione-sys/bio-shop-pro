@@ -147,7 +147,7 @@ Deno.serve(async (req: Request) => {
         ? "cancelado"
         : action === "payment_issue"
           ? "inadimplente"
-          : action === "cancel_renewal"
+          : action === "cancel_renewal" || action === "resume_renewal"
             ? "ativo"
             : "desconhecido";
 
