@@ -64,6 +64,13 @@ Deno.serve(async (req: Request) => {
 
     const { data: subs } = await adminClient.from("subscribers").select("*");
 
+    const { data: overrides } = await adminClient
+      .from("plan_overrides")
+      .select("user_id, plan");
+    const overrideByUser = new Map(
+      (overrides ?? []).map((o) => [o.user_id as string, String(o.plan)])
+    );
+
     const storeByUser = new Map((stores ?? []).map((s) => [s.user_id, s]));
     const subByEmail = new Map(
       (subs ?? []).map((s) => [String(s.email).toLowerCase(), s])
@@ -86,6 +93,7 @@ Deno.serve(async (req: Request) => {
           paymentStatus: sub?.status ?? "desconhecido",
           plan: sub?.plan ?? null,
           lastPaymentEventAt: sub?.hubla_event_at ?? null,
+          planOverride: overrideByUser.get(u.id) ?? null,
         };
       })
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));

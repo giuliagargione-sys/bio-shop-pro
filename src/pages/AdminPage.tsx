@@ -32,6 +32,7 @@ import {
   setStoreActive,
   deleteStore,
   invalidateAlunas,
+  setPlanOverride,
   type AlunaSummary,
 } from "@/lib/adminApi";
 
@@ -54,6 +55,29 @@ const STATUS_STYLE: Record<AlunaSummary["paymentStatus"], { label: string; bg: s
   cancelado: { label: "Cancelado", bg: "#f1f1f1", color: "#737373" },
   desconhecido: { label: "Sem info de pagamento", bg: "#fff8e6", color: "#a06b00" },
 };
+
+/** Qual plano vale pra aluna: liberação manual na frente do que veio do pagamento. */
+function planInfo(a: AlunaSummary) {
+  const raw = (a.planOverride ?? a.plan ?? "").toLowerCase();
+  const isPro = raw.includes("pro");
+  const label = raw ? (isPro ? "PRO" : "Essencial") : "Sem plano";
+  return { isPro, label, manual: Boolean(a.planOverride) };
+}
+
+function PlanBadge({ aluna }: { aluna: AlunaSummary }) {
+  const { isPro, label, manual } = planInfo(aluna);
+  const style = isPro
+    ? { background: "var(--product-cream)", color: "var(--product-coral-dark)" }
+    : label === "Essencial"
+      ? { background: "#eef2f7", color: "#3d5166" }
+      : { background: "#f1f1f1", color: "#737373" };
+  return (
+    <Badge style={style} className="whitespace-nowrap">
+      {label}
+      {manual ? " (manual)" : ""}
+    </Badge>
+  );
+}
 
 function StatusBadge({ status }: { status: AlunaSummary["paymentStatus"] }) {
   const s = STATUS_STYLE[status];
@@ -187,6 +211,21 @@ export default function AdminPage() {
     if (!res.ok) {
       setAlunas((prev) => prev.map((a) => (a.id === aluna.id ? { ...a, active: !value } : a)));
       setError(res.error ?? "Não foi possível mudar o link agora.");
+    }
+  }
+
+  // Libera na mão os recursos do PRO (quando o pagamento não libera automático).
+  async function onTogglePro(aluna: AlunaSummary, value: boolean) {
+    const next = value ? "pro" : "essencial";
+    setAlunas((prev) =>
+      prev.map((a) => (a.id === aluna.id ? { ...a, planOverride: next } : a))
+    );
+    const res = await setPlanOverride(aluna.id, next);
+    if (!res.ok) {
+      setAlunas((prev) =>
+        prev.map((a) => (a.id === aluna.id ? { ...a, planOverride: aluna.planOverride } : a))
+      );
+      setError(res.error ?? "Não foi possível mudar o plano agora.");
     }
   }
 
@@ -368,13 +407,26 @@ export default function AdminPage() {
                     className="rounded-lg border border-border p-3 flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{a.storeName || a.email}</p>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <p className="font-medium truncate">{a.storeName || a.email}</p>
+                        <PlanBadge aluna={a} />
+                      </div>
                       <p className="text-xs text-muted-foreground truncate">
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
                       <StatusBadge status={a.paymentStatus} />
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch
+                          checked={planInfo(a).isPro}
+                          onCheckedChange={(value) => onTogglePro(a, value)}
+                          aria-label="Liberar recursos PRO"
+                        />
+                        <span className={planInfo(a).isPro ? "" : "text-muted-foreground"}>
+                          {planInfo(a).isPro ? "PRO liberado" : "Liberar PRO"}
+                        </span>
+                      </label>
                       {a.slug ? (
                         <>
                           <a
