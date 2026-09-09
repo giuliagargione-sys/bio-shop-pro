@@ -3,7 +3,7 @@ import { ArrowLeft, MessageCircle, Loader2, ArrowRight } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { resolveWhatsAppHref } from "@/lib/utils";
+import { resolveWhatsAppHref, resolveExternalHref } from "@/lib/utils";
 import { saveLead } from "@/lib/leads";
 import { findDestinationForAnswer } from "@/lib/quiz";
 

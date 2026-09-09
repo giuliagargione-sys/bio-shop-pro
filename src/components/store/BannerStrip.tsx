@@ -1,5 +1,6 @@
 import type { Banner, StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
+import { resolveExternalHref } from "@/lib/utils";
 
 // Proporção única, mobile-first (referência: 350 x 256)
 const BANNER_RATIO_CLASS = "aspect-[35/26]";

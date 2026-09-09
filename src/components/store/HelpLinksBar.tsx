@@ -1,5 +1,5 @@
 import type { StoreConfig } from "@/types/config";
-import { resolveWhatsAppHref } from "@/lib/utils";
+import { resolveWhatsAppHref, resolveExternalHref } from "@/lib/utils";
 import { getButtonIcon, readableTextColor } from "@/lib/buttonStyle";
 import { resolveHelpLinkItems, type HelpLinkItem } from "@/lib/layout";
 
