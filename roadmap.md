@@ -12,4 +12,4 @@
    - Expiração → loja suspensa 30 dias → arquivada (sem apagar dados).
    - Fonte única de acesso (`my-access`), idempotência e eventos fora de ordem.
    - Painel central com dados e filtros de assinatura.
-   Status: em andamento.
+   Status: concluído (falta apenas confirmar os nomes dos eventos de cancelamento/renovação com um webhook real da Hubla).
