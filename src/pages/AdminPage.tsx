@@ -398,24 +398,21 @@ export default function AdminPage() {
               </p>
             )}
 
-            <div className="overflow-x-auto">
-              <div className="min-w-[560px] space-y-2">
+            <div>
+              <div className="space-y-2">
                 {visiveis.map((a) => (
                   <div
-
                     key={a.id}
-                    className="rounded-lg border border-border p-3 flex items-center justify-between gap-3"
+                    className="rounded-lg border border-border p-3 space-y-2"
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="font-medium truncate">{a.storeName || a.email}</p>
-                        <PlanBadge aluna={a} />
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="font-medium break-words">{a.storeName || a.email}</p>
+                      <p className="text-xs text-muted-foreground break-all">
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <PlanBadge aluna={a} />
                       <StatusBadge status={a.paymentStatus} />
                       <label className="flex items-center gap-2 text-xs">
                         <Switch
