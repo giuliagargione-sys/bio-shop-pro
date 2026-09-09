@@ -1,7 +1,7 @@
 import { PageMeta } from "@/components/PageMeta";
 import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useLocation, useSearchParams, Link, useNavigate } from "react-router-dom";
-import { Lock, AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useAuth, isSupabaseConfigured } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { cachedQuery, setCache } from "@/lib/queryCache";
