@@ -17,6 +17,8 @@ export interface AlunaSummary {
   paymentStatus: "ativo" | "inadimplente" | "cancelado" | "desconhecido";
   plan: string | null;
   lastPaymentEventAt: string | null;
+  /** Último evento recebido da Hubla (ex: subscription.activated). */
+  lastPaymentEvent?: string | null;
   /** Plano liberado manualmente pela administração central ("pro"/"essencial"). */
   planOverride: string | null;
 }

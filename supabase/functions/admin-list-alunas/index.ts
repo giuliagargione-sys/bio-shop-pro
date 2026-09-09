@@ -64,6 +64,15 @@ Deno.serve(async (req: Request) => {
 
     const { data: subs } = await adminClient.from("subscribers").select("*");
 
+    // Fonte alternativa (e mais confiavel hoje): compradores_ativos, alimentada
+    // pelo webhook da Hubla.
+    const { data: compradores } = await adminClient
+      .from("compradores_ativos")
+      .select("email, status, plano, hubla_event, updated_at");
+    const compByEmail = new Map(
+      (compradores ?? []).map((c) => [String(c.email).toLowerCase(), c])
+    );
+
     const { data: overrides } = await adminClient
       .from("plan_overrides")
       .select("user_id, plan");
@@ -80,7 +89,14 @@ Deno.serve(async (req: Request) => {
       .filter((u) => u.email) // ignora contas sem e-mail (ex: um admin criado sem e-mail, raro)
       .map((u) => {
         const store = storeByUser.get(u.id);
-        const sub = u.email ? subByEmail.get(u.email.toLowerCase()) : undefined;
+        const key = u.email ? u.email.toLowerCase() : "";
+        const sub = key ? subByEmail.get(key) : undefined;
+        const comp = key ? compByEmail.get(key) : undefined;
+        const compStatus = comp
+          ? String(comp.status) === "ativo"
+            ? "ativo"
+            : "cancelado"
+          : null;
         const storeData = store?.data as { brand?: { storeName?: string } } | undefined;
         return {
           id: u.id,
@@ -90,9 +106,10 @@ Deno.serve(async (req: Request) => {
           storeName: storeData?.brand?.storeName ?? null,
           storeUpdatedAt: store?.updated_at ?? null,
           active: store ? (store as { active?: boolean }).active !== false : true,
-          paymentStatus: sub?.status ?? "desconhecido",
-          plan: sub?.plan ?? null,
-          lastPaymentEventAt: sub?.hubla_event_at ?? null,
+          paymentStatus: sub?.status ?? compStatus ?? "desconhecido",
+          plan: sub?.plan ?? comp?.plano ?? null,
+          lastPaymentEventAt: sub?.hubla_event_at ?? comp?.updated_at ?? null,
+          lastPaymentEvent: sub?.hubla_event ?? comp?.hubla_event ?? null,
           planOverride: overrideByUser.get(u.id) ?? null,
         };
       })

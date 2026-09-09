@@ -53,7 +53,7 @@ const STATUS_STYLE: Record<AlunaSummary["paymentStatus"], { label: string; bg: s
   ativo: { label: "Adimplente", bg: "#e6f7ef", color: "#1a9c5b" },
   inadimplente: { label: "Inadimplente", bg: "#fdecec", color: "#c0392b" },
   cancelado: { label: "Cancelado", bg: "#f1f1f1", color: "#737373" },
-  desconhecido: { label: "Sem info de pagamento", bg: "#fff8e6", color: "#a06b00" },
+  desconhecido: { label: "Sem info Hubla", bg: "#fff8e6", color: "#a06b00" },
 };
 
 /** Qual plano vale pra aluna: liberação manual na frente do que veio do pagamento. */
@@ -398,24 +398,21 @@ export default function AdminPage() {
               </p>
             )}
 
-            <div className="overflow-x-auto">
-              <div className="min-w-[560px] space-y-2">
+            <div>
+              <div className="space-y-2">
                 {visiveis.map((a) => (
                   <div
-
                     key={a.id}
-                    className="rounded-lg border border-border p-3 flex items-center justify-between gap-3"
+                    className="rounded-lg border border-border p-3 space-y-2"
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="font-medium truncate">{a.storeName || a.email}</p>
-                        <PlanBadge aluna={a} />
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="font-medium break-words">{a.storeName || a.email}</p>
+                      <p className="text-xs text-muted-foreground break-all">
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <PlanBadge aluna={a} />
                       <StatusBadge status={a.paymentStatus} />
                       <label className="flex items-center gap-2 text-xs">
                         <Switch
