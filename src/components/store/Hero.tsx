@@ -1,5 +1,6 @@
 import type { StoreConfig } from "@/types/config";
 import { Button } from "@/components/ui/button";
+import { resolveExternalHref } from "@/lib/utils";
 
 export function Hero({ config }: { config: StoreConfig }) {
   return (
