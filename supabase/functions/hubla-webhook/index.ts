@@ -264,6 +264,12 @@ Deno.serve(async (req: Request) => {
     status = "active";
     autoRenew = false;
     cancelledAt = parsed.cancelledAt ?? parsed.eventAt ?? nowIso;
+  } else if (action === "resume_renewal") {
+    // Religou a renovacao automatica: volta a renovar, acesso mantido.
+    status = "active";
+    autoRenew = true;
+    cancelledAt = null;
+    deactivatedAt = null;
   } else if (action === "deactivate") {
     autoRenew = false;
     deactivatedAt = parsed.deactivatedAt ?? parsed.eventAt ?? nowIso;
