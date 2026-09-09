@@ -214,6 +214,21 @@ export default function AdminPage() {
     }
   }
 
+  // Libera na mão os recursos do PRO (quando o pagamento não libera automático).
+  async function onTogglePro(aluna: AlunaSummary, value: boolean) {
+    const next = value ? "pro" : "essencial";
+    setAlunas((prev) =>
+      prev.map((a) => (a.id === aluna.id ? { ...a, planOverride: next } : a))
+    );
+    const res = await setPlanOverride(aluna.id, next);
+    if (!res.ok) {
+      setAlunas((prev) =>
+        prev.map((a) => (a.id === aluna.id ? { ...a, planOverride: aluna.planOverride } : a))
+      );
+      setError(res.error ?? "Não foi possível mudar o plano agora.");
+    }
+  }
+
   // Apaga a loja da aluna (o login dela continua).
   async function onDeleteStore(aluna: AlunaSummary) {
     const nome = aluna.storeName || aluna.email;
