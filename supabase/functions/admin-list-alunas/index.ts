@@ -148,7 +148,7 @@ Deno.serve(async (req: Request) => {
       })
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
 
     return json({ alunas });
   } catch (err) {
