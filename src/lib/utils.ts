@@ -45,3 +45,13 @@ export function getContrastText(hex: string): string {
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.6 ? "#1a1a1a" : "#ffffff";
 }
+
+// Garante que links digitados sem "https://" (ex: www.giustore.com) abram
+// como site externo em vez de serem tratados como caminho interno da loja.
+export function resolveExternalHref(href: string): string {
+  const clean = (href || "").trim();
+  if (!clean) return clean;
+  if (clean.startsWith("#") || clean.startsWith("/")) return clean;
+  if (/^(https?:|mailto:|tel:)/i.test(clean)) return clean;
+  return `https://${clean}`;
+}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import type { StoreConfig, VideoItem } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
+import { resolveExternalHref } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 function useCenterItems<T extends HTMLElement>(deps: unknown[]) {
@@ -72,7 +73,7 @@ function VideoCard({ video, ownerId }: { video: VideoItem; ownerId?: string | nu
     return () => observer.disconnect();
   }, [userPaused, video.videoUrl]);
 
-  const href = video.link?.trim();
+  const href = resolveExternalHref(video.link ?? "");
 
   const card = (
     <>

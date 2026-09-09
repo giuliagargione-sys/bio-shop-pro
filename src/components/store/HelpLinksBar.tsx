@@ -1,5 +1,5 @@
 import type { StoreConfig } from "@/types/config";
-import { resolveWhatsAppHref } from "@/lib/utils";
+import { resolveWhatsAppHref, resolveExternalHref } from "@/lib/utils";
 import { getButtonIcon, readableTextColor } from "@/lib/buttonStyle";
 import { resolveHelpLinkItems, type HelpLinkItem } from "@/lib/layout";
 
@@ -17,7 +17,7 @@ export function HelpLinkButton({
   const { contact, theme } = config;
   const label = item.label?.trim();
   const fallback = resolveWhatsAppHref(contact, `Oi! ${label || "Tenho uma dúvida"} 💛`);
-  const href = item.url?.trim() || (item.refId === "support" || item.refId === "returns" ? fallback : "");
+  const href = resolveExternalHref(item.url?.trim() || (item.refId === "support" || item.refId === "returns" ? fallback : ""));
   if (!label || !href) return null;
 
   const Icon = getButtonIcon(item.icon);

@@ -1,5 +1,6 @@
 import type { LayoutBlock } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
+import { resolveExternalHref } from "@/lib/utils";
 import { getButtonIcon, readableTextColor } from "@/lib/buttonStyle";
 
 // Botão extra criado pela aluna na aba Estrutura (ex: catálogo, tabela de medidas).
@@ -11,7 +12,7 @@ export function CustomButtonBlock({
   ownerId?: string | null;
 }) {
   const label = block.label?.trim();
-  const href = block.href?.trim();
+  const href = resolveExternalHref(block.href ?? "");
   if (!label || !href) return null;
 
   const Icon = getButtonIcon(block.icon);

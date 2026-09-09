@@ -1,5 +1,6 @@
 import type { Banner, StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
+import { resolveExternalHref } from "@/lib/utils";
 
 // Proporção única, mobile-first (referência: 350 x 256)
 const BANNER_RATIO_CLASS = "aspect-[35/26]";
@@ -15,7 +16,7 @@ export function BannerCard({
 }) {
   if (banner.enabled === false || !banner.imageUrl?.trim()) return null;
 
-  const href = banner.link?.trim();
+  const href = resolveExternalHref(banner.link ?? "");
   const label = banner.title?.trim() || "Banner da coleção";
   const overlayTitle = banner.overlayTitle?.trim();
   const ctaLabel = banner.ctaLabel?.trim();

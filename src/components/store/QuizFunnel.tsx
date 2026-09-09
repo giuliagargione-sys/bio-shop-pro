@@ -3,7 +3,7 @@ import { ArrowLeft, MessageCircle, Loader2, ArrowRight } from "lucide-react";
 import type { StoreConfig } from "@/types/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { resolveWhatsAppHref } from "@/lib/utils";
+import { resolveWhatsAppHref, resolveExternalHref } from "@/lib/utils";
 import { saveLead } from "@/lib/leads";
 import { findDestinationForAnswer } from "@/lib/quiz";
 
@@ -166,7 +166,7 @@ export function QuizFunnel({ config, ownerId }: { config: StoreConfig; ownerId: 
               <h3 className="font-brand text-xl font-bold">{quiz.resultTitle}</h3>
               <p className="text-sm text-muted-foreground">{quiz.resultDescription}</p>
               {destination ? (
-                <a href={destination.url} target="_blank" rel="noreferrer" className="w-full">
+                <a href={resolveExternalHref(destination.url)} target="_blank" rel="noreferrer" className="w-full">
                   <Button size="lg" className="w-full mt-2">
                     {destination.label.trim() || quiz.resultCtaLabel}
                     <ArrowRight size={18} />
