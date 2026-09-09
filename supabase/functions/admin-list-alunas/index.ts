@@ -89,7 +89,14 @@ Deno.serve(async (req: Request) => {
       .filter((u) => u.email) // ignora contas sem e-mail (ex: um admin criado sem e-mail, raro)
       .map((u) => {
         const store = storeByUser.get(u.id);
-        const sub = u.email ? subByEmail.get(u.email.toLowerCase()) : undefined;
+        const key = u.email ? u.email.toLowerCase() : "";
+        const sub = key ? subByEmail.get(key) : undefined;
+        const comp = key ? compByEmail.get(key) : undefined;
+        const compStatus = comp
+          ? String(comp.status) === "ativo"
+            ? "ativo"
+            : "cancelado"
+          : null;
         const storeData = store?.data as { brand?: { storeName?: string } } | undefined;
         return {
           id: u.id,
