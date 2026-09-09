@@ -32,6 +32,7 @@ import {
   setStoreActive,
   deleteStore,
   invalidateAlunas,
+  setPlanOverride,
   type AlunaSummary,
 } from "@/lib/adminApi";
 
@@ -54,6 +55,29 @@ const STATUS_STYLE: Record<AlunaSummary["paymentStatus"], { label: string; bg: s
   cancelado: { label: "Cancelado", bg: "#f1f1f1", color: "#737373" },
   desconhecido: { label: "Sem info de pagamento", bg: "#fff8e6", color: "#a06b00" },
 };
+
+/** Qual plano vale pra aluna: liberação manual na frente do que veio do pagamento. */
+function planInfo(a: AlunaSummary) {
+  const raw = (a.planOverride ?? a.plan ?? "").toLowerCase();
+  const isPro = raw.includes("pro");
+  const label = raw ? (isPro ? "PRO" : "Essencial") : "Sem plano";
+  return { isPro, label, manual: Boolean(a.planOverride) };
+}
+
+function PlanBadge({ aluna }: { aluna: AlunaSummary }) {
+  const { isPro, label, manual } = planInfo(aluna);
+  const style = isPro
+    ? { background: "var(--product-cream)", color: "var(--product-coral-dark)" }
+    : label === "Essencial"
+      ? { background: "#eef2f7", color: "#3d5166" }
+      : { background: "#f1f1f1", color: "#737373" };
+  return (
+    <Badge style={style} className="whitespace-nowrap">
+      {label}
+      {manual ? " (manual)" : ""}
+    </Badge>
+  );
+}
 
 function StatusBadge({ status }: { status: AlunaSummary["paymentStatus"] }) {
   const s = STATUS_STYLE[status];
