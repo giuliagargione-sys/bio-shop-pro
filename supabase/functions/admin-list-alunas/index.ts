@@ -106,9 +106,10 @@ Deno.serve(async (req: Request) => {
           storeName: storeData?.brand?.storeName ?? null,
           storeUpdatedAt: store?.updated_at ?? null,
           active: store ? (store as { active?: boolean }).active !== false : true,
-          paymentStatus: sub?.status ?? "desconhecido",
-          plan: sub?.plan ?? null,
-          lastPaymentEventAt: sub?.hubla_event_at ?? null,
+          paymentStatus: sub?.status ?? compStatus ?? "desconhecido",
+          plan: sub?.plan ?? comp?.plano ?? null,
+          lastPaymentEventAt: sub?.hubla_event_at ?? comp?.updated_at ?? null,
+          lastPaymentEvent: sub?.hubla_event ?? comp?.hubla_event ?? null,
           planOverride: overrideByUser.get(u.id) ?? null,
         };
       })
