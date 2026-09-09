@@ -73,8 +73,38 @@ const ACTION_BY_TYPE: Record<string, HublaAction> = {
   "subscription.payment_failed": "payment_issue",
 };
 
+/**
+ * Rede de segurança: se a Hubla enviar o mesmo evento com outra grafia
+ * (camelCase, acento, hífen, texto em português), classificamos pelas
+ * palavras — cobrindo exatamente os 7 eventos cadastrados na conta:
+ * assinatura criada / ativa / desativada, renovação ativada / desativada,
+ * pagamento da fatura falhou e fatura reembolsada.
+ */
+function fallbackAction(eventType: string): HublaAction {
+  const k = eventType
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+  if (!k) return "unknown";
+
+  const isRenewalFlag = /autorenew|renovacao|renewal/.test(k);
+  if (isRenewalFlag) {
+    if (/disab|desativ|cancel|off|remov/.test(k)) return "cancel_renewal";
+    if (/enab|activ|ativ|on|resum|reactiv/.test(k)) return "resume_renewal";
+  }
+  if (/refund|reembols|chargeback|estorn/.test(k)) return "deactivate";
+  if (/paymentfailed|failed|falh|unpaid|overdue|late|atras|inadimpl|recusad/.test(k)) {
+    return "payment_issue";
+  }
+  if (/deactiv|desativ|inactiv|expir|vencid|removed|encerrad/.test(k)) return "deactivate";
+  if (/activ|ativ|created|criad|paid|pag|renew|renov|sale|venda|added/.test(k)) return "activate";
+  return "unknown";
+}
+
 export function actionForEvent(eventType: string): HublaAction {
-  return ACTION_BY_TYPE[eventType.trim().toLowerCase()] ?? "unknown";
+  const key = eventType.trim().toLowerCase();
+  return ACTION_BY_TYPE[key] ?? fallbackAction(key);
 }
 
 type Obj = Record<string, unknown>;
