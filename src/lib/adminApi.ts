@@ -17,6 +17,28 @@ export interface AlunaSummary {
   paymentStatus: "ativo" | "inadimplente" | "cancelado" | "desconhecido";
   plan: string | null;
   lastPaymentEventAt: string | null;
+  /** Plano liberado manualmente pela administração central ("pro"/"essencial"). */
+  planOverride: string | null;
+}
+
+/**
+ * Libera (ou volta atrás) o plano PRO na mão, pra quando o pagamento não
+ * chega automático. Passar `null` remove a liberação manual.
+ */
+export async function setPlanOverride(
+  userId: string,
+  plan: "pro" | "essencial" | null
+): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase) return { ok: false, error: "Backend não conectado." };
+  const { error } = plan
+    ? await supabase.from("plan_overrides").upsert(
+        { user_id: userId, plan },
+        { onConflict: "user_id" }
+      )
+    : await supabase.from("plan_overrides").delete().eq("user_id", userId);
+  if (error) return { ok: false, error: error.message };
+  invalidateCache(ALUNAS_KEY);
+  return { ok: true };
 }
 
 const ALUNAS_KEY = "admin-alunas";
