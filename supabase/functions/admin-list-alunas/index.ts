@@ -64,6 +64,15 @@ Deno.serve(async (req: Request) => {
 
     const { data: subs } = await adminClient.from("subscribers").select("*");
 
+    // Fonte alternativa (e mais confiavel hoje): compradores_ativos, alimentada
+    // pelo webhook da Hubla.
+    const { data: compradores } = await adminClient
+      .from("compradores_ativos")
+      .select("email, status, plano, hubla_event, updated_at");
+    const compByEmail = new Map(
+      (compradores ?? []).map((c) => [String(c.email).toLowerCase(), c])
+    );
+
     const { data: overrides } = await adminClient
       .from("plan_overrides")
       .select("user_id, plan");
