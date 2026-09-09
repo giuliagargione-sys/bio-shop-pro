@@ -21,7 +21,21 @@ export interface AlunaSummary {
   lastPaymentEvent?: string | null;
   /** Plano liberado manualmente pela administração central ("pro"/"essencial"). */
   planOverride: string | null;
+  /** Situação da loja: active | suspended | archived. */
+  storeStatus?: string | null;
+  /** Até quando os dados ficam guardados depois do vencimento. */
+  backupUntil?: string | null;
+  /** Assinatura atual (vinda da Hubla). */
+  subscriptionPlan?: string | null;
+  subscriptionStatus?: string | null;
+  subscriptionStartedAt?: string | null;
+  currentPeriodEnd?: string | null;
+  autoRenew?: boolean | null;
+  cancelledAt?: string | null;
+  hublaSubscriptionId?: string | null;
+  hublaOfferId?: string | null;
 }
+
 
 /**
  * Libera (ou volta atrás) o plano PRO na mão, pra quando o pagamento não
