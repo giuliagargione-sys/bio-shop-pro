@@ -407,13 +407,26 @@ export default function AdminPage() {
                     className="rounded-lg border border-border p-3 flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{a.storeName || a.email}</p>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <p className="font-medium truncate">{a.storeName || a.email}</p>
+                        <PlanBadge aluna={a} />
+                      </div>
                       <p className="text-xs text-muted-foreground truncate">
                         {a.email} · conta criada em {formatDate(a.createdAt)}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
                       <StatusBadge status={a.paymentStatus} />
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch
+                          checked={planInfo(a).isPro}
+                          onCheckedChange={(value) => onTogglePro(a, value)}
+                          aria-label="Liberar recursos PRO"
+                        />
+                        <span className={planInfo(a).isPro ? "" : "text-muted-foreground"}>
+                          {planInfo(a).isPro ? "PRO liberado" : "Liberar PRO"}
+                        </span>
+                      </label>
                       {a.slug ? (
                         <>
                           <a
