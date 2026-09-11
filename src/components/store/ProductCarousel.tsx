@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
-import type { StoreConfig } from "@/types/config";
+import { productCtaLabel, type StoreConfig } from "@/types/config";
 import { trackStoreEvent } from "@/lib/trackEvent";
 import { resolveExternalHref } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +109,9 @@ export function ProductCarousel({
                   )}
                 </div>
               )}
-              <span className="text-xs text-primary font-medium">Ver look →</span>
+              <span className="text-xs text-primary font-medium">
+                {productCtaLabel(product.ctaLabel)}
+              </span>
             </div>
           </a>
         ))}

@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { uid } from "@/lib/utils";
 import { uploadStoreImage } from "@/lib/logoUpload";
-import type { Product } from "@/types/config";
+import { DEFAULT_PRODUCT_CTA, type Product } from "@/types/config";
 
 function ProductImageField({
   value,
@@ -196,6 +196,25 @@ export function ProductsSection() {
                   placeholder="https://..."
                 />
               </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <Label>Texto do botão</Label>
+              <Input
+                value={product.ctaLabel ?? ""}
+                maxLength={40}
+                onChange={(e) => updateProduct(product.id, { ctaLabel: e.target.value })}
+                onBlur={(e) =>
+                  updateProduct(product.id, { ctaLabel: e.target.value.trim().slice(0, 40) })
+                }
+                placeholder={`Ex: ${DEFAULT_PRODUCT_CTA}`}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Personalize o texto que aparecerá no botão do produto. Se ficar vazio, usamos "
+                {DEFAULT_PRODUCT_CTA}".
+              </p>
             </div>
 
             <Separator />

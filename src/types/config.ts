@@ -37,6 +37,16 @@ export interface Product {
   showPrice?: boolean; // mostrar ou esconder o preço na loja
   price?: string; // preço cheio, ex: "R$ 189,90"
   salePrice?: string; // preço promocional (ativa o "de / por")
+  ctaLabel?: string; // texto do botão do card (padrão: "Ver look →")
+}
+
+/** texto padrão do botão do card de produto */
+export const DEFAULT_PRODUCT_CTA = "Ver look →";
+
+/** garante um texto válido pro botão do card (retrocompatível) */
+export function productCtaLabel(value?: string | null): string {
+  const clean = (value ?? "").trim().slice(0, 40);
+  return clean || DEFAULT_PRODUCT_CTA;
 }
 
 
