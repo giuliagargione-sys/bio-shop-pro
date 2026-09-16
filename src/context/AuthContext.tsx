@@ -7,6 +7,7 @@ import {
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { clearCache } from "@/lib/queryCache";
 
 interface AuthContextValue {
   session: Session | null;
@@ -37,7 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
+    // Ao sair ou entrar com outra conta, tudo que estava guardado em
+    // memória (plano, acesso, loja, leads) é descartado — assim ninguém
+    // vê dados nem situação de acesso da conta anterior.
+    let currentUserId: string | null = null;
     const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      const nextUserId = newSession?.user?.id ?? null;
+      if (nextUserId !== currentUserId) {
+        currentUserId = nextUserId;
+        clearCache();
+      }
       setSession(newSession);
     });
 
