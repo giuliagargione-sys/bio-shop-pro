@@ -152,7 +152,19 @@ export async function resolveAccess(
   // Liberação manual continua tendo prioridade sobre o pagamento.
   const canUse = Boolean(overridePlan) || (storeOk && subscriptionValid);
 
-  const plan: Plan = (overridePlan as Plan | null) ?? sub?.plan ?? "essential";
+  // Compras anteriores à tabela de assinaturas: usa o plano registrado na compra.
+  let legacyPlan: Plan | null = null;
+  if (!overridePlan && !sub?.plan && normalizedEmail) {
+    const { data: buyer } = await admin
+      .from("compradores_ativos")
+      .select("plano")
+      .ilike("email", normalizedEmail)
+      .eq("status", "ativo")
+      .maybeSingle();
+    if (buyer?.plano) legacyPlan = String(buyer.plano).toLowerCase().includes("pro") ? "pro" : "essential";
+  }
+
+  const plan: Plan = (overridePlan as Plan | null) ?? sub?.plan ?? legacyPlan ?? "essential";
   const planSource: AccessInfo["planSource"] = overridePlan
     ? "manual"
     : sub?.plan
