@@ -41,9 +41,15 @@ export async function fetchLeads(force = false): Promise<Lead[]> {
   return cachedQuery(
     LEADS_KEY,
     async () => {
+      // Sempre filtra pela dona da loja: contas de admin enxergam todos os
+      // leads pelas regras do banco, então o filtro precisa ser explícito.
+      const { data: auth } = await supabase!.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid) return [];
       const { data, error } = await supabase!
         .from("leads")
         .select("id, created_at, name, whatsapp, answers, contacted")
+        .eq("store_user_id", uid)
         .order("created_at", { ascending: false })
         .limit(LEADS_LIMIT);
       if (error || !data) return [];
